@@ -1,0 +1,348 @@
+
+
+
+
+2019/10/29  14:59    <DIR>          2345Downloads
+2022/07/21  17:26    <DIR>          AcrobatXIPortable
+2018/12/07  16:54             1,447 amaoComConfig.ini
+2015/04/23  19:01    <DIR>          Applications
+2017/04/28  11:19    <DIR>          baidu download
+2015/09/02  14:09    <DIR>          BaiduMusic
+2022/06/17  10:31    <DIR>          BaiduYunDownload
+2017/02/14  15:39    <DIR>          CooCox2
+2017/09/18  10:11            10,750 cz01.jpg
+2017/09/18  10:20            11,655 cz02.jpg
+2017/09/18  10:11           162,559 cz03.jpg
+2019/09/23  11:46    <DIR>          datasheet
+2021/09/29  17:05    <DIR>          dialog3-back-keep
+2017/06/16  10:27    <DIR>          DiaSemi
+2021/04/07  18:15    <DIR>          DiaSemi2
+2022/03/28  12:38    <DIR>          Download
+2018/08/10  10:34    <DIR>          download8
+2021/03/25  22:14    <DIR>          download9
+2018/11/20  16:36    <DIR>          Downloads
+2016/08/09  17:11    <DIR>          DTLFolder
+2022/06/17  10:06    <DIR>          e1
+2015/08/04  17:59    <DIR>          eclipse
+2007/11/07  08:00            17,734 eula.2052.txt
+2007/11/07  08:00            17,734 eula.3082.txt
+2022/03/28  12:30        33,779,984 fdm_x64_setup_6.14.2.3973.exe
+2007/11/07  08:00             1,110 globdata.ini
+2019/06/14  16:14    <DIR>          GoldWave (1)
+2016/04/27  17:56    <DIR>          GS309_ALL
+2007/11/07  08:03            75,792 install.res.2052.dll
+2007/11/07  08:03            96,272 install.res.3082.dll
+2016/04/11  17:32    <DIR>          iTudou
+2020/04/22  15:48    <DIR>          KMPlayer
+2016/05/19  10:01    <DIR>          KuGou
+2015/12/15  14:00    <DIR>          KwDownload
+2022/08/22  17:11    <DIR>          learning_log
+2020/01/03  18:38    <DIR>          list
+2015/11/02  18:04    <DIR>          MagicPlus
+2018/09/04  16:51         2,614,272 maomao4.2.exe
+2022/03/28  12:33       107,829,008 Motrix-Setup-1.6.11.exe
+2019/08/08  18:26    <DIR>          music
+2016/08/09  17:39    <DIR>          MyDrivers
+2022/09/09  17:33    <DIR>          nouse
+2016/09/28  15:53    <DIR>          Photoshop6.0_ma
+2021/01/07  14:20    <DIR>          Program Files
+2015/04/16  13:30    <DIR>          Projects
+2022/08/08  16:42    <DIR>          PyCharm Community Edition 2022.2
+2022/09/16  15:52    <DIR>          Python
+2022/09/15  17:39    <DIR>          python_wk
+2022/09/16  14:18    <DIR>          python_work
+2018/07/26  11:59    <DIR>          QT
+2019/10/29  15:11    <DIR>          qycache
+2015/04/23  18:40           120,678 share天之蓝2.jpg
+2015/04/22  19:04           238,534 share悠悠下午茶2.jpg
+2016/08/09  17:13            17,337 softinfo.xml
+2019/06/14  16:14    <DIR>          SoundForge_ha
+2022/09/16  15:22             1,281 sscom.ini
+2005/12/15  23:10           773,120 sscom33.exe
+2005/12/15  23:10           773,120 sscom332.exe
+2017/05/26  23:38           451,072 sscom5.13.1.exe
+2022/08/01  10:23             5,043 sscom51.ini
+2019/10/17  18:43             5,087 sscom512.ini
+2017/05/26  23:38           451,072 sscom52.exe
+2015/04/29  16:55        28,377,847 STM32 ST-LINK Utility_v3.1.0.exe
+2022/08/09  17:34    <DIR>          Sublime Text
+2015/04/10  17:42    <DIR>          SVNKU
+2022/08/09  11:12    <DIR>          temp
+2021/09/23  18:17    <DIR>          TEST
+2022/09/16  11:52    <DIR>          testprj
+2022/09/15  14:35               262 testprj.rar
+2022/09/15  14:32    <DIR>          testproject
+2020/06/15  16:45    <DIR>          Tools
+2021/12/21  10:43    <DIR>          Tools_my_all
+2015/06/16  06:33           497,664 ttcom12.exe
+2019/09/29  14:14    <DIR>          uarttest
+2021/10/27  18:25    <DIR>          UltraEdit
+2007/11/07  08:00             5,686 vcredist.bmp
+2007/11/07  08:09         1,442,522 VC_RED.cab
+2007/11/07  08:12           232,960 VC_RED.MSI
+2018/04/25  17:10    <DIR>          Work5_JsStart3
+2017/09/06  11:57           424,473 yl.png
+2017/09/07  10:38            51,157 yl2.png
+2019/12/06  11:06    <DIR>          Youku Files
+2022/06/17  10:10    <DIR>          _back_temp
+2021/04/09  18:01    <DIR>          _source_back_all
+2022/06/23  10:51    <DIR>          _test_all_keep
+2022/07/21  16:39               446 _zeroplus使用详解_my_ok.txt
+2021/11/09  11:22    <DIR>          __back_SYS
+2015/06/05  11:00    <DIR>          上传_GS278
+2015/12/23  16:22    <DIR>          上传_HR2_back
+2016/09/27  17:23    <DIR>          上传_THECORE_all
+2019/12/30  14:17    <DIR>          发票_元件
+2019/10/29  14:55    <DIR>          搜狗高速下载
+2018/08/01  14:49             6,808 无标题1.png
+2018/08/01  14:51             8,197 无标题2.png
+2018/08/02  11:46             6,536 无标题3.png
+2019/10/30  10:16    <DIR>          梁工pdf工具
+2018/02/08  16:32         2,742,784 猫猫串口网络调试助手V3.2.3.exe
+2022/06/06  11:01    <DIR>          百度网盘
+              38 个文件    183,065,824 字节
+              63 个目录 36,198,297,600 可用字节
+
+D:\>cd testprj
+
+D:\testprj>python main.py
+222
+111
+
+D:\testprj>pip show pyserial
+WARNING: Package(s) not found: pyserial
+
+D:\testprj>pip show colorama
+WARNING: Package(s) not found: colorama
+
+D:\testprj>cd..
+
+D:\>cd python
+
+D:\Python>cd python310
+
+D:\Python\Python310>pip show pyserial
+WARNING: Package(s) not found: pyserial
+
+D:\Python\Python310>pip show colorama
+WARNING: Package(s) not found: colorama
+
+D:\Python\Python310>pip show pyftdi
+WARNING: Package(s) not found: pyftdi
+
+D:\Python\Python310>pip show pip
+Name: pip
+Version: 22.2.2
+Summary: The PyPA recommended tool for installing Python packages.
+Home-page: https://pip.pypa.io/
+Author: The pip developers
+Author-email: distutils-sig@python.org
+License: MIT
+Location: d:\python\python310\lib\site-packages
+Requires:
+Required-by:
+
+D:\Python\Python310>pip show matplotlib
+WARNING: Package(s) not found: matplotlib
+
+D:\Python\Python310>python -m pip install --user colorama  --default-timeout=300
+0
+Collecting colorama
+  Using cached colorama-0.4.5-py2.py3-none-any.whl (16 kB)
+Installing collected packages: colorama
+Successfully installed colorama-0.4.5
+
+D:\Python\Python310>python -m pip install --user pyserial  --default-timeout=300
+0
+Collecting pyserial
+  Using cached pyserial-3.5-py2.py3-none-any.whl (90 kB)
+Installing collected packages: pyserial
+  WARNING: The scripts pyserial-miniterm.exe and pyserial-ports.exe are installe
+d in 'C:\Users\GS\AppData\Roaming\Python\Python310\Scripts' which is not on PATH
+.
+  Consider adding this directory to PATH or, if you prefer to suppress this warn
+ing, use --no-warn-script-location.
+Successfully installed pyserial-3.5
+WARNING: There was an error checking the latest version of pip.
+
+D:\Python\Python310>python -m pip install --user pyftdi  --default-timeout=3000
+Collecting pyftdi
+  Using cached pyftdi-0.54.0-py3-none-any.whl (144 kB)
+Requirement already satisfied: pyserial>=3.0 in c:\users\gs\appdata\roaming\pyth
+on\python310\site-packages (from pyftdi) (3.5)
+Collecting pyusb!=1.2.0,>=1.0.0
+  Using cached pyusb-1.2.1-py3-none-any.whl (58 kB)
+Installing collected packages: pyusb, pyftdi
+Successfully installed pyftdi-0.54.0 pyusb-1.2.1
+WARNING: There was an error checking the latest version of pip.
+
+D:\Python\Python310>python -m pip install --user limepy  --default-timeout=3000
+
+Collecting limepy
+  Using cached limepy-0.1.12-py3-none-any.whl (11 kB)
+Collecting requests
+  Using cached requests-2.28.1-py3-none-any.whl (62 kB)
+Collecting numpy
+  Downloading numpy-1.23.3-cp310-cp310-win_amd64.whl (14.6 MB)
+     --------------------------------------- 14.6/14.6 MB 17.5 kB/s eta 0:00:00
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status
+=None)) after connection broken by 'ProtocolError('Connection aborted.', RemoteD
+isconnected('Remote end closed connection without response'))': /simple/pandas/
+Collecting pandas
+  Downloading pandas-1.4.4-cp310-cp310-win_amd64.whl (10.0 MB)
+     --------------------------------------- 10.0/10.0 MB 29.8 kB/s eta 0:00:00
+Collecting xmltodict
+  Using cached xmltodict-0.13.0-py2.py3-none-any.whl (10.0 kB)
+Collecting python-dateutil>=2.8.1
+  Using cached python_dateutil-2.8.2-py2.py3-none-any.whl (247 kB)
+Collecting pytz>=2020.1
+  Using cached pytz-2022.2.1-py2.py3-none-any.whl (500 kB)
+Collecting urllib3<1.27,>=1.21.1
+  Using cached urllib3-1.26.12-py2.py3-none-any.whl (140 kB)
+Collecting idna<4,>=2.5
+  Using cached idna-3.4-py3-none-any.whl (61 kB)
+Collecting certifi>=2017.4.17
+  Using cached certifi-2022.9.14-py3-none-any.whl (162 kB)
+Collecting charset-normalizer<3,>=2
+  Using cached charset_normalizer-2.1.1-py3-none-any.whl (39 kB)
+Collecting six>=1.5
+  Using cached six-1.16.0-py2.py3-none-any.whl (11 kB)
+Installing collected packages: pytz, xmltodict, urllib3, six, numpy, idna, chars
+et-normalizer, certifi, requests, python-dateutil, pandas, limepy
+  WARNING: The script f2py.exe is installed in 'C:\Users\GS\AppData\Roaming\Pyth
+on\Python310\Scripts' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warn
+ing, use --no-warn-script-location.
+  WARNING: The script normalizer.exe is installed in 'C:\Users\GS\AppData\Roamin
+g\Python\Python310\Scripts' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warn
+ing, use --no-warn-script-location.
+Successfully installed certifi-2022.9.14 charset-normalizer-2.1.1 idna-3.4 limep
+y-0.1.12 numpy-1.23.3 pandas-1.4.4 python-dateutil-2.8.2 pytz-2022.2.1 requests-
+2.28.1 six-1.16.0 urllib3-1.26.12 xmltodict-0.13.0
+WARNING: There was an error checking the latest version of pip.
+
+D:\Python\Python310>pip show pip
+Name: pip
+Version: 22.2.2
+Summary: The PyPA recommended tool for installing Python packages.
+Home-page: https://pip.pypa.io/
+Author: The pip developers
+Author-email: distutils-sig@python.org
+License: MIT
+Location: d:\python\python310\lib\site-packages
+Requires:
+Required-by:
+
+D:\Python\Python310>python -m pip install --user pyft4222  --default-timeout=300
+0
+Collecting pyft4222
+  Using cached pyft4222-0.1.1-py3-none-any.whl (432 kB)
+Collecting koda>=0.10.2
+  Using cached koda-1.0.0-py3-none-any.whl (8.7 kB)
+Installing collected packages: koda, pyft4222
+Successfully installed koda-1.0.0 pyft4222-0.1.1
+WARNING: There was an error checking the latest version of pip.
+
+D:\Python\Python310>python -m pip install --user matplotlib  -i https://pypi.tun
+a.tsinghua.edu.cn/simple
+Looking in indexes: https://pypi.tuna.tsinghua.edu.cn/simple
+Collecting matplotlib
+  Downloading https://pypi.tuna.tsinghua.edu.cn/packages/1d/ca/226bf297851690781
+ac79d8d1cb1af550f5d4926c56ee5035bf3d2027093/matplotlib-3.6.0-cp310-cp310-win_amd
+64.whl (7.2 MB)
+     ---------------------------------------- 7.2/7.2 MB 119.0 kB/s eta 0:00:00
+Requirement already satisfied: numpy>=1.19 in c:\users\gs\appdata\roaming\python
+\python310\site-packages (from matplotlib) (1.23.3)
+Collecting pyparsing>=2.2.1
+  Using cached https://pypi.tuna.tsinghua.edu.cn/packages/6c/10/a7d0fa5baea8fe7b
+50f448ab742f26f52b80bfca85ac2be9d35cdd9a3246/pyparsing-3.0.9-py3-none-any.whl (9
+8 kB)
+Collecting contourpy>=1.0.1
+  Downloading https://pypi.tuna.tsinghua.edu.cn/packages/e2/a1/60afbcfe6bbd80116
+5e3234281dfd515305d40bce4534738ea33b22ef3d4/contourpy-1.0.5-cp310-cp310-win_amd6
+4.whl (164 kB)
+     ------------------------------------- 164.1/164.1 kB 93.8 kB/s eta 0:00:00
+Requirement already satisfied: python-dateutil>=2.7 in c:\users\gs\appdata\roami
+ng\python\python310\site-packages (from matplotlib) (2.8.2)
+Collecting fonttools>=4.22.0
+  Downloading https://pypi.tuna.tsinghua.edu.cn/packages/c3/f2/8e1f94318021b1620
+00a8c48f2c460d5efba78fe0e46ef5d236ff3fe8147/fonttools-4.37.2-py3-none-any.whl (9
+59 kB)
+     ------------------------------------- 959.8/959.8 kB 56.2 kB/s eta 0:00:00
+Collecting cycler>=0.10
+  Using cached https://pypi.tuna.tsinghua.edu.cn/packages/5c/f9/695d6bedebd747e5
+eb0fe8fad57b72fdf25411273a39791cde838d5a8f51/cycler-0.11.0-py3-none-any.whl (6.4
+ kB)
+Collecting packaging>=20.0
+  Using cached https://pypi.tuna.tsinghua.edu.cn/packages/05/8e/8de486cbd03baba4
+deef4142bd643a3e7bbe954a784dc1bb17142572d127/packaging-21.3-py3-none-any.whl (40
+ kB)
+Collecting pillow>=6.2.0
+  Downloading https://pypi.tuna.tsinghua.edu.cn/packages/02/55/67a3c17b9e7d972ed
+8c246f104da99ca4f3ea42fba566697e479011b84b6/Pillow-9.2.0-cp310-cp310-win_amd64.w
+hl (3.3 MB)
+     ---------------------------------------- 3.3/3.3 MB 118.8 kB/s eta 0:00:00
+Collecting kiwisolver>=1.0.1
+  Downloading https://pypi.tuna.tsinghua.edu.cn/packages/68/20/2ce1186ef4edf4728
+1faf58f6dd72a1fcd2be1fc66514bd2d220097bdcd1/kiwisolver-1.4.4-cp310-cp310-win_amd
+64.whl (55 kB)
+     -------------------------------------- 55.3/55.3 kB 192.4 kB/s eta 0:00:00
+Requirement already satisfied: six>=1.5 in c:\users\gs\appdata\roaming\python\py
+thon310\site-packages (from python-dateutil>=2.7->matplotlib) (1.16.0)
+Installing collected packages: pyparsing, pillow, kiwisolver, fonttools, cycler,
+ contourpy, packaging, matplotlib
+  WARNING: The scripts fonttools.exe, pyftmerge.exe, pyftsubset.exe and ttx.exe
+are installed in 'C:\Users\GS\AppData\Roaming\Python\Python310\Scripts' which is
+ not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warn
+ing, use --no-warn-script-location.
+Successfully installed contourpy-1.0.5 cycler-0.11.0 fonttools-4.37.2 kiwisolver
+-1.4.4 matplotlib-3.6.0 packaging-21.3 pillow-9.2.0 pyparsing-3.0.9
+WARNING: There was an error checking the latest version of pip.
+
+D:\Python\Python310>
+
+
+
+====================================
+
+ 'C:\Users\GS\AppData\Roaming\Python\Python310\Scripts' 
+WARNING: There was an error checking the latest version of pip.
+
+
+
+**********===========================  测试 uci_uart  =====================================************
+
+跟串口通讯的时候，发生某种错误  （待研究）
+
+D:\python_work\qm35test\scripts>python uci_uart_fira_test.py -p COM3
+
+HSSiport pass ok
+
+No response from the device (2s timeout)
+
+Traceback (most recent call last):
+  File "D:\python_work\qm35test\scripts\uci\core.py", line 205, in command
+    (rgid, roid, payload) = self.wq.get(timeout=2)
+  File "D:\Python\Python310\lib\queue.py", line 179, in get
+    raise Empty
+_queue.Empty
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\python_work\qm35test\scripts\uci_uart_fira_test.py", line 38, in <mod
+ule>
+    client.session_init(args.session_id, 0))
+  File "D:\python_work\qm35test\scripts\uci\v1_0.py", line 695, in session_init
+    payload = self.command(Gid.UwbSessionConfig, 0, payload)
+  File "D:\python_work\qm35test\scripts\uci\core.py", line 209, in command
+    raise ProtocolError(msg) from exc
+uci.core.ProtocolError: No response from the device (2s timeout)
+
+D:\python_work\qm35test\scripts>
+
+
+
+

@@ -1,0 +1,44 @@
+﻿
+当在执行pip更新时，出现失败或警告，再次执行pip命令报错时，分别按顺序执行以下2条命令即可完成修复。
+
+python -m ensurepip 
+python -m pip install --upgrade pip
+
+有时一定要進入到下面的目录，才能成功安装后面一句：
+D:\Python>python38\    python -m pip install --upgrade pip
+ 
+
+
+
+=================================
+
+python -m pip install --upgrade pip
+
+
+# 第一种
+python -m pip install --upgrade pip
+
+1
+2
+3
+
+# 第二种
+pip install --upgrade pip
+
+1
+2
+3
+
+# 第三种
+python3 -m pip install --upgrade pip
+
+1
+2
+3
+
+# 第四种
+python -m pip install -U --force-reinstall pip
+
+————————————————
+版权声明：本文为CSDN博主「无 羡ღ」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/yuan2019035055/article/details/125189610

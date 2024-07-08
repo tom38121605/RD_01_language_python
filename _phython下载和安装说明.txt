@@ -1,0 +1,366 @@
+﻿
+    D:\Python>python38\   pip show pip      //ok
+    D:\Python>python38\   pip show matplotlib      //ok
+
+    D:\Python>python38\   pip uninstall matplotlib   //3.5.3
+    D:\Python>python38\   pip install matplotlib==2.2.3
+
+    D:\Python>python38\  easy_install pip
+
+    D:\Python>python38\    python -m ensurepip     //ok
+
+   D:\Python>python38\    python -m pip install --upgrade pip     //ok
+
+   python -m pip install --user matplotlib  
+   python -m pip install --user matplotlib  --default-timeout=3000     //ok
+
+   python -m pip install --user matplotlib  -i https://pypi.tuna.tsinghua.edu.cn/simple     //ok
+
+   python -m  pip install --target=c:\users\gs\appdata\roaming\python\python38\site-packages matplotlib    //ok
+
+   python -m  pip install  -i https://pypi.tuna.tsinghua.edu.cn/simple  --target=c:\use\gs\appdata\roaming\python\python38\site-packages matplotlib  
+
+   pip install --target=d:\python\python38\lib\site-packages pip 
+
+   python -m pip install --user matplotlib==2.2.3  -i https://pypi.tuna.tsinghua.edu.cn/simple     //ok
+
+  python setup.py install
+
+pip install colorama
+pip install pyserial
+pip install pyftdi
+
+python -m pip install --user colorama  --default-timeout=3000     
+python -m pip install --user pyserial  --default-timeout=3000     
+python -m pip install --user pyftdi  --default-timeout=3000     
+python -m pip install --user limepy  --default-timeout=3000     
+
+python -m pip install --user pyft4222  --default-timeout=3000
+
+python -m pip install --user matplotlib  --default-timeout=3000
+python -m pip install --user matplotlib  -i https://pypi.tuna.tsinghua.edu.cn/simple    
+
+
+
+================uci uart===测试？======================
+
+python uci_uart_fira_test.py -p COM3
+
+
+
+================colorama===测试ok======================
+
+from colorama import Fore, Style, init, Back   #add
+init()
+print(Fore.RED + 'some red text')
+print(Back.GREEN + 'and with a green background')
+print(Style.DIM + 'and in dim text')
+print(Style.RESET_ALL)
+print('back to normal now')
+
+
+================argparse===测试ok=====test.py=================
+
+
+-----------------------多个参数--------ok--------------------
+
+import argparse
+
+parser = argparse.ArgumentParser(description="Demo of argparse")
+parser.add_argument('-n','--name', default=' Li ')
+parser.add_argument('-y','--year', default='20')
+args = parser.parse_args()
+print(args)
+name = args.name
+year = args.year
+print('Hello {}  {}'.format(name,year))
+
+
+:>  python test.py  -n Liu  -y 18
+
+
+
+-----------------------参数数列--------待理解--------------------
+
+
+import argparse
+
+parser = argparse.ArgumentParser(description='Process some integers.')
+parser.add_argument('integers', metavar='N', type=int, nargs='+',
+                    help='an integer for the accumulator')
+parser.add_argument('--sum', dest='accumulate', action='store_const',
+                    const=sum, default=max,
+                    help='sum the integers (default: find the max)')
+
+args = parser.parse_args()
+print(args.accumulate(args.integers))
+
+print('hello')
+
+
+ ##运行效果## 
+ 
+ 
+D:\python_work>python hello_world.py 1 2 3 4
+4
+hello
+ 
+D:\python_work>python hello_world.py 1 2 3 4 --sum
+10
+hello
+
+
+----------------固定参数--------------ok--------------------
+
+import argparse
+ 
+parser = argparse.ArgumentParser()
+parser.add_argument("square", help="display a square of a given number", type=int)
+args = parser.parse_args()
+print(rgs.square**2)
+
+
+ ##运行效果## 
+
+$ python argparse_usage.py 9
+81
+
+
+----------可选参数-------------ok----------------
+
+import argparse
+ 
+parser = argparse.ArgumentParser()
+ 
+parser.add_argument("--square", help="display a square of a given number", type=int)
+parser.add_argument("--cubic", help="display a cubic of a given number", type=int)
+ 
+args = parser.parse_args()
+ 
+if args.square:
+    print(args.square**2)
+ 
+if args.cubic:
+    print(args.cubic**3)
+
+
+ ##运行效果## 
+
+$ python argparse_usage.py --square 8
+64
+ 
+$ python argparse_usage.py --cubic 8
+512
+ 
+$ python argparse_usage.py 8
+usage: argparse_usage.py [-h] [--square SQUARE] [--cubic CUBIC]
+argparse_usage.py: error: unrecognized arguments: 8
+ 
+$ python argparse_usage.py  # 没有输出
+
+============================================
+
+pip install --upgrade pip
+python -m pip install --upgrade pip
+
+python -m pip install -U --force-reinstall pip
+ 
+
+python -m  pip uninstall pip 
+py -m ensurepip --upgrade
+
+
+
+python uci_uart_fira_test.py -p COM3
+
+
+
+
+
+=====================关于包的详解======================
+
+sound/                          Top-level package
+      __init__.py               Initialize the sound package
+      formats/                  Subpackage for file format conversions
+              __init__.py
+              wavread.py
+              wavwrite.py
+              aiffread.py
+              aiffwrite.py
+              auread.py
+              auwrite.py
+              ...
+      effects/                  Subpackage for sound effects
+              __init__.py
+              echo.py
+              surround.py
+              reverse.py
+              ...
+      filters/                  Subpackage for filters
+              __init__.py
+              equalizer.py
+              vocoder.py
+              karaoke.py
+              ...
+
+---
+
+需要注意的是使用 from package import item 方式导入包时，这个子项（item）既可以是包中的一个子模块（或一个子包），也可以是包中定义的其它命名，像函数、类或变量。import 语句首先核对是否包中有这个子项，如果没有，它假定这是一个模块，并尝试加载它。如果没有找到它，会引发一个 ImportError 异常。
+
+相反，使用类似 import item.subitem.subsubitem 这样的语法时，这些子项必须是包，最后的子项可以是包或模块，但不能是前面子项中定义的类、函数或变量。
+
+---
+
+ 如果包中使用了子包结构（就像示例中的 sound 包），可以按绝对位置从相邻的包中引入子模块。例如，如果 sound.filters.vocoder 包需要使用 sound.effects 包中的 echo 模块，它可以 from sound.Effects import echo。
+你可以用这样的形式from module import name 来写显式的相对位置导入。那些显式相对导入用点号标明关联导入当前和上级包。以 surround 模块为例，你可以这样用:
+
+
+from . import echo
+from .. import formats
+from ..filters import equalizer
+
+
+==========================
+
+import sys sys.path.append(r'D:\PY_TEST\pythonProject\6modules') #替换为自己的目录
+
+Note: Python 10 64bit should be used to run the example scripts.    //qorvo的python scritps
+
+==========================================
+
+
+python运行某脚本时所有加载到内存的模块都放在sys.modules中，使用python运行脚本和使用python -m两种方式不同的地方在于
+
+‘main’: <module ‘main’ from ‘test.py’ # (普通方式)
+
+‘main’: <module ‘test’ from ‘D:\Backup\桌面\test.py’ # (-m方式)
+
+可以看出后者被当做了模块，前者则是脚本中的main被当做了模块。
+
+==========================
+
+
+1.  win7上面最好安装 V3.8.8以前的python （win8,win10考虑安装最新的版本）
+    http://www.zzvips.com/article/185952.html                       //python  下载和安装  ok
+    https://www.python.org/downloads/                               //python  官网下载网址
+
+
+
+2. 安装的时候选自定义安装
+
+3. 安装出现勾选时，把所有的都勾选上
+
+4. 不要安装在C盘，要安装的剩余空间比较大的盘
+
+5. 如果运行时有个DLL的错误， 则
+    。下载api-ms-win-crt-runtime-|1-1-0.dll
+    。把dll文件替换 C:\Windows\SysWOW64 里面的相同名称dll
+    。再下载vc_redist.x64.exe，并安装后重启
+    。ok
+
+6. 补充说明： 卸载python时，不要在控制面板里面卸载。重新安装，并选择uninstall选项
+
+    http://www.zzvips.com/article/185952.html          //python  下载和安装  ok
+    c.biancheng.net/view/5804.html                         //pycharm 下载和安装  ok  （注意：要把前面的http去掉才能出现网页）
+    http://ituring.cn/book/2784    //下载相关的资源  //python入门到精通示例下载
+
+
+7. pip升级版本
+
+   D:\Python>python38\    python -m pip install --upgrade pip
+
+7. pip安装到一半就中断的解决
+   https://blog.csdn.net/weixin_31715353/article/details/111975266
+   https://www.csdn.net/tags/MtTaEgzsNDA3MTU1LWJsb2cO0O0O.html
+
+   1）。延长安装时间
+         pip install xxxxx --default-timeout=1000
+
+   2）。使用镜像源
+           新版ubuntu要求使用https源，要注意。
+          清华：https://pypi.tuna.tsinghua.edu.cn/simple
+          阿里云：http://mirrors.aliyun.com/pypi/simple/
+          中国科技大学 https://pypi.mirrors.ustc.edu.cn/simple/
+          华中理工大学：http://pypi.hustunique.com/
+          山东理工大学：http://pypi.sdutlinux.org/
+          豆瓣：http://pypi.douban.com/simple/
+
+          临时使用：
+          可以在使用pip的时候加参数-i https://pypi.tuna.tsinghua.edu.cn/simple
+
+
+8. 用ctrl+B运行sublime text，看不输出结果的解决
+    菜单 Tools\build with\点选python
+
+
+9. 找不到colorama模块时，只需提取colorama目录并将其放入项目的文件夹中。无需卸载以前安装的colorama软件包。在
+
+======================================================
+
+
+//Python列表(list)、元祖(tuple)、集合(set)，和字典(dictionary)区别和联系   //--good ok  （网格比较）
+https://www.baidu.com/link?url=Icaf2H496pgoHdMSUovPWlEC8KTZAz5KLQzV-klWneIMsqttgGnXSN525JdXCC2UmCcfL1ZmoVedJrKpSHF-vbr1oN8g8gEVczXdiGc1Tli&wd=&eqid=832ca3fe000141c70000000662f35fef
+
+
+
+-----
+
+https://www.bilibili.com/read/cv13608428        //python安装  ok
+
+https://blog.csdn.net/MC_XY/article/details/120043889    //python安装
+
+http://wk.xuysg.cn/?kmxu/&bd_vid=10020927161798188764
+
+https://jingyan.baidu.com/article/870c6fc3cac0b0f13ee4be0e.html      //python卸载
+
+https://blog.csdn.net/elsa_yxy1984/article/details/107541895?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-1-107541895-blog-109984742.pc_relevant_multi_platform_whitelistv1_exp2&spm=1001.2101.3001.4242.2&utm_relevant_index=3   //python卸载 ok
+
+1.下载api-ms-win-crt-runtime-|1-1-0.dll文件
+  （1）在开始菜单中找到“运行(R)” （按快捷键“Win键+R”）
+  （2）弹出一个对话框，
+          在框内输入 regsvr32 api-ms-win-crt-runtime-l1-1-0.dll 回车，
+
+http://cto.jusiboxin.com/post/182.html     // 64位操作系统：vc_redist.x64.exe：微软官网下载地址
+https://blog.csdn.net/q951250246/article/details/125331009    //api-ms-win-crt-runtime-|1-1-0.dll  问题解决方法
+
+
+---------------------------
+
+
+
+embeddable zip file：解压安装。下载的是一个压缩文件，解压后即表示安装完成。
+
+executable installer：程序安装。下载的是一个exe可执行程序，双击进行安装。
+
+web-based installer：在线安装。下载的是一个exe可执行程序，双击后，该程序自动下载安装文件(所以需要有网络)进行安装
+
+--------------
+
+
+Python文件在很多工具中都可以运行起来，以下列举2中常用的py文件运行方法。
+方法一：通过命令行窗口运行
+1、第一步首先复制一下py文件存放的路径，也就是在本地电脑中的文件路径;
+2、第二步打开命令行窗口，进去之后，首先切换到py文件的路径下面，然后输入“python py文件名称”;
+3、第三步按回车键，可以看到已经运行py文件了，需要注意的是在命令行窗口中运行py文件，需要将 python安装路径添加到环境变量path中。
+
+方法二：通过python的ide编辑器运行
+1、第一步可以下载安装python的ide代码编辑器pycharm，新建一个项目，将py文件放到项目中执行;
+2、第二步点击Run进行执行py文件，可以看到运行结果；
+简单的办法是直接双击。这里需要将 py 文件的打开方式设置为 python ，通常在安装 python 的时候会自动关联。否则需要手动设置。
+
+
+===========================论坛====================================
+
+https://bbs.pythontab.com/thread-4874-1-1.html     //论坛，一步一步网络爬虫
+
+
+
+
+
+
+
+
+
+
+
+
