@@ -1,0 +1,27 @@
+﻿
+1. 直接在dos输入python， 开启python
+
+   C:\> python
+       Python 3.7.2 (v3.7.2:9a3ffc0492, Dec 23 2018, 23:09:28) [MSC v.1916 64 bit
+      (AMD64)] on win32
+     Type "help", "copyright", "credits" or "license" for more information.
+     >>>
+
+2. 直接运行python 代码
+
+     >>> print("Hello Python interpreter!")
+    Hello Python interpreter!
+    >>>
+
+3. 结束python  , 下面两种方法
+    ctrl + z
+    >>> exit()
+
+4. 在dos命令行，运行
+   D:\python_test>python  hello.py
+   
+hello
+
+
+
+
