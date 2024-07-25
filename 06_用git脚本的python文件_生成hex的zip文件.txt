@@ -1,0 +1,23 @@
+﻿
+1. 用一下git的脚本来生成zip
+
+2. ommo_nrf\flash_files\build.py
+
+3. 用build.py执行下面的三个命令
+      
+     。清掉所有build
+        build.py clean ALL
+
+    。build工程
+       build.py build [proj名字，比如11663A-1p_microsd_2v8-standard-3p0mm]
+
+    。生成zip
+       build.py package [proj名字]
+
+    第三个参数都可以是ALL，不过ALL就是跑所有的工程，要跑好久
+
+
+
+
+
+
