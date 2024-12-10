@@ -1,0 +1,15 @@
+
+ommo_nrf\flash_files\build.py
+
+
+ 有三个命令
+清掉所有build
+build.py clean ALL
+build工程
+build.py build [proj名字，比如11663A-1p_microsd_2v8-standard-3p0mm]
+生成zip
+build.py package [proj名字]
+
+
+
+
