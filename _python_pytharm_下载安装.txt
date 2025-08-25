@@ -1,0 +1,10 @@
+
+
+1. 下载和安装， 要先安装python，再安装pycharm  （pycharm下载社区版）
+
+     。python下载地址：https://www.python.org/downloads/     （详见python里面的网文说明）
+     。pycharm 下载地址： https://www.jetbrains.com/pycharm/download/?section=windows#section=windows （详见网文说明）
+
+    。安装python时要设置环境变量
+    。pycharm要下载社区版
+
