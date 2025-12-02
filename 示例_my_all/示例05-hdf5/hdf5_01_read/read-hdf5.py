@@ -1,3 +1,7 @@
+
+# keys返回 对象的字符串名称， values是对象本身
+
+
 from os.path import expanduser
 import h5py
 import os.path
@@ -23,6 +27,7 @@ def main():
                 print(f"数据集名称：{os.path.basename(name)}")
                 last_dataset = os.path.basename(name)
                 data = obj[:]
+
 
         f.visititems(get_dataset_name)  #把hdf5中每个对象的name和obj传给函数get_dataset_name
 
@@ -54,7 +59,7 @@ def main3():
     file_name = "data0.hdf5"
     data_file = h5py.File(expanduser(file_name), 'r')
 
-    # print("keys=" + f'{data_file.keys()}')  # keys返回 对象的字符串名称
+    # print("keys=" + f'{data_file.keys()}')  # keys返回 对象的字符串名称， values是对象本身
     print("文件中的group：", data_file.keys())
 
     for device in data_file.values():  # device是group或dataset
@@ -67,6 +72,6 @@ def main3():
 
 if __name__ == "__main__":
     # main()
-    # main2()
-    main3()
+    main2()
+    # main3()
 
