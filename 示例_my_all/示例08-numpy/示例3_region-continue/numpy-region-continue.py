@@ -1,7 +1,7 @@
-import numpy as np
+﻿import numpy as np
 
 #功能：对真值表的连续个数的位置进行统计，并筛选掉连续个数太小的位置
-# 参数：condition，1
+# 参数：condition（真值表），1
 def contiguous_regions(condition, min_len=0):
     d = np.diff(condition)  # np.diff是取得状态切换的真值表
     print("condition=", condition)
