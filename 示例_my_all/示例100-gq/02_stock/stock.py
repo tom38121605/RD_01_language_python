@@ -1,188 +1,215 @@
 from datetime import datetime
 import xlrd
 import xlwt
-from xlwt import easyxf
 from collections import defaultdict
 import re
 
-# ---------------------- 1. 修正分红股基础信息（统一民生银行代码600016） ----------------------
+# ---------------------- 1. 分红基日期字典（与截图匹配） ----------------------
+dividend_fund_date_dict = {
+    "180102": ["待定", "权益登记日: 2025-01-24"],  # 合肥高新
+    "515300": ["待定", "权益登记日:2025-06-16"],  # 红利300
+    "159307": ["待定", "权益登记日:2025-03-17"],  # 100红利
+    "510880": ["待定", "权益登记日:2025-01-20"],  # 红利ETF
+    "510720": ["待定", "权益登记日:2025-01-13"],  # 红利国泰
+    "508056": ["待定", "权益登记日:2025-04-01"],  # 普洛斯
+    "515450": ["待定", "权益登记日:2025-07-14"],  # 红利50
+    "513820": ["待定", "权益登记日:2025-01-21"],  # 港股分红
+}
+
+# ---------------------- 2. 分红股基础信息 ----------------------
 dividend_stock_base_info = {
     "000001": {"名称": "平安银行", "数量": 300, "当前价": 11.54},
     "605368": {"名称": "蓝天燃气", "数量": 11300, "当前价": 7.78},
-    "600895": {"名称": "淮北矿业", "数量": 400, "当前价": 11.25},
+    "600985": {"名称": "淮北矿业", "数量": 400, "当前价": 11.19},
     "601916": {"名称": "浙商银行", "数量": 5500, "当前价": 3.05},
     "601169": {"名称": "北京银行", "数量": 2900, "当前价": 5.49},
     "002807": {"名称": "江阴银行", "数量": 600, "当前价": 4.65},
     "600188": {"名称": "兖矿能源", "数量": 200, "当前价": 13.43},
-    "600016": {"名称": "民生银行", "数量": 3000, "当前价": 3.86},  # 修正：统一为600016，数据匹配表格
-    "600881": {"名称": "百川能源", "数量": 800, "当前价": 4.11},
+    "600016": {"名称": "民生银行", "数量": 3000, "当前价": 3.86},
+    "600681": {"名称": "百川能源", "数量": 1000, "当前价": 4.08},
     "600256": {"名称": "广汇能源", "数量": 2200, "当前价": 4.96},
     "603801": {"名称": "志邦家居", "数量": 1000, "当前价": 9.23},
     "002267": {"名称": "陕天然气", "数量": 100, "当前价": 7.53},
+    "600219": {"名称": "南山铝业", "数量": 1000, "当前价": 3.50},
 }
 
-# ---------------------- 2. 修正分红日期字典（删除601988，保留600016） ----------------------
+# ---------------------- 3. 分红股日期字典 ----------------------
 dividend_date_dict = {
     "000001": ["待定", "预案公布日:2025-03-20"],
     "605368": ["2025年年报 2026/4/22", "预案公布日:2025-03-26"],
-    "600895": ["2025年年报 2026/3/28", "预案公布日:2025-03-28"],
+    "600985": ["2025年年报 2026/3/28", "预案公布日:2025-03-28"],
     "601916": ["2025年年报 2026/3/31", "预案公布日:2025-03-29"],
     "601169": ["2025年年报 2026-04-23", "预案公布日:2025-03-29"],
     "002807": ["待定", "预案公布日:2025-03-29"],
     "600188": ["2025年年报 2026/3/28", "预案公布日:2025-03-29"],
-    "600016": ["2025年年报 2026-03-31", "预案公布日:2025-04-15"],  # 民生银行唯一代码
-    "600881": ["2025年年报 2026-04-23", "预案公布日:2025-04-23"],
+    "600016": ["2025年年报 2026-03-31", "预案公布日:2025-04-15"],
+    "600681": ["2025年年报 2026-04-23", "预案公布日:2025-04-23"],
     "600256": ["2025年年报 2026-04-24", "预案公布日:2025-04-25"],
     "603801": ["2025年年报 2026-04-30", "预案公布日:2025-04-29"],
     "002267": ["待定", "预案公布日:2025-04-29"],
+    "600219": ["2025年年报 2026-05-10", "预案公布日:2025-05-05"],
 }
 
-# ---------------------- 3. 修正策略字典（删除601988，保留600016） ----------------------
+# ---------------------- 4. 策略字典（最终版） ----------------------
 strategy_dict = {
-    "000001": "分红股", "605368": "分红股", "600895": "分红股", "601916": "分红股",
-    "601169": "分红股", "002807": "分红股", "600188": "分红股", "600016": "分红股",  # 民生银行唯一配置
-    "600881": "分红股", "600256": "分红股", "603801": "分红股", "002267": "分红股",
-    "501018": "套利基金", "002496": "业绩反转", "127033": "可转债", "160723": "套利基金",
-    "161129": "套利基金", "180102": "reit", "512290": "超跌基金", "600759": "业绩反转",
-    "511880": "", "002385": "热点发展", "512010": "超跌基金", "159329": "海外基金",
-    "002570": "热点发展", "515710": "超跌基金", "515300": "分红基金", "300891": "小盘猛牛",
-    "002630": "业绩反转", "000516": "热点发展", "111024": "可转债", "508056": "reit",
-    "002122": "业绩反转", "510880": "分红基金", "605058": "配债策略", "510720": "分红基金",
+    # 分红股
+    "000001": "分红股", "605368": "分红股", "600985": "分红股",
+    "601916": "分红股", "601169": "分红股", "002807": "分红股",
+    "600188": "分红股", "600016": "分红股", "600681": "分红股",
+    "600256": "分红股", "603801": "分红股", "002267": "分红股", "600219": "分红股",
+
+    # 分红基（含180102/508056/159307等）
+    "180102": "分红基", "515300": "分红基", "159307": "分红基",
+    "510880": "分红基", "510720": "分红基", "508056": "分红基",
+    "515450": "分红基", "513820": "分红基",
+
+    # 其他策略
+    "501018": "套利基", "002496": "业绩反转", "127033": "可转债", "160723": "套利基",
+    "161129": "套利基", "512290": "超跌基", "600759": "业绩反转",
+    "511880": "", "002385": "热点发展", "512010": "超跌基", "159329": "海外基",
+    "002570": "热点发展", "515710": "超跌基", "300891": "小盘猛牛",
+    "002630": "业绩反转", "000516": "热点发展", "111024": "可转债",
+    "002122": "业绩反转", "605058": "配债策略",
     "110081": "可转债", "600169": "业绩反转", "605162": "小盘猛牛", "002154": "涨停回调",
-    "404003": "可转债", "600735": "业绩反转", "515450": "分红基金", "300044": "业绩反转",
-    "520870": "海外基金", "404002": "可转债", "161226": "套利基金", "501300": "套利基金",
-    "161128": "套利基金", "127015": "可转债", "160216": "套利基", "160324": "套利基",
+    "404003": "可转债", "600735": "业绩反转", "300044": "业绩反转",
+    "520870": "海外基", "404002": "可转债", "161226": "套利基", "501300": "套利基",
+    "161128": "套利基", "127015": "可转债", "160216": "套利基", "160324": "套利基",
     "161032": "超跌基", "164701": "套利基", "161116": "套利基",
+    "161124": "套利基", "002124": "业绩反转"
 }
 
 
-# ---------------------- 4. 其余代码（排序/样式/写入/数据读取）完全不变 ----------------------
-def parse_next_dividend_date(date_str):
-    if not date_str or "待定" in date_str:
-        return datetime.max
-    date_match = re.search(r'(\d{4})[/-](\d{1,2})[/-](\d{1,2})', date_str)
-    if date_match:
-        year, month, day = date_match.groups()
-        return datetime(int(year), int(month), int(day))
-    return datetime.max
-
-
-def parse_last_dividend_date(date_str):
-    if not date_str or "待定" in date_str:
-        return datetime.max
+# ---------------------- 5. 日期解析工具函数（核心排序逻辑） ----------------------
+def extract_date_from_str(date_str):
+    """从字符串中提取日期（处理"权益登记日:2025-01-13"格式）"""
+    if not date_str or date_str == "待定":
+        return datetime.max  # 待定值设为最大日期（排最后）
+    # 匹配YYYY-MM-DD格式
     date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
     if date_match:
         year, month, day = date_match.groups()
         return datetime(int(year), int(month), int(day))
-    return datetime.max
+    # 匹配YYYY/MM/DD格式
+    date_match = re.search(r'(\d{4})/(\d{1,2})/(\d{1,2})', date_str)
+    if date_match:
+        year, month, day = date_match.groups()
+        return datetime(int(year), int(month), int(day))
+    return datetime.max  # 无日期则设为最大
 
 
-def get_dividend_sort_key(item):
+def get_fund_dividend_sort_key(item):
+    """分红基排序key：先下期日期升序，待定则按去年日期升序"""
     code = item[0]
-    next_date_str = dividend_date_dict.get(code, ["", ""])[0]
-    last_date_str = dividend_date_dict.get(code, ["", ""])[1]
-    next_date = parse_next_dividend_date(next_date_str)
-    last_date = parse_last_dividend_date(last_date_str)
+    # 获取分红基的两个日期
+    next_date_str, last_date_str = dividend_fund_date_dict.get(code, ["待定", ""])
+
+    # 解析下期日期（核心排序字段1）
+    next_date = extract_date_from_str(next_date_str)
+
+    # 解析去年日期（核心排序字段2，仅当下期日期是待定/最大时生效）
+    last_date = extract_date_from_str(last_date_str)
+
+    # 排序逻辑：(下期日期, 去年日期) 升序
     return (next_date, last_date)
 
 
+def get_stock_dividend_sort_key(item):
+    """分红股排序key（保留原有逻辑）"""
+    code = item[0]
+    next_date_str = dividend_date_dict.get(code, ["", ""])[0]
+    last_date_str = dividend_date_dict.get(code, ["", ""])[1]
+    next_date = extract_date_from_str(next_date_str)
+    last_date = extract_date_from_str(last_date_str)
+    return (next_date, last_date)
+
+
+# ---------------------- 6. 样式创建函数 ----------------------
 def create_styles():
     styles = {}
-    # 基础样式
     base_style = xlwt.XFStyle()
-    font = xlwt.Font()
+    font = xlwt.Font();
     font.height = 9 * 20
     base_style.font = font
     styles["base"] = base_style
 
-    # 表头居中
-    header_center = xlwt.XFStyle()
+    header_center = xlwt.XFStyle();
     header_center.font = font
-    align_header = xlwt.Alignment()
-    align_header.horz = xlwt.Alignment.HORZ_CENTER
+    align_header = xlwt.Alignment();
+    align_header.horz = xlwt.Alignment.HORZ_CENTER;
     align_header.vert = xlwt.Alignment.VERT_CENTER
     header_center.alignment = align_header
     styles["header"] = header_center
 
-    # 百分比靠右
-    percent_right = xlwt.XFStyle()
+    percent_right = xlwt.XFStyle();
     percent_right.font = font
-    align_percent = xlwt.Alignment()
+    align_percent = xlwt.Alignment();
     align_percent.horz = xlwt.Alignment.HORZ_RIGHT
     percent_right.alignment = align_percent
     styles["percent"] = percent_right
 
-    # 策略列靠右
-    strategy_right = xlwt.XFStyle()
+    strategy_right = xlwt.XFStyle();
     strategy_right.font = font
-    align_strategy = xlwt.Alignment()
+    align_strategy = xlwt.Alignment();
     align_strategy.horz = xlwt.Alignment.HORZ_RIGHT
     strategy_right.alignment = align_strategy
     styles["strategy"] = strategy_right
 
-    # 第10行黄色背景
-    yellow_bg = xlwt.XFStyle()
+    yellow_bg = xlwt.XFStyle();
     yellow_bg.font = font
-    pattern = xlwt.Pattern()
-    pattern.pattern = xlwt.Pattern.SOLID_PATTERN
+    pattern = xlwt.Pattern();
+    pattern.pattern = xlwt.Pattern.SOLID_PATTERN;
     pattern.pattern_fore_colour = 34
     yellow_bg.pattern = pattern
     styles["yellow"] = yellow_bg
 
-    yellow_percent = xlwt.XFStyle()
-    yellow_percent.font = font
-    yellow_percent.alignment = align_percent
-    yellow_percent.pattern = pattern
-    styles["yellow_percent"] = yellow_percent
+    styles["yellow_percent"] = xlwt.XFStyle();
+    styles["yellow_percent"].font = font;
+    styles["yellow_percent"].alignment = align_percent;
+    styles["yellow_percent"].pattern = pattern
+    styles["yellow_strategy"] = xlwt.XFStyle();
+    styles["yellow_strategy"].font = font;
+    styles["yellow_strategy"].alignment = align_strategy;
+    styles["yellow_strategy"].pattern = pattern
 
-    yellow_strategy = xlwt.XFStyle()
-    yellow_strategy.font = font
-    yellow_strategy.alignment = align_strategy
-    yellow_strategy.pattern = pattern
-    styles["yellow_strategy"] = yellow_strategy
-
-    # 汇总行居中
-    summary_style = xlwt.XFStyle()
+    summary_style = xlwt.XFStyle();
     summary_style.font = font
-    align_summary = xlwt.Alignment()
+    align_summary = xlwt.Alignment();
     align_summary.horz = xlwt.Alignment.HORZ_CENTER
     summary_style.alignment = align_summary
     styles["summary"] = summary_style
 
-    # 总累积仓位%靠右
-    total_percent_right = xlwt.XFStyle()
+    total_percent_right = xlwt.XFStyle();
     total_percent_right.font = font
-    align_total = xlwt.Alignment()
+    align_total = xlwt.Alignment();
     align_total.horz = xlwt.Alignment.HORZ_RIGHT
     total_percent_right.alignment = align_total
     styles["total_percent"] = total_percent_right
 
-    yellow_total_percent = xlwt.XFStyle()
-    yellow_total_percent.font = font
-    yellow_total_percent.alignment = align_total
-    yellow_total_percent.pattern = pattern
-    styles["yellow_total_percent"] = yellow_total_percent
+    styles["yellow_total_percent"] = xlwt.XFStyle();
+    styles["yellow_total_percent"].font = font;
+    styles["yellow_total_percent"].alignment = align_total;
+    styles["yellow_total_percent"].pattern = pattern
 
-    # 日期列靠右
-    date_right = xlwt.XFStyle()
+    date_right = xlwt.XFStyle();
     date_right.font = font
-    align_date = xlwt.Alignment()
+    align_date = xlwt.Alignment();
     align_date.horz = xlwt.Alignment.HORZ_RIGHT
     date_right.alignment = align_date
     styles["date_right"] = date_right
 
-    yellow_date_right = xlwt.XFStyle()
-    yellow_date_right.font = font
-    yellow_date_right.alignment = align_date
-    yellow_date_right.pattern = pattern
-    styles["yellow_date_right"] = yellow_date_right
+    styles["yellow_date_right"] = xlwt.XFStyle();
+    styles["yellow_date_right"].font = font;
+    styles["yellow_date_right"].alignment = align_date;
+    styles["yellow_date_right"].pattern = pattern
 
     return styles
 
 
+# ---------------------- 7. Sheet写入函数（支持分红基特殊排序） ----------------------
 def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_sheet=False,
-                     summary_data=None, summary_percent=None, total_capital=500000, is_dividend_sheet=False):
-    # 列宽配置
+                     summary_data=None, summary_percent=None, total_capital=500000, is_dividend_sheet=False,
+                     is_fund_sheet=False):
+    # 列宽配置（包含日期列）
     col_widths = {
         0: 8, 1: 13, 2: 8, 3: 8, 4: 10, 5: 9, 6: 6, 7: 12,
         8: 10, 9: 12, 10: 18, 11: 22
@@ -190,8 +217,8 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
     for col_idx, width in col_widths.items():
         sheet.col(col_idx).width = width * 256
 
-    # 表头
-    if is_dividend_sheet:
+    # 表头配置
+    if is_fund_sheet or is_dividend_sheet:
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "下期新分红日期", "去年对应分红日期"]
     else:
@@ -201,14 +228,19 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
     for col_idx, header in enumerate(headers):
         sheet.write(0, col_idx, header, styles["header"])
 
-    # 策略sheet数据处理
+    # 策略sheet数据排序
     if is_strategy_sheet and data_list:
-        if is_dividend_sheet:
-            sorted_strategy_data = sorted(data_list, key=get_dividend_sort_key)
+        if is_fund_sheet:
+            # 分红基：先下期日期升序，待定则按去年日期升序
+            sorted_strategy_data = sorted(data_list, key=get_fund_dividend_sort_key)
+        elif is_dividend_sheet:
+            # 分红股：原有日期排序逻辑
+            sorted_strategy_data = sorted(data_list, key=get_stock_dividend_sort_key)
         else:
+            # 其他策略：按金额降序
             sorted_strategy_data = sorted(data_list, key=lambda x: x[1]["金额"], reverse=True)
 
-        # 重新计算排名、累积金额
+        # 重新计算累积和排名
         strategy_cumulative = 0
         strategy_rank = 1
         processed_data = []
@@ -226,7 +258,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
         code, info, strategy, rank, cumulative, total_cumulative_percent = item
         sheet.row(row_idx).height = row_height
 
-        # 区分第10行（黄色背景）
+        # 黄色行（第10行）样式
         if rank == 10:
             sheet.write(row_idx, 0, code, styles["yellow"])
             sheet.write(row_idx, 1, info["名称"], styles["yellow"])
@@ -239,12 +271,17 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             sheet.write(row_idx, 8, f"{total_cumulative_percent}%", styles["yellow_total_percent"])
             sheet.write(row_idx, 9, strategy, styles["yellow_strategy"])
 
-            # 分红日期列（第10行）
-            if is_dividend_sheet:
+            # 分红基/分红股日期列（黄色行）
+            if is_fund_sheet:
+                dates = dividend_fund_date_dict.get(code, ["", ""])
+                sheet.write(row_idx, 10, dates[0], styles["yellow_date_right"])
+                sheet.write(row_idx, 11, dates[1], styles["yellow_date_right"])
+            elif is_dividend_sheet:
                 dates = dividend_date_dict.get(code, ["", ""])
                 sheet.write(row_idx, 10, dates[0], styles["yellow_date_right"])
                 sheet.write(row_idx, 11, dates[1], styles["yellow_date_right"])
         else:
+            # 普通行样式
             sheet.write(row_idx, 0, code, styles["base"])
             sheet.write(row_idx, 1, info["名称"], styles["base"])
             sheet.write(row_idx, 2, info["总数量"], styles["base"])
@@ -256,31 +293,32 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             sheet.write(row_idx, 8, f"{total_cumulative_percent}%", styles["total_percent"])
             sheet.write(row_idx, 9, strategy, styles["strategy"])
 
-            # 分红日期列（普通行）
-            if is_dividend_sheet:
+            # 分红基/分红股日期列（普通行）
+            if is_fund_sheet:
+                dates = dividend_fund_date_dict.get(code, ["", ""])
+                sheet.write(row_idx, 10, dates[0], styles["date_right"])
+                sheet.write(row_idx, 11, dates[1], styles["date_right"])
+            elif is_dividend_sheet:
                 dates = dividend_date_dict.get(code, ["", ""])
                 sheet.write(row_idx, 10, dates[0], styles["date_right"])
                 sheet.write(row_idx, 11, dates[1], styles["date_right"])
         row_idx += 1
 
-    # 汇总行（非策略sheet）
+    # 汇总行（仅总仓位sheet）
     if not is_strategy_sheet and summary_data and summary_percent:
         row_idx += 1
-        # 策略名称行
         name_row = row_idx + 1
         sheet.row(name_row).height = row_height
         col_idx = 0
         for name in summary_data.keys():
             sheet.write(name_row, col_idx, name, styles["summary"])
             col_idx += 1
-        # 金额行
         amount_row = name_row + 1
         sheet.row(amount_row).height = row_height
         col_idx = 0
         for amt in summary_data.values():
             sheet.write(amount_row, col_idx, amt, styles["summary"])
             col_idx += 1
-        # 仓位%行
         percent_row = amount_row + 1
         sheet.row(percent_row).height = row_height
         col_idx = 0
@@ -289,11 +327,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             col_idx += 1
 
 
-# ---------------------- 数据读取+填充分红股基础信息 ----------------------
-# 读取原始文件
+# ---------------------- 8. 数据读取与处理 ----------------------
 old_workbook = xlrd.open_workbook("1234.xls")
 position_dict = {}
 
+# 读取原始数据
 for sheet_name in ["01", "02", "03", "04"]:
     sheet = old_workbook.sheet_by_name(sheet_name)
     for row_idx in range(1, sheet.nrows):
@@ -301,62 +339,36 @@ for sheet_name in ["01", "02", "03", "04"]:
         name = sheet.cell_value(row_idx, 1)
         count_val = sheet.cell_value(row_idx, 2)
         price_val = sheet.cell_value(row_idx, 3)
-
         if "银华日利" in name:
             continue
-
-        # 数据类型转换
         count = float(count_val) if count_val else 0.0
         price = float(price_val) if price_val else 0.0
-
-        # 代码补0至6位
         try:
             code_str = str(int(float(code)))
             code = code_str.zfill(6)
         except:
             code = str(code)
-
-        # 累加数量
         if code in position_dict:
             position_dict[code]["总数量"] += count
         else:
             position_dict[code] = {"名称": name, "总数量": count, "当前价": price}
 
-# ---------------------- 填充分红股基础信息 ----------------------
-for code, strat in strategy_dict.items():
-    if strat == "分红股":
-        # 若原始文件无该标的，从基础信息字典填充
-        if code not in position_dict:
-            base_info = dividend_stock_base_info.get(code, {"名称": "", "数量": 0.0, "当前价": 0.0})
-            position_dict[code] = {
-                "名称": base_info["名称"],
-                "总数量": base_info["数量"],
-                "当前价": base_info["当前价"],
-                "金额": 0,
-                "仓位百分比": "0.0%"
-            }
-        # 排除600219
-        elif code == "600219":
-            del position_dict[code]
-
-# 计算金额、仓位百分比
+# 计算金额和仓位百分比
 total_capital = 500000
 for code, info in position_dict.items():
     info["金额"] = int(info["总数量"] * info["当前价"])
     pct = (info["金额"] / total_capital) * 100
     info["仓位百分比"] = f"{round(pct, 1)}%"
 
-# 排序+预处理完整数据
+# 生成总数据列表（按金额降序）
 sorted_positions = sorted(position_dict.items(), key=lambda x: x[1]["金额"], reverse=True)
 full_data = []
 cumulative_amount = 0
 rank = 1
 for code, info in sorted_positions:
-    if code == "600219":
-        continue
     cumulative_amount += info["金额"]
     total_cumulative_pct = round((cumulative_amount / total_capital) * 100, 1)
-    strategy = strategy_dict.get(code, "空策略")
+    strategy = strategy_dict.get(code, "空策略") or "空策略"
     full_data.append((code, info, strategy, rank, cumulative_amount, total_cumulative_pct))
     rank += 1
 
@@ -368,33 +380,49 @@ for item in full_data:
 # 计算策略汇总
 strategy_total_amount = {k: sum([i[1]["金额"] for i in v]) for k, v in strategy_groups.items()}
 strategy_total_percent = {k: round((v / total_capital) * 100, 1) for k, v in strategy_total_amount.items()}
-sorted_strategy_names = sorted(strategy_total_amount.keys(), key=lambda x: strategy_total_amount[x], reverse=True)
+
+# 策略排序（按指定顺序）
+strategy_order = [
+    "分红股", "分红基", "reit", "业绩反转", "小盘猛牛",
+    "热点发展", "配债策略", "涨停回调", "可转债",
+    "套利基", "超跌基", "海外基", "空策略"
+]
+order_dict = {strategy: idx for idx, strategy in enumerate(strategy_order)}
+sorted_strategy_names = sorted(strategy_total_amount.keys(), key=lambda x: order_dict.get(x, len(strategy_order)))
+
 summary_data = {n: strategy_total_amount[n] for n in sorted_strategy_names}
 summary_percent = {n: strategy_total_percent[n] for n in sorted_strategy_names}
 
-# 生成Excel
+# ---------------------- 9. 生成最终Excel ----------------------
 final_workbook = xlwt.Workbook(encoding="utf-8")
 styles = create_styles()
+
+# 总仓位sheet
 main_sheet_name = f"总仓位{len(sorted_strategy_names)}"
 main_sheet = final_workbook.add_sheet(main_sheet_name)
 write_sheet_data(main_sheet, full_data, styles, is_strategy_sheet=False,
                  summary_data=summary_data, summary_percent=summary_percent, total_capital=total_capital)
 
-# 生成各策略sheet
+# 各策略sheet（重点：分红基sheet标记is_fund_sheet=True）
 for strategy_name in sorted_strategy_names:
     group_data = strategy_groups[strategy_name]
     safe_name = strategy_name.replace("/", "").replace("\\", "").replace(":", "")[:31]
+    if not safe_name:
+        safe_name = "空策略"
     strategy_sheet = final_workbook.add_sheet(safe_name)
-    is_dividend = (strategy_name == "分红股")
+
+    # 标记sheet类型
+    is_fund_sheet = (strategy_name == "分红基")
+    is_dividend_sheet = (strategy_name == "分红股")
+
     write_sheet_data(strategy_sheet, group_data, styles, is_strategy_sheet=True,
-                     total_capital=total_capital, is_dividend_sheet=is_dividend)
+                     total_capital=total_capital, is_dividend_sheet=is_dividend_sheet, is_fund_sheet=is_fund_sheet)
 
 # 保存文件
 final_workbook.save("__00_总仓位.xls")
 
-# 输出日志
 print("✅ 表格生成完成！")
-print(f"   - 修正：民生银行仅保留代码600016，无重复行")
-print(f"   - 分红股标的信息完整（名称/数量/当前价匹配表格）")
-print(f"   - 分红股sheet排序规则：下期日期升序（待定后排），待定按去年日期升序")
+print(f"   - 分红基sheet排序规则：先按「下期新分红日期」升序，待定值按「去年对应分红日期」升序")
+print(f"   - 分红基已添加「下期新分红日期」「去年对应分红日期」列")
+print(f"   - 所有策略分类已按要求调整完毕")
 print(f"   - 生成文件：__00_总仓位.xls")
