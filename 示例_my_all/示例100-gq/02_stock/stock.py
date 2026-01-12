@@ -48,7 +48,8 @@ dividend_date_dict = {
     "603801": ["2025年年报 2026-04-30", "预案公布日:2025-04-29"],
     "002267": ["2025年报 2026-04-28", "预案公布日:2025-04-29"],
     "600219": ["2025年年报 2026-03-27", "预案公布日:2025-05-05"],
-    "600755": ["2025年报 2026-04-23", ""],
+    "600755": ["2025年报 2026-04-23", "--"],
+    "601006": ["2025年报 2026-04-30", "--"],
 }
 
 # ---------------------- 4. 策略字典 ----------------------
@@ -76,7 +77,7 @@ strategy_dict = {
     "000698": "业绩反转", "600339": "业绩反转", "600858": "涨停回调", "002076": "业绩反转",
     "160719": "套利基", "600777": "业绩反转", "501001": "套利基", "600738": "热点发展",
     "161031": "套利基", "165525": "套利基",  "160416": "套利基",
-    "600755": "分红股", "300506": "业绩反转",
+    "600755": "分红股", "300506": "业绩反转", "601006": "分红股",
 }
 
 # ---------------------- 5. 小盘猛牛年报日期字典 ----------------------
@@ -272,7 +273,7 @@ def create_styles():
 
 # ---------------------- 11. Sheet写入函数 ----------------------
 def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_sheet=False,
-                     summary_data=None, summary_percent=None, total_capital=500000, is_dividend_sheet=False,
+                     summary_data=None, summary_percent=None, total_capital=550000, is_dividend_sheet=False,
                      is_fund_sheet=False, is_small_cap_sheet=False, is_hot_development_sheet=False,
                      is_performance_reversal_sheet=False):
     col_widths = {
@@ -448,7 +449,7 @@ for sheet_name in ["01", "02", "03", "04"]:
         else:
             position_dict[code] = {"名称": name, "总数量": count, "当前价": price}
 
-total_capital = 500000
+total_capital = 550000
 for code, info in position_dict.items():
     info["金额"] = int(info["总数量"] * info["当前价"])
     pct = (info["金额"] / total_capital) * 100
