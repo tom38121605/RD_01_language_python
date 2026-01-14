@@ -10,7 +10,7 @@ dividend_fund_date_dict = {
     "515300": ["待定", "权益登记日:2025-06-16"],
     "159307": ["待定", "权益登记日:2025-03-17"],
     "510880": ["待定", "权益登记日:2025-01-20"],
-    "510720": ["待定", "权益登记日:2025-01-13"],
+    "510720": ["待定", "权益登记日:2025-02-13"],
     "508056": ["待定", "权益登记日:2025-04-01"],
     "515450": ["待定", "权益登记日:2025-07-14"],
     "513820": ["待定", "权益登记日:2025-01-21"],
@@ -275,7 +275,7 @@ def create_styles():
 
 # ---------------------- 11. Sheet写入函数 ----------------------
 def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_sheet=False,
-                     summary_data=None, summary_percent=None, total_capital=550000, is_dividend_sheet=False,
+                     summary_data=None, summary_percent=None, total_capital=500000, is_dividend_sheet=False,
                      is_fund_sheet=False, is_small_cap_sheet=False, is_hot_development_sheet=False,
                      is_performance_reversal_sheet=False):
     col_widths = {
@@ -451,7 +451,7 @@ for sheet_name in ["01", "02", "03", "04"]:
         else:
             position_dict[code] = {"名称": name, "总数量": count, "当前价": price}
 
-total_capital = 550000
+total_capital = 500000
 for code, info in position_dict.items():
     info["金额"] = int(info["总数量"] * info["当前价"])
     pct = (info["金额"] / total_capital) * 100
