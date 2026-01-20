@@ -23,10 +23,10 @@ while True:
         hex_byte = f"{byte:02X}"  # 单个字节转两位十六进制
         hex_list.append(hex_byte)  # 收集到列表：['AA', '42', '77', '48']
 
-    # hex_str = ' '.join(hex_list)
+    hex_str = ' '.join(hex_list)
 
     print("十六进制: ", hex_list)  # 输出： ['AA', '42', '77', '48']
-    # print("十六进制: ", hex_str)  # 输出：十六进制:  AA 42 77 48
+    print("十六进制: ", hex_str)  # 输出：十六进制:  AA 42 77 48
 
     if received_data[0] == 0xaa:
         print("x1 ", int.from_bytes(received_data[1:4], "big", signed="True"), file=f2)
