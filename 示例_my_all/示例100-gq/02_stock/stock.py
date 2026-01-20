@@ -73,19 +73,20 @@ strategy_dict = {
     "161128": "套利基", "127015": "可转债", "160216": "套利基", "160324": "套利基",
     "161032": "超跌基", "164701": "套利基", "161116": "套利基",
     "161124": "套利基", "002124": "业绩反转",
-    # 补充业绩反转股票代码（根据截图）
+    # 补充业绩反转/涨停回调股票代码（根据截图）
     "000698": "业绩反转", "600339": "业绩反转", "600858": "涨停回调", "002076": "业绩反转",
     "160719": "套利基", "600777": "业绩反转", "501001": "套利基", "600738": "热点发展",
-    "161031": "套利基", "165525": "套利基",  "160416": "套利基", "600755": "分红股",
+    "161031": "套利基", "165525": "套利基", "160416": "套利基", "600755": "分红股",
     "300506": "业绩反转", "601006": "分红股", "164824": "海外基", "002689": "业绩反转",
-     "128124": "可转债",  "002762": "业绩反转",
+    "128124": "可转债", "002762": "业绩反转",
+    "600477": "涨停回调", "300343": "业绩反转", "002424": "业绩反转",
 }
 
 # ---------------------- 5. 小盘猛牛年报日期字典 ----------------------
 small_cap_annual_report_dict = {
-    "300891": ["2025年报2026-04-21", ""],  # 小盘猛牛1
-    "605162": ["2025年报2026-04-25", ""],  # 小盘猛牛2
-    "300000": ["待定", "2024年报 2025-04-10"],  # 示例：待定日期的小盘猛牛股票
+    "300891": ["2025年报2026-04-21", ""],  # 惠云钛业
+    "605162": ["2025年报2026-04-25", ""],  # 新中港
+    "300000": ["待定", "2024年报 2025-04-10"],  # 示例：待定日期
 }
 
 # ---------------------- 6. 热点发展年报日期字典 ----------------------
@@ -111,32 +112,66 @@ performance_reversal_annual_report_dict = {
     "300506": ["2025年报 2026-04-10", ""],  # *ST名家
     "002689": ["2025年报 2026-04-29", ""],  # ST远智
     "002762": ["2025年报 2026-04-16", "--"],
+    "002424": ["2025年报 2026-04-24", "--"],
+    "300343": ["2025年报 2026-04-15", "--"],
+    "000000": ["待定", "2024年报 2025-05-10"],  # 示例：待定日期
+}
 
-    "000000": ["待定", "2024年报 2025-05-10"],  # 示例：待定日期的股票
+# ---------------------- 8. 涨停回调年报日期字典（核心） ----------------------
+limit_up_callback_annual_report_dict = {
+    "002154": ["2025年报 2026-04-25", ""],  # 报喜鸟
+    "600477": ["2025年报 2026-04-17", ""],  # 杭萧钢构
+    "600858": ["待定", "2024年报 2025-04-20"],  # 银座股份（测试：待定+去年日期）
+    "000001": ["待定", ""],  # 测试：纯待定
 }
 
 
-# ---------------------- 8. 日期解析工具函数（修复 timestamp 溢出问题） ----------------------
+# ---------------------- 9. 日期解析工具函数（关键：待定返回极大值） ----------------------
 def extract_date_from_str(date_str):
     """
-    从字符串中提取日期（处理"权益登记日:2025-01-13"等格式）
-    修复 datetime.max.timestamp() 在某些系统上的溢出问题
+    从字符串提取日期，兼容多种格式
+    - 待定/无日期 → 返回2099-12-31（极大值，升序排最后）
+    - 有效日期 → 返回datetime对象（用于排序）
     """
-    if not date_str or date_str == "待定":
-        return datetime(2099, 12, 31)  # 待定用一个极大值表示，升序时会排在最后
-    # 提取日期（兼容"2025年报 2026-04-24"格式）
+    if not date_str or date_str == "待定" or date_str == "--":
+        return datetime(2099, 12, 31)  # 待定用极大值，升序时排在最后
+
+    # 匹配 YYYY-MM-DD 格式（如：2026-04-25）
     date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
     if date_match:
         year, month, day = date_match.groups()
         return datetime(int(year), int(month), int(day))
+
+    # 匹配 YYYY/MM/DD 格式（如：2026/4/22）
     date_match = re.search(r'(\d{4})/(\d{1,2})/(\d{1,2})', date_str)
     if date_match:
         year, month, day = date_match.groups()
         return datetime(int(year), int(month), int(day))
-    return datetime(2099, 12, 31)  # 无有效日期时返回极大值
+
+    return datetime(2099, 12, 31)  # 无有效日期 → 极大值
 
 
-# ---------------------- 9. 各策略排序函数 ----------------------
+# ---------------------- 10. 涨停回调排序函数（核心逻辑：升序+待定兜底） ----------------------
+def get_limit_up_callback_sort_key(item):
+    """
+    涨停回调排序规则：
+    1. 先按「下期新年报日期」升序（早日期在前）
+    2. 若下期日期是「待定」→ 按「去年对应年报日期」升序
+    """
+    code = item[0]
+    # 获取该股票的两个日期
+    next_date_str = limit_up_callback_annual_report_dict.get(code, ["待定", ""])[0]
+    last_date_str = limit_up_callback_annual_report_dict.get(code, ["", ""])[1]
+
+    # 解析日期（待定→2099-12-31）
+    next_date = extract_date_from_str(next_date_str)
+    last_date = extract_date_from_str(last_date_str)
+
+    # 排序元组：先比下期日期，再比去年日期（元组升序=先按第一个元素，再按第二个）
+    return (next_date, last_date)
+
+
+# ---------------------- 其他策略排序函数（保留） ----------------------
 def get_fund_dividend_sort_key(item):
     """分红基排序key：先下期日期升序，待定则按去年日期升序"""
     code = item[0]
@@ -145,8 +180,9 @@ def get_fund_dividend_sort_key(item):
     last_date = extract_date_from_str(last_date_str)
     return (next_date, last_date)
 
+
 def get_stock_dividend_sort_key(item):
-    """分红股排序key（原有逻辑）"""
+    """分红股排序key"""
     code = item[0]
     next_date_str = dividend_date_dict.get(code, ["", ""])[0]
     last_date_str = dividend_date_dict.get(code, ["", ""])[1]
@@ -156,18 +192,17 @@ def get_stock_dividend_sort_key(item):
 
 
 def get_small_cap_sort_key(item):
-    """小盘猛牛排序key：先按「下期新年报日期」升序，待定则按「去年对应年报日期」升序"""
+    """小盘猛牛排序key"""
     code = item[0]
     next_date_str = small_cap_annual_report_dict.get(code, ["待定", ""])[0]
     last_date_str = small_cap_annual_report_dict.get(code, ["", ""])[1]
     next_date = extract_date_from_str(next_date_str)
     last_date = extract_date_from_str(last_date_str)
-    # 升序排序：直接返回日期（小日期在前），待定的会因极大值排在最后
     return (next_date, last_date)
 
 
 def get_hot_development_sort_key(item):
-    """热点发展排序key：先按「下期新年报日期」降序，待定则按「去年对应年报日期」降序"""
+    """热点发展排序key"""
     code = item[0]
     next_date_str = hot_development_annual_report_dict.get(code, ["待定", ""])[0]
     last_date_str = hot_development_annual_report_dict.get(code, ["", ""])[1]
@@ -177,21 +212,16 @@ def get_hot_development_sort_key(item):
 
 
 def get_performance_reversal_sort_key(item):
-    """业绩反转排序key：先按「下期新年报日期」升序，待定则按「去年对应年报日期」升序"""
+    """业绩反转排序key"""
     code = item[0]
-    # 获取下期和去年年报日期
     next_date_str = performance_reversal_annual_report_dict.get(code, ["待定", ""])[0]
     last_date_str = performance_reversal_annual_report_dict.get(code, ["", ""])[1]
-
-    # 解析日期（待定返回极大值）
     next_date = extract_date_from_str(next_date_str)
     last_date = extract_date_from_str(last_date_str)
-
-    # 升序排序：直接返回日期（小日期在前），待定的会因极大值排在最后
     return (next_date, last_date)
 
 
-# ---------------------- 10. 样式创建函数 ----------------------
+# ---------------------- 11. 样式创建函数 ----------------------
 def create_styles():
     styles = {}
     base_style = xlwt.XFStyle()
@@ -274,11 +304,12 @@ def create_styles():
     return styles
 
 
-# ---------------------- 11. Sheet写入函数 ----------------------
+# ---------------------- 12. Sheet写入函数（支持涨停回调） ----------------------
 def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_sheet=False,
                      summary_data=None, summary_percent=None, total_capital=500000, is_dividend_sheet=False,
                      is_fund_sheet=False, is_small_cap_sheet=False, is_hot_development_sheet=False,
-                     is_performance_reversal_sheet=False):
+                     is_performance_reversal_sheet=False, is_limit_up_callback_sheet=False):
+    # 列宽配置
     col_widths = {
         0: 8, 1: 13, 2: 8, 3: 8, 4: 10, 5: 9, 6: 6, 7: 12,
         8: 10, 9: 12, 10: 18, 11: 22
@@ -286,22 +317,23 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
     for col_idx, width in col_widths.items():
         sheet.col(col_idx).width = width * 256
 
-    # 表头逻辑：业绩反转新增年报日期列
+    # 表头配置（涨停回调显示年报日期列）
     if is_fund_sheet or is_dividend_sheet:
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "下期新分红日期", "去年对应分红日期"]
-    elif is_small_cap_sheet or is_hot_development_sheet or is_performance_reversal_sheet:
+    elif is_small_cap_sheet or is_hot_development_sheet or is_performance_reversal_sheet or is_limit_up_callback_sheet:
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "下期新年报日期", "去年对应年报日期"]
     else:
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略"]
 
+    # 写入表头
     sheet.row(0).height = row_height
     for col_idx, header in enumerate(headers):
         sheet.write(0, col_idx, header, styles["header"])
 
-    # 排序逻辑：各策略使用对应排序规则
+    # 策略sheet排序逻辑（核心：涨停回调用自定义排序）
     if is_strategy_sheet and data_list:
         if is_fund_sheet:
             sorted_strategy_data = sorted(data_list, key=get_fund_dividend_sort_key)
@@ -313,10 +345,13 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             sorted_strategy_data = sorted(data_list, key=get_hot_development_sort_key)
         elif is_performance_reversal_sheet:
             sorted_strategy_data = sorted(data_list, key=get_performance_reversal_sort_key)
+        elif is_limit_up_callback_sheet:
+            # 涨停回调：使用自定义排序函数（升序+待定兜底）
+            sorted_strategy_data = sorted(data_list, key=get_limit_up_callback_sort_key)
         else:
             sorted_strategy_data = sorted(data_list, key=lambda x: x[1]["金额"], reverse=True)
 
-        # 重新计算累积和排名（按新排序）
+        # 重新计算排名和累积
         strategy_cumulative = 0
         strategy_rank = 1
         processed_data = []
@@ -328,7 +363,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             strategy_rank += 1
         data_list = processed_data
 
-    # 数据行写入
+    # 写入数据行
     row_idx = 1
     for item in data_list:
         code, info, strategy, rank, cumulative, total_cumulative_percent = item
@@ -347,8 +382,13 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             sheet.write(row_idx, 8, f"{total_cumulative_percent}%", styles["yellow_total_percent"])
             sheet.write(row_idx, 9, strategy, styles["yellow_strategy"])
 
-            # 日期列写入（黄色行）
-            if is_fund_sheet:
+            # 涨停回调日期列（黄色行）
+            if is_limit_up_callback_sheet:
+                dates = limit_up_callback_annual_report_dict.get(code, ["", ""])
+                sheet.write(row_idx, 10, dates[0], styles["yellow_date_right"])
+                sheet.write(row_idx, 11, dates[1], styles["yellow_date_right"])
+            # 其他策略日期列（保留）
+            elif is_fund_sheet:
                 dates = dividend_fund_date_dict.get(code, ["", ""])
                 sheet.write(row_idx, 10, dates[0], styles["yellow_date_right"])
                 sheet.write(row_idx, 11, dates[1], styles["yellow_date_right"])
@@ -368,8 +408,9 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 dates = performance_reversal_annual_report_dict.get(code, ["", ""])
                 sheet.write(row_idx, 10, dates[0], styles["yellow_date_right"])
                 sheet.write(row_idx, 11, dates[1], styles["yellow_date_right"])
+
+        # 普通行样式
         else:
-            # 普通行样式
             sheet.write(row_idx, 0, code, styles["base"])
             sheet.write(row_idx, 1, info["名称"], styles["base"])
             sheet.write(row_idx, 2, info["总数量"], styles["base"])
@@ -381,8 +422,13 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             sheet.write(row_idx, 8, f"{total_cumulative_percent}%", styles["total_percent"])
             sheet.write(row_idx, 9, strategy, styles["strategy"])
 
-            # 日期列写入（普通行）
-            if is_fund_sheet:
+            # 涨停回调日期列（普通行）
+            if is_limit_up_callback_sheet:
+                dates = limit_up_callback_annual_report_dict.get(code, ["", ""])
+                sheet.write(row_idx, 10, dates[0], styles["date_right"])
+                sheet.write(row_idx, 11, dates[1], styles["date_right"])
+            # 其他策略日期列（保留）
+            elif is_fund_sheet:
                 dates = dividend_fund_date_dict.get(code, ["", ""])
                 sheet.write(row_idx, 10, dates[0], styles["date_right"])
                 sheet.write(row_idx, 11, dates[1], styles["date_right"])
@@ -406,7 +452,8 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
         row_idx += 1
 
     # 汇总行（仅总仓位sheet）
-    if summary_data and summary_percent:
+    if not is_strategy_sheet and summary_data and summary_percent:
+        row_idx += 1
         name_row = row_idx + 1
         sheet.row(name_row).height = row_height
         col_idx = 0
@@ -427,10 +474,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             col_idx += 1
 
 
-# ---------------------- 12. 数据读取与处理 ----------------------
+# ---------------------- 13. 数据读取与处理 ----------------------
 old_workbook = xlrd.open_workbook("1234.xls")
 position_dict = {}
 
+# 读取原始仓位数据（01-04 sheet）
 for sheet_name in ["01", "02", "03", "04"]:
     sheet = old_workbook.sheet_by_name(sheet_name)
     for row_idx in range(1, sheet.nrows):
@@ -438,30 +486,41 @@ for sheet_name in ["01", "02", "03", "04"]:
         name = sheet.cell_value(row_idx, 1)
         count_val = sheet.cell_value(row_idx, 2)
         price_val = sheet.cell_value(row_idx, 3)
+
+        # 跳过银华日利
         if "银华日利" in name:
             continue
+
+        # 数据类型转换
         count = float(count_val) if count_val else 0.0
         price = float(price_val) if price_val else 0.0
+
+        # 标准化证券代码（补零到6位）
         try:
             code_str = str(int(float(code)))
             code = code_str.zfill(6)
         except:
             code = str(code)
+
+        # 合并同代码数量
         if code in position_dict:
             position_dict[code]["总数量"] += count
         else:
             position_dict[code] = {"名称": name, "总数量": count, "当前价": price}
 
+# 计算金额和仓位百分比（总资金50万）
 total_capital = 500000
 for code, info in position_dict.items():
     info["金额"] = int(info["总数量"] * info["当前价"])
     pct = (info["金额"] / total_capital) * 100
     info["仓位百分比"] = f"{round(pct, 1)}%"
 
+# 生成总数据列表（按金额降序）
 sorted_positions = sorted(position_dict.items(), key=lambda x: x[1]["金额"], reverse=True)
 full_data = []
 cumulative_amount = 0
 rank = 1
+
 for code, info in sorted_positions:
     cumulative_amount += info["金额"]
     total_cumulative_pct = round((cumulative_amount / total_capital) * 100, 1)
@@ -469,13 +528,16 @@ for code, info in sorted_positions:
     full_data.append((code, info, strategy, rank, cumulative_amount, total_cumulative_pct))
     rank += 1
 
+# 按策略分组
 strategy_groups = defaultdict(list)
 for item in full_data:
     strategy_groups[item[2]].append(item)
 
+# 计算策略汇总金额和百分比
 strategy_total_amount = {k: sum([i[1]["金额"] for i in v]) for k, v in strategy_groups.items()}
 strategy_total_percent = {k: round((v / total_capital) * 100, 1) for k, v in strategy_total_amount.items()}
 
+# 策略显示顺序
 strategy_order = [
     "分红股", "分红基", "reit", "业绩反转", "小盘猛牛",
     "热点发展", "配债策略", "涨停回调", "可转债",
@@ -486,7 +548,7 @@ sorted_strategy_names = sorted(strategy_total_amount.keys(), key=lambda x: order
 summary_data = {n: strategy_total_amount[n] for n in sorted_strategy_names}
 summary_percent = {n: strategy_total_percent[n] for n in sorted_strategy_names}
 
-# ---------------------- 13. 生成最终Excel ----------------------
+# ---------------------- 14. 生成最终Excel ----------------------
 final_workbook = xlwt.Workbook(encoding="utf-8")
 styles = create_styles()
 
@@ -496,7 +558,7 @@ main_sheet = final_workbook.add_sheet(main_sheet_name)
 write_sheet_data(main_sheet, full_data, styles, is_strategy_sheet=False,
                  summary_data=summary_data, summary_percent=summary_percent, total_capital=total_capital)
 
-# 各策略sheet
+# 各策略sheet（关键：涨停回调标记）
 for strategy_name in sorted_strategy_names:
     group_data = strategy_groups[strategy_name]
     safe_name = strategy_name.replace("/", "").replace("\\", "").replace(":", "")[:31]
@@ -510,17 +572,18 @@ for strategy_name in sorted_strategy_names:
     is_small_cap_sheet = (strategy_name == "小盘猛牛")
     is_hot_development_sheet = (strategy_name == "热点发展")
     is_performance_reversal_sheet = (strategy_name == "业绩反转")
+    is_limit_up_callback_sheet = (strategy_name == "涨停回调")  # 涨停回调标记
 
+    # 写入策略sheet数据
     write_sheet_data(strategy_sheet, group_data, styles, is_strategy_sheet=True,
                      total_capital=total_capital, is_dividend_sheet=is_dividend_sheet,
                      is_fund_sheet=is_fund_sheet, is_small_cap_sheet=is_small_cap_sheet,
                      is_hot_development_sheet=is_hot_development_sheet,
-                     is_performance_reversal_sheet=is_performance_reversal_sheet)
+                     is_performance_reversal_sheet=is_performance_reversal_sheet,
+                     is_limit_up_callback_sheet=is_limit_up_callback_sheet)  # 传入涨停回调标记
 
 # 保存文件
 final_workbook.save("__00_总仓位.xls")
+
+# 验证提示
 print("✅ 表格生成完成！")
-# print(f"   - 小盘猛牛sheet排序规则：先按「下期新年报日期」升序，待定值按「去年对应年报日期」升序")
-# print(f"   - 热点发展sheet排序规则：先按「下期新年报日期」降序，待定值按「去年对应年报日期」降序")
-# print(f"   - 业绩反转sheet排序规则：先按「下期新年报日期」升序，待定值按「去年对应年报日期」升序")
-# print(f"   - 业绩反转/热点发展sheet已新增「下期新年报日期」「去年对应年报日期」列")
