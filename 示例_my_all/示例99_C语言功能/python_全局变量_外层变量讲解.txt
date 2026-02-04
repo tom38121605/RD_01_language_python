@@ -1,0 +1,18 @@
+# 全局变量
+global_last = 0
+
+def outer():
+    # 外层嵌套变量
+    nonlocal_last = 0
+
+    def inner():
+        global global_last       # 声明改全局变量
+        nonlocal nonlocal_last  # 声明改外层嵌套变量
+        global_last += 1
+        nonlocal_last += 1
+        print(global_last, nonlocal_last)  # 输出：1 1
+
+    inner()
+
+outer()
+

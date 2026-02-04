@@ -1,0 +1,12 @@
+
+1. 取得某文件的路径
+sdir = os.path.dirname(file_name)
+
+
+2. 把路径和文件名组合起来
+logfile = os.path.join(sdir, "log.txt")
+
+
+
+
+

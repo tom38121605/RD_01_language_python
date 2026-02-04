@@ -1,0 +1,71 @@
+
+
+1. hdf5文件用到的库
+
+   import h5py
+
+
+2. 读取hdf5文件
+
+    file_name = "data0.hdf5"
+    data_file = h5py.File(file_name, 'r')
+
+
+3. 打印出所有的group
+
+    file_name = "d:\\data0.hdf5"
+    data_file = h5py.File(file_name, 'r')
+
+    print("keys=" + f'{data_file.keys()}')  #keys返回 对象的字符串名称
+
+    print("values=" )
+    for device in data_file.values():      #values返回对象本身，如group或dataset
+        print(device)
+
+
+4. 读取group里面的dataset
+
+    file_name = "data0.hdf5"
+    data_file = h5py.File(expanduser(file_name), 'r')
+
+    dataset = data_file['/Device_3528137102_0/Theta']      
+
+    print(dataset)
+    print("数据集内容：", dataset[:2] )       # 输出该数集的所有内容
+    print("数据集形状：", dataset.shape)      # 输出该数集的行列数和维度， (17704, 1)
+    print("数据集数据类型：", dataset.dtype)   # 输出该数集的内容，uint16
+
+
+5. 遍历打印出所有的group，及里面所有的dataset
+
+    file_name = "data0.hdf5"
+    data_file = h5py.File(file_name, 'r')
+
+    for device in data_file.values():  # device是group
+        print(f'group名：{device.name}')
+
+        for ds in device.values():   # ds是数集
+            print(f"数据集名：{os.path.basename(ds.name)}")
+            print(f"{ds[:2]}")
+
+
+6. 判断group里面是否含有Position的数集， 对含有Position的group进行下一步操作
+
+    file_name = "data0.hdf5"
+    data_file = h5py.File(expanduser(file_name), 'r')
+
+    print("文件中的group：", data_file.keys())   # keys返回 group的字符串名称， values是group本身
+
+    for device in data_file.values():  # device是group
+        if "Position" in device:
+            print(f' device:{device.name}')
+            timestamp_full = device['Timestamp']
+            print(timestamp_full)
+
+
+
+9. keys和values的区别
+
+   data_file.keys()    --  #group的字符串名称
+   data_file.values()  --  #group的对象本身
+
