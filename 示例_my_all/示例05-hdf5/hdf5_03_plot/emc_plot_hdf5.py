@@ -1,4 +1,4 @@
-
+﻿
 import h5py
 import numpy as np
 import matplotlib.pyplot as plt
@@ -429,7 +429,7 @@ def main():
     # # print("step1", step1 )   # [ True  True  True  True]
     #
     # step2 = np.where(step1)  # 2维数组
-    # # print("step2", step2)    # array([0, 1, 2, 3])
+    # # print("step2", step2)    # (  array([0, 1, 2, 3]),  )
     #
     # t0_idx1 = step2[0]  # 输出：[0, 1, 2, 3]
     # # print('t0_device_idx=', t0_idx1 )
