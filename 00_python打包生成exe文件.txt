@@ -1,0 +1,13 @@
+
+1. 安装 Python 并勾选「Add Python to PATH」
+
+2. pip install pyinstaller
+
+3. 打开 CMD / 终端，切换到hello.py所在的文件夹
+
+4. pyinstaller -F helloworld.py
+
+5. 不加-F，会生成一堆依赖文件，新手容易搞混
+
+
+
