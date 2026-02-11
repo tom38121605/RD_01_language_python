@@ -1,14 +1,9 @@
-﻿
-0. hdf5文件里面的数据列，行，层
-   。双击dataset数据集， 看数据集表格的上面有没有左右箭头
-       1）. 如果没有左右箭头，则是二维数组，表格的列就是数组的列，表格的行就是数组的行，如Theta数集， 数组的面积是17704 x 1
-       2）. 如果有左右箭头，是三维数组，表格外边上面的列是数组的列，表格里面的列是数组的行，表格里面的行是数组的层，如Indicatior数集，数组的体积是 17704 x 1 x1
-             如Position数集，数组的体积是 17704 x 1 x3
-             如Mag数集，数组的体积是 17704 x 3 x3
 
 
 1. hdf5文件用到的库
+
    import h5py
+
 
 2. 读取hdf5文件
 
@@ -67,11 +62,10 @@
             timestamp_full = device['Timestamp']
             print(timestamp_full)
 
+
+
 9. keys和values的区别
 
    data_file.keys()    --  #group的字符串名称
    data_file.values()  --  #group的对象本身
-
-10. 取得group的名称
-    sname =device.name     #   "/Device_3528137102_1"
 
