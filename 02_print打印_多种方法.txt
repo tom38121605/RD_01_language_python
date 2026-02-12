@@ -1,0 +1,8 @@
+   print("\ntimestamp", timestamp)
+
+   print("delta=", delta[:3])
+
+   print("Timestamp=", f"{AAA}") 
+
+  print('device={} time={}'.format(device.name, time_array[row]) )
+   print('device='+f'{device.name}' + ' time=' + f'{time_array[row]}' )
