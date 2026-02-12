@@ -4,5 +4,8 @@
 
    print("Timestamp=", f"{AAA}") 
 
-  print('device={} time={}'.format(device.name, time_array[row]) )
+   print('device={} time={}'.format(device.name, time_array[row]) )
+
    print('device='+f'{device.name}' + ' time=' + f'{time_array[row]}' )
+
+
