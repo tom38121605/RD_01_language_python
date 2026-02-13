@@ -1,4 +1,22 @@
 ﻿
+===============================================
+
+同样的一些数字，定义在()里就是元组，定义在[]里就是列表
+
+
+t = (1, 2, 3)  # 元组
+
+l = [1, 2, 3]  # 列表
+
+t = (100,)  # 这是元组（哪怕只有1个数）
+
+t错 = (100) # 这只是数字100，不是元组
+
+
+
+-----------------------------------------------
+
+
 0. numpy的第三方库
    import numpy as np
 
@@ -154,13 +172,16 @@
 
 ================================
 
+   num_chunks = 3
+   chunk_size =5000
 
-   AAA = data[:num_chunks * chunk_size, 0].reshape(-1, chunk_size)
+   print("\nshape-data=", np.shape(data))  # (17685, 3)     //117685行，3列 easy
+
+   AAA = data[0 : 3 * 5000, 0].reshape(-1, 5000)
 
    x_avg = np.mean(AAA, axis=1)
 
    // x_avg = np.mean(data[:num_chunks * chunk_size, 0].reshape(-1, chunk_size), axis=1)
-
 
 
 
