@@ -1,0 +1,86 @@
+﻿ 
+0. plot使用到的第三方库
+   import matplotlib.pyplot as plt
+
+1. 不创建子图，直接在总画布上画x1曲线     //x1曲线颜色，x轴范围，y轴范围
+
+        plt.plot(x1points, color='red')
+
+
+        plt.axis([0, 100, -1000, 1000])  #设置x轴范围，y轴范围
+ 
+       plt.show()
+
+
+2. 创建和显示单个子图，在单个子图上画正弦波和余弦波 //创建子图，画折线，设x，y轴标签，标题，线条标签，显示图形
+
+    subpic = plt.subplot()   //  #创建子图subpic
+ 
+    x = np.linspace(0, 20, 201)  # 0到10的101个点
+   subpic.plot(x, np.sin(x), label='sin(x)', color='red')  # 画正弦曲线
+   subpic.plot(x, np.cos(x), label='cos(x)', color='green')  # 画余弦曲线
+
+   subpic.set_xlabel('X')  # 设X轴标签
+   subpic.set_ylabel('Y')  # 设Y轴标签
+   subpic.set_title('Sine Cosine Graph')  # 设标题  
+   subpic.legend(loc='lower left')  # 把线条的标签显示在左下角
+
+   plt.show()  # 显示图形
+
+
+3. 创建和显示多个子图，在多个子图上画正弦波和余弦波
+
+   # 1. 准备数据
+   x = np.linspace(0, 20, 201)
+   y_sin = np.sin(x)
+   y_cos = np.cos(x)
+
+   # 2. 创建子图
+   #    plt.subplot(rows, columns, index)
+   #    index 从 1 开始
+   subpic1 = plt.subplot(1, 2, 1)  # 1行，2列，第1个子图
+   subpic2 = plt.subplot(1, 2, 2)  # 1行，2列，第2个子图
+
+   # 3. 在第一个子图 (subpic1) 上绘制和设置
+   subpic1.plot(x, y_sin, color='red', label='sin(x)')
+   subpic1.set_title('Sine Wave')  # 设置子图1的标题
+   subpic1.set_xlabel('X Axis')    # 设置子图1的X轴标签
+   subpic1.set_ylabel('Y Axis')    # 设置子图1的Y轴标签
+   subpic1.legend()                # 显示子图1的图例
+   subpic1.grid(True)              # 显示子图1的网格
+
+   # 4. 在第二个子图 (subpic2) 上绘制和设置
+   subpic2.plot(x, y_cos, color='green', label='cos(x)')
+   subpic2.set_title('Cosine Wave')# 设置子图2的标题
+   subpic2.set_xlabel('X Axis')    # 设置子图2的X轴标签
+   # 注意：这里可以不设置Y轴标签，因为和左边对齐
+   subpic2.legend()                # 显示子图2的图例
+   subpic2.grid(True)              # 显示子图2的网格
+
+   # 5. 调整子图间距，防止标签重叠（可选但推荐）
+   plt.tight_layout()
+
+   # 6. 统一显示所有子图
+   plt.show()
+
+
+
+
+7. legend对曲线添加说明
+
+   # 创建6行1列子图（你之前问过的写法）
+   fig, ax = plt.subplots(6, 1, figsize=(10, 8))
+
+   # 模拟6条曲线的数据
+   x = np.linspace(0, 10, 100)
+   ax[2].plot(x, x, label='x')          # 第1条：x
+   ax[2].plot(x, x+1, label='y')        # 第2条：y
+   ax[2].plot(x, x+2, label='z')        # 第3条：z
+   ax[2].plot(x, x/2, label='x filtered')  # 第4条：x filtered
+   ax[2].plot(x, x/2+1, label='y filtered')# 第5条：y filtered
+   ax[2].plot(x, x/2+2, label='z filtered')# 第6条：z filtered
+
+   # 核心代码：加图例，放右侧
+   ax[2].legend(['x', 'y', 'z', 'x filtered', 'y filtered', 'z filtered'], loc='right')
+
+   plt.show()
