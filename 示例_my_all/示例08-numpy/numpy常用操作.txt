@@ -3,14 +3,26 @@
    import numpy as np
 
 1. 创建一个 NumPy 二维数组
-   np_array = np.array( [ [0, -1] ] )
+   idata= np.array( [ [0, -1] ] )  //把二维队列转换成np数组
+   idata= np.array(t0_all, dtype=np.int64)   //把队列转换成np数组，数据类型为int64
+
    print("NumPy 数组:", np_array)
    print("类型:", type(np_array))  # <class 'numpy.ndarray'>
    print("形状:", np_array.shape)  # (1, 2) -> 1 行，2 列
    print("维度:", np_array.ndim)   # 2 -> 二维
 
 
-2. np.stack((x,y,z), axis=1)对数组的拼接的就讲解：
+2.  判断np数组的数据类型
+
+   type = np.int64   if np.issubdtype( idata.  dtype,  np.integer)   else   np.double
+   idata= np.array( idata, dtype=np.int64)  
+
+3.  np.shape求np数组的面积，体积或形状
+    idata= np.array( [ [0, -1] ] )  //把二维队列转换成np数组
+    AAA = np.shape(idata)   // (1, 2)   //1行2列
+
+
+4. np.stack((x,y,z), axis=1)对数组的拼接的就讲解：
    分析： axis=1，表示xyz各占一列
              axis=0，表示xyz各占一行
 
@@ -31,7 +43,7 @@
    #  [5 6]] # z行
 
 
-3. flatten的讲解   //把多维数组，展开成一维数组，再按索引列表取值
+5. flatten的讲解   //把多维数组，展开成一维数组，再按索引列表取值
 
    delta = np.array([[10000, 20000], [100000, 80000]])  # 2行2列的二维数组
    ts_event_idx = [0, 3]   
@@ -41,14 +53,124 @@
    # 输出：[10000 80000]
 
 
+6.  在np数组里面，插入一个元素
+   idata = np.array( [2, 2, ... ] )
+   time_passed1 = np.insert( idata, 0, 1)    //在数组idata，0的位置，插入一个1的数据 //# [0 2 2 ...]
 
 
-7. np.linspace的讲解
+7. 对np数组里面的值，依次相加累积，生成一个新的数组
+   time_passed2 = np.cumsum(time_passed1)    //# [0 2 4 ...]
 
-ccc = np.linspace(0, aaa , bbb)  // 0 -- 起始值， aaa-1-- 终止值，bbb --  等分个数
 
-ccc = np.linspace(0, 9, 4)
-print(ccc)  # 输出：[0. 3. 6. 9.]
+8. np.linspace对首尾数字等分的讲解
+   ccc = np.linspace(0, aaa , bbb)  // 0 -- 起始值， aaa-1-- 终止值，bbb --  等分个数
+
+   ccc = np.linspace(0, 9, 4)
+   print(ccc)  # 输出：[0. 3. 6. 9.]
+
+
+9. 创建全是1的数组
+    isize= 20
+    AAA = np.ones(isize)   // 创建一个全是1的列表， 里面有20个1
+    BBB= AAA / isize        // 20个元素变成 1/20
+
+    # print("\nBBB=", BBB)
+
+
+10.  讲解np.convolve() 是 NumPy 里做卷积计算的函数，大白话就是「用一个数组（核）去 “扫” 另一个数组，计算加权求和」，最常用在平滑数据
  
+    isize= 3
+    AAA = np.ones(isize)         //[ 1, 1, 1 ]
+
+
+
+
+   idata =  [1, 2, 3, 4, 5 ]
+
+
+   icore= AAA                   //[ 1, 1, 1 ]
+
+
+
+
+   #结果数组result会少isize-1个数据
+   result = np.convolve(idata, icore= , mode='valid)    // mode='valid'：只算能完整扫到的部分 
+   print(result)  
+   # 输出：[6 9 12]
+
+
+11. 求平均值
+
+   # 例1：一维数组求平均（最基础）
+   a = np.array([1, 2, 3, 4, 5])
+   avg1 = np.mean(a)
+   print(avg1)  # 输出：3.0（(1+2+3+4+5)/5=3）
+
+   # 例2：二维数组求总平均（默认算所有数）
+   b = np.array([[1,2], [3,4]])
+   avg2 = np.mean(b)
+   print(avg2)  # 输出：2.5（(1+2+3+4)/4=2.5）
+
+   # 例3：二维数组按行求平均（axis = 1）
+   b = np.array([[1,2], [3,4]])
+   avg_row = np.mean(b, axis=1)   
+   print(avg_row)  
+   # 输出：[1.5 3.5]    // 第一行(1+2)/2=1.5，第二行(3+4)/2=3.5 
+
+   # 例4：二维数组按列求平均（axis = 0）
+   b = np.array([[1,2], [3,4]])
+   avg_col = np.mean(b, axis=0)  
+   print(avg_col)  
+   # 输出：[2. 3.]     //第一列(1+3)/2=2，第二列(2+4)/2=3 
+
+
+12.改变数组形状， 韩信点兵
+
+   # 原始一维数组（6个数）
+   a = np.array([1,2,3,4,5,6])
+
+   # 例1：改成2行3列的二维数组
+   b = a.reshape(2, 3)
+   print(b)
+   # 输出：
+   # [[1 2 3]
+   #  [4 5 6]]
+
+   # 例2：改成3行2列的二维数组
+   c = a.reshape(3, 2)
+   print(c)
+   # 输出：
+   # [[1 2]
+   #  [3 4]
+   #  [5 6]]
+
+   # 例3：懒人写法（-1自动算行数/列数）
+   d = a.reshape(-1, 2)  # 固定列数2，行数自动算（6/2=3行）
+   print(d)  # 和例2结果一样
+
+   e = a.reshape(2, -1)  # 固定行数2，列数自动算（6/2=3列）
+   print(e)  # 和例1结果一样
+
+
+================================
+
+
+   AAA = data[:num_chunks * chunk_size, 0].reshape(-1, chunk_size)
+
+   x_avg = np.mean(AAA, axis=1)
+
+   // x_avg = np.mean(data[:num_chunks * chunk_size, 0].reshape(-1, chunk_size), axis=1)
+
+
+
+
+
+
+
+
+ 
+
+
+
 
  
