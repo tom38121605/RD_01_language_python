@@ -84,7 +84,6 @@
    plt.show()
 
 
-
 8. 关于plot是画点，还是画折线
 
    ax[0].plot(x,y) → 只画折线
@@ -99,7 +98,16 @@ plot(y) → 只画折线
    ax[0].plot(y,'.') → 只画点
 
 
+9.  创建一个画布，和其中6个子图，画布大小10x12， 画布间距 7，画布标题
+
+    fig, ax = plt.subplots(6, 1, figsize = (10, 12))  # 创建一个画布，6行1列六个子图，画布大小10x12
+        fig.tight_layout(pad=7)   # 画布间距 7
+        AAA = 'device='+f'{device.name}' + ' time=' + f'{time_array[row]}'
+        fig.suptitle(AAA) 
 
 
+10. 保存画布到图片
+
+     fig.savefig( '01.png')
 
 
