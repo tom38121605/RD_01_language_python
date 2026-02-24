@@ -64,8 +64,6 @@
    plt.show()
 
 
-
-
 7. legend对曲线添加说明
 
    # 创建6行1列子图（你之前问过的写法）
@@ -84,3 +82,24 @@
    ax[2].legend(['x', 'y', 'z', 'x filtered', 'y filtered', 'z filtered'], loc='right')
 
    plt.show()
+
+
+
+8. 关于plot是画点，还是画折线
+
+   ax[0].plot(x,y) → 只画折线
+
+   ax[0].plot(x,y,'.') → 只画点
+
+
+   ax[0].
+
+plot(y) → 只画折线
+
+   ax[0].plot(y,'.') → 只画点
+
+
+
+
+
+
