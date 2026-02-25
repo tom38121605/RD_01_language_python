@@ -134,12 +134,35 @@ performance_reversal_annual_report_dict = {
     "002693": ["2025年报 2026-04-29", "--"],
     "002305": ["2025年报 2026-04-27", "--"],
     "000000": ["待定", "--"],  # 测试：纯待定
+    "000929": ["2025年报 2026-03-31", ""],  # ST兰黄
+    "603789": ["2025年报 2026-04-25", ""],
+    "300173": ["2025年报 2026-04-29", ""],
+    "600421": ["2025年报 2026-04-30", ""],
+    "300366": ["2025年报 2026-04-24", ""],
+    "300460": ["2025年报 2026-04-27", ""],
 }
 
-# ---------------------- 新增：8. 业绩反转处罚摘帽申请日期字典 ----------------------
+# ---------------------- 8. 业绩反转申请摘帽日期字典（已清理所有空格） ----------------------
 performance_reversal_delisting_application_dict = {
-    "000698": "2025年报 2026-11-28",  # ST沈化（指定日期）
-    # 其他股票可按需补充，格式："证券代码": "摘帽申请日期"，无数据留空或不添加
+    "000929": "2025年报 2026-03-31",  # ST兰黄
+    "002496": "2025年报 2026-03-31",
+    "000595": "2025年报 2026-04-18",
+    "300211": "2025年报 2026-04-24",
+    "603789": "2025年报 2026-04-25",
+    "002693": "2025年报 2026-04-29",
+    "002076": "2025年报 2026-04-29",
+    "600735": "2025年报 2026-04-30",
+    "600421": "2025年报 2026-04-30",
+    "000903": "2026-08-08",
+    "300527": "2026-09-16",
+    "300366": "2026-10-24",
+    "603595": "2026-11-13",
+    "002122": "2026-11-13",
+    "000698": "2026-11-29",
+    "002689": "2026-12-20",
+    "600169": "2026-12-29",
+    "300460": "2027-01-12",
+    "300173": "2027-02-06",  # 关键日期：2027-2-6
 }
 
 # ---------------------- 9. 涨停回调年报日期字典 ----------------------
@@ -160,6 +183,8 @@ def extract_date_from_str(date_str):
     """
     if not date_str or date_str == "待定" or date_str == "--":
         return datetime(2099, 12, 31)  # 待定用极大值，升序时排在最后
+    # 清理字符串所有多余空格
+    date_str = date_str.strip()
     # 匹配 YYYY-MM-DD 格式（如：2026-04-25）
     date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
     if date_match:
@@ -172,8 +197,15 @@ def extract_date_from_str(date_str):
         return datetime(int(year), int(month), int(day))
     return datetime(2099, 12, 31)  # 无有效日期 → 极大值
 
+# ---------------------- 11. 摘帽申请日期解析函数（新增空格清理） ----------------------
+def extract_delisting_apply_date(code):
+    """提取摘帽申请日期，兼容空值/待定，新增【空格清理】逻辑"""
+    delisting_date_str = performance_reversal_delisting_application_dict.get(code, "")
+    delisting_date_str = delisting_date_str.strip()  # 清理字符串前后所有空格
+    return extract_date_from_str(delisting_date_str)
 
-# ---------------------- 11. 各策略排序函数 ----------------------
+
+# ---------------------- 12. 各策略排序函数 ----------------------
 def get_fund_dividend_sort_key(item):
     """分红基排序key：先下期日期升序，待定则按去年日期升序"""
     code = item[0]
@@ -214,13 +246,17 @@ def get_hot_development_sort_key(item):
 
 
 def get_performance_reversal_sort_key(item):
-    """业绩反转排序key"""
+    """业绩反转排序key：优先按摘帽申请日期升序，无则按年报日期升序，无摘帽日期统一排最后"""
     code = item[0]
+    # 1. 优先按摘帽申请日期升序（已自动处理空格，无数据则为2099-12-31）
+    delisting_apply_date = extract_delisting_apply_date(code)
+    # 2. 摘帽日期为2099-12-31时，按年报日期升序补充排序；否则年报日期仅为次要维度
     next_date_str = performance_reversal_annual_report_dict.get(code, ["待定", ""])[0]
     last_date_str = performance_reversal_annual_report_dict.get(code, ["", ""])[1]
     next_date = extract_date_from_str(next_date_str)
     last_date = extract_date_from_str(last_date_str)
-    return (next_date, last_date)
+    # 核心：摘帽日期为极大值时，年报日期才起主要作用；否则年报日期仅为辅助
+    return (delisting_apply_date, next_date, last_date)
 
 
 def get_limit_up_callback_sort_key(item):
@@ -233,7 +269,7 @@ def get_limit_up_callback_sort_key(item):
     return (next_date, last_date)
 
 
-# ---------------------- 12. 新增：合并股票策略排序函数 ----------------------
+# ---------------------- 13. 新增：合并股票策略排序函数 ----------------------
 def get_combined_stock_sort_key(item):
     """
     合并股票sheet排序规则：
@@ -267,7 +303,7 @@ def get_combined_stock_sort_key(item):
     return (priority, date_key)
 
 
-# ---------------------- 13. 样式创建函数（新增摘帽日期列样式） ----------------------
+# ---------------------- 14. 样式创建函数（新增摘帽日期列样式） ----------------------
 def create_styles():
     styles = {}
     base_style = xlwt.XFStyle()
@@ -359,7 +395,7 @@ def create_styles():
     return styles
 
 
-# ---------------------- 14. Sheet写入函数（增强版：新增摘帽申请日期列） ----------------------
+# ---------------------- 15. Sheet写入函数（增强版：新增摘帽申请日期列） ----------------------
 def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_sheet=False,
                      summary_data=None, summary_percent=None, total_capital=500000, is_dividend_sheet=False,
                      is_fund_sheet=False, is_small_cap_sheet=False, is_hot_development_sheet=False,
@@ -379,7 +415,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                    "总累积仓位%", "策略", "下期新分红日期", "去年对应分红日期"]
     elif is_performance_reversal_sheet:  # 业绩反转sheet表头（新增第12列）
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
-                   "总累积仓位%", "策略", "下期新年报日期", "去年对应年报日期", "处罚摘帽申请日期"]
+                   "总累积仓位%", "策略", "下期新年报日期", "去年对应年报日期", "摘帽申请日期"]
     elif is_combined_stock_sheet:  # 合并股票sheet表头
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "下期新年报/分红日期", "去年对应年报/分红日期"]
@@ -511,7 +547,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 dates = performance_reversal_annual_report_dict.get(code, ["", ""])
                 sheet.write(row_idx, 10, dates[0], styles["date_right"])
                 sheet.write(row_idx, 11, dates[1], styles["date_right"])
-                # 新增摘帽申请日期列（000698显示指定日期，其他为空）
+                # 新增摘帽申请日期列
                 delisting_date = performance_reversal_delisting_application_dict.get(code, "")
                 sheet.write(row_idx, 12, delisting_date, styles["delisting_apply_right"])
             # 其他策略日期列（保留）
@@ -576,7 +612,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             col_idx += 1
 
 
-# ---------------------- 15. 数据读取与处理 ----------------------
+# ---------------------- 16. 数据读取与处理（新增代码空格清理） ----------------------
 old_workbook = xlrd.open_workbook("1234.xls")
 position_dict = {}
 
@@ -597,12 +633,12 @@ for sheet_name in ["01", "02", "03", "04"]:
         count = float(count_val) if count_val else 0.0
         price = float(price_val) if price_val else 0.0
 
-        # 标准化证券代码（补零到6位）
+        # 标准化证券代码（补零到6位，新增【空格清理】）
         try:
-            code_str = str(int(float(code)))
+            code_str = str(int(float(code))).strip()  # 清理空格
             code = code_str.zfill(6)
         except:
-            code = str(code)
+            code = str(code).strip()  # 清理空格
 
         # 合并同代码数量
         if code in position_dict:
@@ -650,7 +686,7 @@ sorted_strategy_names = sorted(strategy_total_amount.keys(), key=lambda x: order
 summary_data = {n: strategy_total_amount[n] for n in sorted_strategy_names}
 summary_percent = {n: strategy_total_percent[n] for n in sorted_strategy_names}
 
-# ---------------------- 16. 新增：合并6个股票策略数据 ----------------------
+# ---------------------- 17. 新增：合并6个股票策略数据 ----------------------
 # 定义需要合并的股票策略列表
 stock_strategies = ["分红股", "业绩反转", "小盘猛牛", "热点发展", "涨停回调", "配债股"]
 # 合并数据
@@ -659,7 +695,7 @@ for strategy in stock_strategies:
     if strategy in strategy_groups:
         combined_stock_data.extend(strategy_groups[strategy])
 
-# ---------------------- 17. 生成最终Excel ----------------------
+# ---------------------- 18. 生成最终Excel ----------------------
 final_workbook = xlwt.Workbook(encoding="utf-8")
 styles = create_styles()
 
@@ -702,4 +738,4 @@ for strategy_name in sorted_strategy_names:
 final_workbook.save("__00_总仓位.xls")
 
 # 验证提示
-print("✅ 表格生成完成！")
+print("✅ 表格生成完成！业绩反转sheet已按摘帽申请日期升序排列，2027-2-6的股票排在所有空白日期股票之前")
