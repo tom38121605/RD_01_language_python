@@ -169,31 +169,27 @@ t错 = (100) # 这只是数字100，不是元组
    print(e)  # 和例1结果一样
 
 
-13. np.any
+13. np.any，判断是否存在有元素为 True
 
      aaa = np.any(ccc, axis=1)
 
      np.any()：核心功能是 “判断是否存在任意一个元素为 True的行或列”
       axis=1：指定 “按行判断”（如果写 axis=0 就是按列判断）
 
-14. np.all
+
+14. np.all， 判断是否存在所有元素为 True
 
     np.all()：核心功能是 “判断是否存在所有元素为 True的行或列”
 
 
-================================
 
-   num_chunks = 3
-   chunk_size =5000
+15. np.abs  , 求绝对值
 
-   print("\nshape-data=", np.shape(data))  # (17685, 3)     //117685行，3列 easy
+     AAA = np.array([0.1, -0.5, 0.3, 0.8, -0.2])
 
-   AAA = data[0 : 3 * 5000, 0].reshape(-1, 5000)
-
-   x_avg = np.mean(AAA, axis=1)
-
-   // x_avg = np.mean(data[:num_chunks * chunk_size, 0].reshape(-1, chunk_size), axis=1)
-
+    abs_vals = np.abs(AAA)
+    
+print(abs_vals)    #  [0.1 0.5 0.3 0.8 0.2]
 
 
 
