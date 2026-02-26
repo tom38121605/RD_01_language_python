@@ -1,4 +1,4 @@
-﻿
+
 import h5py
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,14 +15,6 @@ print("file=" + data_file.filename)
 
 pad_seconds = 5
 
-
-# #------------------遍历group和数集---------------------------------------
-# for device in data_file.values():  # device是group
-#     print(f'group名：{device.name}')
-#     for ds in device.values():  # ds是数集
-#         print(f"数据集名：{os.path.basename(ds.name)}")
-#         # print(f"{ds[:2]}")
-# #------------------遍历group和数集---------end------------------------------
 
 #功能：对x里面的值, 依次相邻两个相减得到对应的差值列表，结合x_max修正后,返回修正后的差值列表AAA
 def rolling_bidirection_diff(x, x_max = 0 ):
@@ -51,15 +43,16 @@ def moving_average_3d(data, window_size):
     # print("data=", np.shape(data))  # (17704, 1, 3)  //17704层，1行，3列 easy
 
     AAA = np.ones(window_size) / window_size  # 这里是生成 20个数的列表，里面每个元素都是1/20
+    # print("\nAAA=", AAA)
 
     # convolve是以AAA为平均核，依次对每20个数取平均值，用平均值生成一个新的数组，新数组少了19个元素
-    x_smooth = np.convolve(data[:, 0, 0], AAA, mode='valid')   # 后面的0表示x列，中间的0行，前面的:表示所有的x列  easy
-    y_smooth = np.convolve(data[:, 0, 1], AAA, mode='valid')   # 后面的1表示y列，中间的0行，前面的:表示所有的y列  easy
-    z_smooth = np.convolve(data[:, 0, 2], AAA, mode='valid')   # 后面的2表示z列，中间的0行，前面的:表示所有的z列  easy
+    x_smooth = np.convolve(data[:, 0, 0], AAA, mode='valid')   # 后面的0表示x列(表格上面的列)，中间的0行(即表格里的列)，前面的:表示所有的x层(即表格里的行)  easy
+    y_smooth = np.convolve(data[:, 0, 1], AAA, mode='valid')   # 后面的1表示y列(表格上面的列)，中间的0行(即表格里的列)，前面的:表示所有的y层(即表格里的行)  easy
+    z_smooth = np.convolve(data[:, 0, 2], AAA, mode='valid')   # 后面的2表示z列(表格上面的列)，中间的0行(即表格里的列)，前面的:表示所有的z层(即表格里的行)  easy
 
     #  把三个独立的n行1列的数组，合并成一个 n行3列的二维数组，axis=-1表示新维度在最后一个维度的下一级(举例：原来是5列，现在变成5行3列)
     smoothed_data = np.stack((x_smooth, y_smooth, z_smooth), axis=-1) # 把三个独立的n行1列的数组，合并成一个 n行3列的二维数组                                                                     # -1是把所有的指列合并
-
+                                                                             # axis=-1，按最后一维堆叠，等价于 axis=1，x,y,z作为列
     # print("\n smoothed_data=", smoothed_data[:3])
     # print("\n shapesmoothed_data=", np.shape(smoothed_data))  # (17685, 3)  //117685行，3列 easy
 
@@ -70,14 +63,24 @@ def moving_average_3d(data, window_size):
 def downsample_average(data, chunk_size=1000):
     # Ensure the input is a 2D NumPy array with 3 columns for 3D coordinates
     data = np.array(data, dtype=float)
-    print("\ndata=", data[:3])
-    print("\nshape-data=", np.shape(data))  # (17685, 3)  //117685行，3列 easy
+    # print("\ndata=", data[:3])
+    # print("\nshape-data=", np.shape(data))  # (17685, 3)  //117685行，3列 easy
 
     # Calculate the number of complete chunks
     num_chunks = len(data) // chunk_size
 
     # Reshape each dimension separately, apply averaging for complete chunks
-    x_avg = np.mean(data[:num_chunks * chunk_size, 0].reshape(-1, chunk_size), axis=1)
+
+    AAA = data[:num_chunks * chunk_size, 0]
+    print("\nAAA=", AAA[:3])      # [294.81233826 294.81216431 294.81199036]
+    print("\nshape-AAA=", np.shape(AAA))   # (15000,)
+
+    BBB = AAA.reshape(-1, chunk_size)
+    x_avg = np.mean(BBB, axis=1)
+
+
+
+    # x_avg = np.mean(data[:num_chunks * chunk_size, 0].reshape(-1, chunk_size), axis=1)
     y_avg = np.mean(data[:num_chunks * chunk_size, 1].reshape(-1, chunk_size), axis=1)
     z_avg = np.mean(data[:num_chunks * chunk_size, 2].reshape(-1, chunk_size), axis=1)
 
@@ -105,15 +108,16 @@ def contiguous_regions(condition, min_len=0):
     print("idx=", idx)
     idx += 1  # 每个元素的位置值都+1, 用于首尾成双处理
 
-    #如果首部为True，则首部凑成双
-    if condition[0]:
+    if condition[0]:   #如果首部为True，则首部凑成双  //本例中，首部的xyz都为0，小0.3，首部只能是false
         idx = np.r_[0, idx]  # 把 0 插到索引数组 idx 的最前面
-
-    #如果尾部为True，则尾部部凑成双
-    if condition[-1]:
+        print("start ins")
+    elif condition[-1]:  #如果尾部为True，则尾部部凑成双
         idx = np.r_[idx, condition.size]  # 把数组的总长度追加到索引数组 idx 末尾
+        print("end ins")
+    else:
+        print("no ins")
 
-    idx.shape = (-1, 2)  # 把idx从1维数组转换成2维数组，-1的意思是自动算出行数
+    idx.shape = (-1, 2)  # 把idx从1维数组转换成2维数组，2的意思是两列，-1的意思是自动算出行数
     print("idx=", idx)
 
     aaa = np.subtract(idx[:, 1], idx[:, 0])  # 等价于 aaa = idx[:,1] - idx[:,0]， 每次连续True值的个数
@@ -130,7 +134,7 @@ def contiguous_regions(condition, min_len=0):
 #参数： device, t0, test_regions   //3222425134
 def process_device(device, t0, time_array:np.ndarray):
 
-    if(device.name != "/Device_3528137102_1"):
+    if(device.name != "/Device_3528137102_1"):   #group名称
         return
 
     print("device=", device.name)
@@ -140,7 +144,7 @@ def process_device(device, t0, time_array:np.ndarray):
 
     if "Timestamp" in device:   #yes
        timestamp_full = device['Timestamp']                   # 取得该 device中的 Timestamp数集
-       print("timestamp_full name = ",timestamp_full.name)    # Device_3528137102_1/Timestamp
+       print("timestamp_full name = ",timestamp_full.name)    # /Device_3528137102_1/Timestamp
        print("timestamp_full = ",timestamp_full[:2])
     else:
        print("no Timestamp")
@@ -184,14 +188,22 @@ def process_device(device, t0, time_array:np.ndarray):
 
         print("timepass2=",time_passed2)  # add
 
+        # get start_idx
         step1 = time_passed2 >= start_clock
         print("step1=", step1)
 
-        step2=np.where(step1)    # step2是二维数组，只有一个元素
+        step2=np.where(step1)    # (  array([    0,     1,     2, ..., 17701, 17702, 17703]),  )
         print("step2=", step2)
+        start_idx = step2[0][0]    #0
 
-        start_idx = step2[0][0]
-        end_idx = np.where(time_passed2 >= end_clock)[0][0] + 1
+        # get end_idx
+        step1 = time_passed2 >= end_clock
+        print("step1=", step1)
+
+        step2=np.where(step1)       # step2是二维数组，只有一个元素（列）
+        print("step2=", step2)      #(  array([17703]),  )
+        end_idx = step2[0][0] + 1   #17704
+
         print("start_idx=", start_idx)
         print("end_idx=", end_idx)
 
@@ -201,6 +213,7 @@ def process_device(device, t0, time_array:np.ndarray):
         print("delta_end_idx=", delta_end_idx)
 
         timestamp = time_passed2[start_idx:end_idx,...]  #相当于 timestamp = time_passed2[start_idx:end_idx,:]
+                                                         #“...”代表所有其他维度全部入选，这里只有1维，所以没有什么用（画s添足）
         print("time_passed2=", time_passed2)
         print("timestamp=", timestamp)
 
@@ -227,29 +240,30 @@ def process_device(device, t0, time_array:np.ndarray):
 
         # 功能：对所有的列，即x，y，z取得滑动平均值，然后把3个独立的数组合并成一个新的二维数组
         smoothed_position = moving_average_3d(position, 20)
-        print("\nshape-smoothed_position=", np.shape(smoothed_position))  # (17685, 3)  //117685行，3列 easy
+        print("\nsmoothed_position=", smoothed_position[:3])    # add
+        print("shape-smoothed_position=", np.shape(smoothed_position))  # (17685, 3)  //117685行，3列 easy
 
         #每5000个数取平均值变成1个数，最后1700多个x,y,z数变成4个数x,y,z数
         downsampled_position = downsample_average(smoothed_position, 5000)  # 把5000个数取平均值变成一个数
-        print("downsampled_position=", downsampled_position[:])    # add
+        print("\ndownsampled_position=", downsampled_position[:])    # add
         print("shape-downsampled_position=", np.shape(downsampled_position))  # (4, 3)  //4行，3列 easy
 
-        # # 下面2个变量似乎没有用到
+        # # 下面2个变量没有用到 （忽略，跳过）
         # position_delta_vector = downsampled_position[-1]-downsampled_position[0]
         # position_delta_magnitude = np.linalg.norm(downsampled_position[0]-downsampled_position[-1])  #直线距离 √(x^2+y^2+z^2)
         # print("position_delta_vector=", position_delta_vector[:])
         # print("position_delta_magnitude=", position_delta_magnitude)
 
         # check timestamp
-        delta = timestamp_delta[delta_start_idx:delta_end_idx,...]  # 相当于 timestamp_delta[0:17703, :]
+        delta = timestamp_delta[delta_start_idx:delta_end_idx,...]  # 因为只有二维，相当于 timestamp_delta[0:17703, :]
         print("timestamp_delta=", timestamp_delta[:5])
         print("shape-timestamp_delta=", np.shape(timestamp_delta))  # (17703, 1)  //17703行，1列
-        print("delta=", delta[:])
+        print("delta=", delta[:3])
 
         delta_values, delta_counts = np.unique(delta, return_counts=True)  # 取得唯一值的列表，并取得每个唯一值的重复次数列表
         # ts_events = np.logical_or(delta < 15980, delta > 10 * 15980)   # []  , 越界的异常数据真值列表  //无数据
         ts_events = np.logical_or(delta < 15980, delta > 6 * 15980)       # [11831 12827 14603]   //有数据，方便测试
-        ts_event_idx = np.where(ts_events)[0]   # 异常数据在矩阵中的位置
+        ts_event_idx = np.where(ts_events)[0]   # 异常数据在矩阵中的位置 //参考np.where示例中的test4，输出的第一个元素是行列表
 
         print("\ndelta_values=", delta_values[:])
         print("delta_counts=", delta_counts[:])
@@ -257,37 +271,53 @@ def process_device(device, t0, time_array:np.ndarray):
         print("ts_event_idx=", ts_event_idx)
 
 
-        try:
-            ts_events_s = timestamp[ts_event_idx] / 16000000.0
+        try:   #或为根据timestamp找到相应的delta
+            ts_events_s = timestamp[ts_event_idx] / 16000000.0   #把count换算成秒
             print("\ntimestamp", timestamp)
             print("Timestamp events=", ts_events_s)
-            print("Timestamp events packets loss=", f"{delta[ts_event_idx].flatten()/15984}") # flatten 把多维数组展平为一维数组
+
+            # AAA = delta[ts_event_idx].flatten()
+            AAA = delta.flatten()[ts_event_idx]   # flatten 把多维数组展平为一维数组
+            print("AAA=", AAA)   #[143856 143856 143856]
+            print("Timestamp events packets loss=", f"{AAA/15984}")   #[9. 9. 9.]
 
         except Exception as e: print(e)
 
-        #================================第一块画布===============================
+        #================================总画布===============================
 
         # 总画布ok，6个子图，大小10x8，间距3，标题d”evice=* time=[0 -1]“
-        fig, ax = plt.subplots(6, 1, figsize = (10, 8))  # 创建一个画布，6行1列六个子图，画布大小10x8
-        fig.tight_layout(pad=3)   # 画布间距 3
-        fig.suptitle('device={} time={}'.format(device.name, time_array[row]))  #  [0 -1], 所有时间范围
+        fig, ax = plt.subplots(6, 1, figsize = (10, 12))  # 创建一个画布，6行1列六个子图，画布大小10x8
+        fig.tight_layout(pad=7)   # 画布间距 3
 
-        #子图0 ok，以层号为x轴坐标， 以时间差的间隔值（一维）为y轴坐标，在画布上画点
-        print("delta=", delta[:])
+        AAA = 'device='+ device.name + ' time=' + f'{time_array[row]}'
+
+        fig.suptitle(AAA)  #  [0 -1], 所有时间范围
+
+        # plt.show()
+
+    # ================================第一块画布===============================
+
+        #------子图0 ok，以层号为x轴坐标， 以时间差的间隔值（一维）为y轴坐标，在画布上画点
+        print("delta=", delta[:5])
         ax[0].plot(delta, '.')  #在y坐标上，以x对应的时间差的间隔值delta值画"."
-        # ax[0].title.set_text("Timestamp Deltas"); ax[0].set_xlabel("Samples"); ax[0].set_ylabel("Delta B Timestamps")
-        print(f' Timestamp deltas:{delta_values}\n counts:{delta_counts}')
-        # print("Timestamp deltas=", delta_values)
-        # print("delta_counts=", delta_counts)
 
-        # 子图1 ok，以层号为x轴坐标，以x对应的角度差值delta值为y轴坐标，画点
+        ax[0].title.set_text("pic0")  # Timestamp Deltas
+        ax[0].set_xlabel("x0")       # Samples
+        ax[0].set_ylabel("y0")       # Delta B Timestamps
+
+        print("Timestamp deltas=", delta_values)
+        print("delta_counts=", delta_counts)
+
+        # plt.show()
+
+        #------子图1 ok，以层号为x轴坐标，以x对应的角度差值delta值为y轴坐标，画点
+
         # 功能：对theta里面的值, 相邻两个角度差，修正后,存入delta中  //easy
         delta = rolling_bidirection_diff(theta, 3600)
         delta_values, delta_counts = np.unique(delta, return_counts=True)  # 取得唯一值的列表，及唯一值对应的重复次数列表
-        print("theta=", theta)
+        print("theta=", theta[:5])
         print("delta_values=", delta_values)
         print("delta_counts=", delta_counts)
-        # plt.show()
 
         # theta_events = np.logical_or(delta < 0, delta > 800)  # 取得每个数据是否越界的真值表（True/False） //无数据
         theta_events = np.logical_or(delta < 0, delta > 400)  # 取得每个数据是否越界的真值表（True/False）   //有数据
@@ -297,69 +327,88 @@ def process_device(device, t0, time_array:np.ndarray):
         print("timestamp[]=", timestamp[theta_events_idx])    # 出现角度越界的时间戳
         print("theta_events_s=", theta_events_s)
 
-
         ax[1].plot(delta, '.') #在y坐标上，以x对应的角度差值delta值画"."
-        ax[1].title.set_text("theta Deltas"); ax[1].set_xlabel("Samples"); ax[1].set_ylabel("Delta Between theta Measurments")
+
+        ax[1].title.set_text("pic1")  # theta Deltas
+        ax[1].set_xlabel("x1")       # Samples
+        ax[1].set_ylabel("y1")       # Delta Between theta Measurments
 
         # plt.show()
 
-        # 子图2 ok，以层号为x轴坐标，已position数组里的xyz的相对值为y轴坐标，画点
+        #------子图2 ok，以层号为x轴坐标，以position数组里的xyz的相对值为y轴坐标，画点
         #          以 sample数//降维后的个数（相等分隔） 为x轴坐标，downsampled_position_centered，在y轴坐标上画折线
-        position_centered = position[:, 0, :] - position[0, 0, :]  # position所有层的第0行，减去第0层的第0行，降维得到层与列的二维数组
-        downsampled_position_centered = downsampled_position - position[0, 0, :]  # position浓缩型所有层的第0行，减去第0层的第0行，降维...
+        position_centered = position[:, 0, :] - position[0, 0, :]  # position所有层的第0行(其实只要0行)，减去第0层的第0行，降维得到层与列的二维数组
         print("position=", position[:5])
+        print("shape-position=", np.shape(position))  # (17704, 1, 3)  //17704层， 1行，3列 easy
+        print("position_centered=", position_centered[:5])
+
+        downsampled_position_centered = downsampled_position - position[0, 0, :]  # position浓缩型所有层的第0行，减去第0层的第0行，降维...
         print("downsampled_position=", downsampled_position)
-        print("shape-position=", np.shape(position) )      # (17704, 1, 3)  //17704层， 1行，3列 easy
-        print("shape-position_centered=", np.shape(position_centered) )      # (17704, 3)
         print("downsampled_position_centered=", downsampled_position_centered)
+        print("shape-position_centered=", np.shape(position_centered))  # (17704, 3)
+
+        ax[2].plot(position_centered, '.')   # 以上，画子图2的第1部分
 
 
-        ax[2].plot(position_centered, '.')
         aaa = len(position_centered)
         bbb = len(downsampled_position_centered)
         ccc = np.linspace(0, aaa - 1, bbb)
-        ax[2].plot(ccc, downsampled_position_centered, linewidth=4)  # 以ccc为x轴坐标，downsampled_position_centered为y轴坐标画点，
 
-        ax[2].title.set_text("Position Change"); ax[2].set_xlabel("Samples"); ax[2].set_ylabel("Position from origin (mm)"); ax[2].legend(['x', 'y', 'z', 'x filtered', 'y filtered', 'z filtered'], loc='right')
-
+        print("aaa=", aaa)
+        print("bbb=", bbb)
         print("ccc=", ccc)
+
+        ax[2].plot(ccc, downsampled_position_centered, linewidth=4)  #以上，画子图2的第2部分。以ccc为x轴坐标，downsampled_position_centered为y轴坐标画点，
+
+        ax[2].title.set_text("pic2")  # Position Change
+        ax[2].set_xlabel("x2")        # Samples
+        ax[2].set_ylabel("y2")        # Position from origin (mm)
+
+        ax[2].legend(['x', 'y', 'z', 'x filtered', 'y filtered', 'z filtered'], loc='right')  #标注线条名称
+
         # plt.show()
 
-        # 子图3 ok，以层号为x轴坐标，以position数组里的xyz的绝对值为y轴坐标，画点 （跟上面区别是，图2是相对值，图3是绝对值）
+        #------子图3 ok，以层号为x轴坐标，以position数组里的xyz的绝对值为y轴坐标，画点 （跟上面区别是，图2是相对值，图3是绝对值）
         ax[3].plot(position[:, 0, :], '.') # 分别把各层的"层"当画布上的x轴坐标，并把第0行的x，y，z维度当y轴坐标，进行画点
-        ax[3].title.set_text("Absolute Position"); ax[3].set_xlabel("Samples"); ax[3].set_ylabel("Position from Base Station (mm)")
+        ax[3].title.set_text("pic3"); ax[3].set_xlabel("x3"); ax[3].set_ylabel("y3(mm)")
         # plt.show()
 
-        # 子图4 ok，以层数为x轴坐标，把indicator数组里的xyz的绝对值，在y轴坐标上画"." 。  （待完善理解： indicator是个什么东东，先忽略跳过）
+        #------子图4 ok，以层数为x轴坐标，把indicator数组里的xyz的绝对值，在y轴坐标上画"." 。  （待完善理解： indicator是个什么东东，先忽略跳过）
         ax[4].plot(indicator[:, 0, :], '.') # 分别把各层的"层"当画布上的x轴坐标，并把第0行的x，y，z维度当y轴坐标，进行画点
-        ax[4].title.set_text("Indicator"); ax[4].set_xlabel("Samples"); ax[4].set_ylabel("Indicator value")
+        ax[4].title.set_text("pic4"); ax[4].set_xlabel("x4"); ax[4].set_ylabel("y4")
         # plt.show()
 
-        # 子图5 ok，取最中间的500个数据，以层号为x轴坐标，以mag的xyz为y轴坐标，画"." 。
-        if len(mag[:, 0, :]) > 500:   # len表示最外围的层数
+        #------子图5 ok，取最中间的500个数据，以层号为x轴坐标，分别分别以mag的xyz为y轴坐标，画"." 。
+        if len(mag[:, 0, :]) > 500:   # 行号=0，先对三维数组切片变成二维数组，len表示最外围的层数
             ccc = math.floor(len(mag[:, 0, :])/2) # 对len长度的一半取整数（向下取整）
             aaa= range(ccc-250, ccc+250)         # 取中间500个数
             bbb = mag[:, 0, :][ccc-250:ccc+250]  # 相当于写法mag[0:500,0,:] ，取中间500行（含所有列的数据）
             ax[5].plot(aaa, bbb, '.')            # aaa 是一维，bbb 是二维（按列自动分组画点）
 
-            ax[5].title.set_text("Mag"); ax[5].set_xlabel("Samples"); ax[5].set_ylabel("Mag value")
+            ax[5].title.set_text("pic5"); ax[5].set_xlabel("x5"); ax[5].set_ylabel("y5")
         print("mag=", mag)
         print("ccc=", ccc)
         print("aaa=", aaa)
         print("bbb=", bbb)
         # plt.show()
 
-        # 判断是否有越界的数据和相应画布打印
+
+        #================================第二块画布===============================
+
+
+        # 判断是否有越界的数据和相应画布打印 (判断是否打印第二块画布)
         # ccc =np.abs(position_centered)>1  # 矩阵中，只要绝对值大于1，就原地设为True，生成一个相同矩阵的真值表
         ccc =np.abs(position_centered)>0.3  # 矩阵中，只要绝对值大于0.3，就原地设为True，生成一个相同矩阵的真值表
-        aaa = np.any(ccc, axis=1)           # 对二维数组ccc每一行，在所有列中至少一个 True，设为True，如果都为False为False，返回一维数组的真值表
+        aaa = np.any(ccc, axis=1)           # 对二维数组ccc每一行，在所有列中至少一个 True，设为T，如果都为False设为F，返回一维数组的真值表
 
-        # 功能：对真值表的连续个数的位置进行统计，并筛选掉连续个数太小的位置
-        regions = contiguous_regions(aaa, 50)  #取得True连续大于50个的片段，组成一个新的矩阵返回 //连续50个相对位置都是大于2mm
-        # print("position_centered=", position_centered)
+        print("position_centered=", position_centered)
         print("ccc=", ccc)
         print("aaa=", aaa)
-        print("regions=", regions)  # [[ 8746  8908]  [10742 10842]]  //8746和8908是起始层数
+
+        # 功能：对真值表的连续个数的位置进行统计，并筛选掉连续个数太少的位置
+        regions = contiguous_regions(aaa, 50)  #取得True连续大于50个的片段，组成一个新的矩阵返回 //连续50个相对位置都是大于2mm
+
+        print("regions=", regions)  # [[ 8746  8908]  [10742 10842]]  //8746 是起始层数
 
         print("start_position=", position[0,0,:])
         print("position over 2mm:", regions)
@@ -369,31 +418,33 @@ def process_device(device, t0, time_array:np.ndarray):
         fig.savefig(device.name[1:] + '.png')
 
 
-        #================================第二块画布===============================
-
         #如果有误差>2mm的，则运行下面 （创建一个新的画布并显示出来）
         if num_regions > 0:  # 2
             print("第二个画布")
             fig, ax = plt.subplots(num_regions + 1, 1, figsize = (10, 8))
-            fig.tight_layout(pad=3)
-            fig.suptitle('device={} time={} regions'.format(device.name, time_array[row]))
+            fig.tight_layout(pad=6)
+
+            AAA = 'device=' + device.name + ' time=' + f'{time_array[row]}' + 'regions'
+            fig.suptitle(AAA)  # [0 -1], 所有时间范围
 
             aaa =  np.shape(position_centered)[0]   #17704
             mask = np.ones(aaa, dtype=bool)  # np.ones默认生成 1，指定dtype=bool后 1 会转为布尔值True，常用来作为 “掩码”
             print("aaa=", aaa)
             print("mask=", mask)
 
+            # plt.show()
+
             #所有越界数据段的子画布 ok， 以行号为x轴坐标，以相对位置列表position_centered中的xyz为y轴坐标（各段越界的），画点
             print("regions=", regions)
-            for i in range(num_regions):   # 2
-                # print("i=", i)
-                # if (i != 0):
-                #      continue
+            for i in range(num_regions):   # 2   //for里面，只显示相对位置列表position_centered里，各个越界的部分xyz
+
+                # if (i != 0): continue   # 先只看第一个越界画布i=0
+                print("i=", i)
 
                 region_end_idx = regions[i,1]  # //8908  // 10842
                 print("region_end_idx=", region_end_idx)
 
-                if region_end_idx >= np.shape(position_centered)[0]:   #easy
+                if region_end_idx >= np.shape(position_centered)[0]:   #easy，是否超出相对位置列表position_centered的边界
                     region_end_idx = np.shape(position_centered)[0]-1
 
                 print(f'Region start={timestamp[regions[i,0]] / 16000000.0} end={timestamp[region_end_idx] / 16000000.0}')
@@ -403,21 +454,25 @@ def process_device(device, t0, time_array:np.ndarray):
                 print("bbb=", bbb[:5])   #(162, 3)
                 print("shape-bbb=", np.shape(bbb))
                 ax[i].plot(bbb,'.')  # 以行号为x轴坐标，以相对位置列表position_centered中的xyz为y轴坐标，画点
-                ax[i].title.set_text("Region of Deviation >2mm "+str(i)); ax[i].set_xlabel("Samples"); ax[i].set_ylabel("Deviation (mm)")
+                ax[i].title.set_text("Region of Deviation >2mm "+str(i)); ax[i].set_xlabel("x"+f'{i}'); ax[i].set_ylabel("y (mm)")
 
+            #在for外面，切除所有越界的分段，只显示所有没有越界的数据，并把它们首尾拼在一起
             # 所有没越界数据段的子画布 ok， 以行号为x轴坐标，以相对位置列表position_centered中的xyz为y轴坐标（没有越界的拼在一起），画点
             ax[num_regions].plot(position_centered[mask],'.')
             ax[num_regions].title.set_text("Dataset with >2mm Deviations Removed"); ax[num_regions].set_xlabel("Samples"); ax[num_regions].set_ylabel("Deviation (mm)")
-            fig.savefig(device.name[2:] + '.png')
-        plt.show()
+            fig.savefig(device.name[1:] + '-2.png')
+
+            plt.show()
+
 
 def main():
 
     #-------- 每个group的Timestamp的第0行0列值添加到t0_all，最小值给t0，最小值的坐标给t0_idx1 ----------
 
     t0_all = []
-    for device in data_file.values():
+    for device in data_file.values():   #device 是group
         t0_all.append(device['Timestamp'][0, 0])  # 在每个group的Timestamp数集中，取得第0行0列的值，添加到t0_all中
+    # print("t0all ", t0_all)
 
     #t0_all这里是一维数组
     t0_all = np.array(t0_all, dtype=np.int64)  # [3222425134 3222425134 3222425134 3222425134]
@@ -426,13 +481,13 @@ def main():
     t0 = np.min(t0_all)     # 3222425134
 
     # step1 = t0_all == t0    # 1维数组
-    # # print("step1", step1 )   # [ True  True  True  True]
+    # print("step1", step1 )   # [ True  True  True  True]
     #
     # step2 = np.where(step1)  # 2维数组
-    # # print("step2", step2)    # (  array([0, 1, 2, 3]),  )
+    # print("step2", step2)    # (array([0, 1, 2, 3]),)
     #
     # t0_idx1 = step2[0]  # 输出：[0, 1, 2, 3]
-    # # print('t0_device_idx=', t0_idx1 )
+    # print('t0_device_idx=', t0_idx1 )
 
     #-------- 每个group的Timestamp的第0行0列值添加到t0_all，最小值给t0，最小值的坐标给t0_idx1 ---end-------
 

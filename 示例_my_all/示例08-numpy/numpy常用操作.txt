@@ -261,6 +261,16 @@ print(abs_vals)    #  [0.1 0.5 0.3 0.8 0.2]
       print(aaa)  # [1 1 2]
 
 
+22. 对数组的一段元素直接赋值
+
+      mask = np.array([1, 2, 3, 4, 5, 6])
+      start = 1
+      end = 4
+
+      mask[start:end] = 2  # 直接赋值单个数字，无需迭代对象
+      print(mask)  # 输出：[1 2 2 2 5 6]
+
+
 
       
 
