@@ -111,3 +111,14 @@ plot(y) → 只画折线
      fig.savefig( '01.png')
 
 
+11. 把图片贴到pdf文件里
+
+    pdf_file = ".\\all_plots_data0.pdf" 
+    pdf_out = PdfPages(pdf_file)     # 创建一个PDF 对象，把多张图表依次写入这个 PDF
+ 
+    简单类比：
+         PdfPages 相当于制作一个 “空白的 PDF 笔记本”
+        pdf_out 是空白的 PDF 笔记本
+        调用 pdf_out.savefig() 就是往笔记本里 “贴图表”
+        调用 pdf_out.close() 是 “合上笔记本并保存”
+
