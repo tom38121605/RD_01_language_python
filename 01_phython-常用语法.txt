@@ -1,4 +1,52 @@
 ﻿
+0.    python中，定义全局变量
+
+      global_last = 0
+
+      def outer():
+          # 外层嵌套变量
+          nonlocal_last = 0
+
+          def inner():
+              global global_last       # 声明改全局变量
+              nonlocal nonlocal_last  # 声明改外层嵌套变量
+              global_last += 1
+              nonlocal_last += 1
+              print(global_last, nonlocal_last)  # 输出：1 1
+
+          inner()
+
+      outer()
+
+
+0.  python中，定义预编译选项
+
+      DEFINES = \
+      {
+          "TXMODE": True,
+          "DEBUG": False,
+      }
+
+      # DEFINES = {
+      #     "TXMODE": False,
+      #     "DEBUG": True,
+      # }
+
+
+      def defined(macro_name):
+          is_defined = macro_name in DEFINES
+          is_enabled = DEFINES[macro_name]
+          return is_defined and is_enabled
+
+
+      if defined("TXMODE"):
+          print("tx")
+
+      elif defined("DEBUG"):
+          print("debug")
+      else:
+          print("默认模式执行")
+
 
 1。 为什么下面语句打印结果后面有个逗号 
 
