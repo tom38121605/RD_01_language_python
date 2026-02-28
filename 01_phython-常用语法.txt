@@ -90,3 +90,31 @@
 
       print(mask)  # 输出：[1, 2, 2, 2, 5, 6]
 
+6.   下面代码把 print 的输出流强制改成了日志输出
+
+      logging.getLogger('emc_analysis')
+      logging.basicConfig(level=logging.INFO)
+      logger = logging.getLogger()
+
+      txt_file_name = ".\\logfile.txt"
+      if os.path.isfile(txt_file_name):
+          open(txt_file_name, 'w').close()
+      file_handler = logging.FileHandler(txt_file_name)
+      file_handler.setLevel(logging.INFO)
+
+      logger.addHandler(file_handler)
+
+      class LoggerWriter:
+          def __init__(self, logger, level):
+              self.logger = logger
+              self.level = level
+
+          def write(self, message):
+              if message and not message.isspace():
+                  self.logger.log(self.level, message.strip())
+
+          def flush(self):
+              pass  # This method is needed for compatibility with `sys.stdout`
+
+     sys.stdout = LoggerWriter(logger, logging.INFO) 
+
