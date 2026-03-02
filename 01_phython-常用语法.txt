@@ -128,6 +128,20 @@
       print("NumPy数组的类型：", type(numpy_array))  # <class 'numpy.ndarray'>
 
 
+8. indicator = [x[0] for x in indicator]   # 3维 --> 2维， 逻辑应为去掉外层的倒数第二层
+
+      # 3维列表 
+      indicator = [
+          [[1, 2]],
+          [[5, 6]]
+      ]
+      print("初始3维列表：", indicator)  # [[[1, 2]], [[5, 6]]]
+
+      # 降维操作  3维 --> 2维
+      indicator = [x[0] for x in indicator]   # 3维 --> 2维
+      print("降维后2维列表：", indicator)  # [[1, 2], [5, 6]]
+
+
 
 
 
