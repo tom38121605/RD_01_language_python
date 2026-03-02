@@ -118,3 +118,18 @@
 
      sys.stdout = LoggerWriter(logger, logging.INFO) 
 
+
+7. 判断一个变量时numpy，还是列表
+ 
+      python_list = [1, 2, 3]       # Python原生列表（你说的“数组”）
+      numpy_array = np.array([1,2,3])# NumPy数组
+ 
+      print("列表的类型：", type(python_list))  # <class 'list'>
+      print("NumPy数组的类型：", type(numpy_array))  # <class 'numpy.ndarray'>
+
+
+
+
+
+
+
