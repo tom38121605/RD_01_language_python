@@ -39,11 +39,11 @@ t错 = (100) # 这只是数字100，不是元组
     AAA = np.shape(idata)   // (1, 2)   //1行2列
 
 
-4. np.stack((x,y,z), axis=1)对数组的拼接的就讲解：
+4. np.stack((x,y,z), axis=1)对数组的拼接的就讲解：   //例如：把3个1维数组，拼接成一个2维数组
    分析： axis=1，表示xyz各占一列
              axis=0，表示xyz各占一行
 
-   import numpy as np
+   import numpy as np 
    x = [1,2]
    y = [3,4]
    z = [5,6] 

@@ -58,7 +58,7 @@ def moving_average_3d(data, window_size):
 
     return smoothed_data
 
-# 功能：取压缩平均值
+# 功能：取压缩平均值，再 把3个1维数组，拼接成一个2维数组
 # 参数：smoothed_position，5000
 def downsample_average(data, chunk_size=1000):
     # Ensure the input is a 2D NumPy array with 3 columns for 3D coordinates
@@ -76,13 +76,12 @@ def downsample_average(data, chunk_size=1000):
     print("\nshape-AAA=", np.shape(AAA))   # (15000,)
 
     BBB = AAA.reshape(-1, chunk_size)
-    x_avg = np.mean(BBB, axis=1)
-
+    x_avg = np.mean(BBB, axis=1)       # 取得每一行x的平均值
 
 
     # x_avg = np.mean(data[:num_chunks * chunk_size, 0].reshape(-1, chunk_size), axis=1)
-    y_avg = np.mean(data[:num_chunks * chunk_size, 1].reshape(-1, chunk_size), axis=1)
-    z_avg = np.mean(data[:num_chunks * chunk_size, 2].reshape(-1, chunk_size), axis=1)
+    y_avg = np.mean(data[:num_chunks * chunk_size, 1].reshape(-1, chunk_size), axis=1)   # 取得每一行y的平均值
+    z_avg = np.mean(data[:num_chunks * chunk_size, 2].reshape(-1, chunk_size), axis=1)   # 取得每一行z的平均值
 
     # Handle any remaining points (the last incomplete chunk)
     if len(data) % chunk_size != 0:
@@ -92,7 +91,7 @@ def downsample_average(data, chunk_size=1000):
         z_avg = np.append(z_avg, remainder_mean[2])
 
     # Stack the averaged x, y, z back into a 2D array
-    downsampled_data = np.stack((x_avg, y_avg, z_avg), axis=-1)
+    downsampled_data = np.stack((x_avg, y_avg, z_avg), axis=-1)  # 把3个1维数组，拼接成一个2维数组， xyz各占一列
 
     return downsampled_data
 
