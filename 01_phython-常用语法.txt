@@ -142,7 +142,15 @@
       print("降维后2维列表：", indicator)  # [[1, 2], [5, 6]]
 
 
+9.  为什么indicator的数据类型会变   numpy.ndarray  -->  list
 
+       print("type indicator=", type(indicator))         # <class 'numpy.ndarray'>
+       indicator = [x[0] for x in indicator]   # 3维 --> 2维， 逻辑应为去掉外层的倒数第二层
+       print("indicator2=", indicator[:2])     #   [ [0.9999894], [0.9999894] ]
+       print("type2 indicator=", type(indicator))  # <class 'list'>
+
+      核心原因就一个：列表推导式 [x[0] for x in indicator] 是 Python 原生语法，它的返回值永远是「Python 列表（list）」
+      哪怕你遍历的是 NumPy 数组，推导完也会从 np.ndarray 变成 list。
 
 
 
