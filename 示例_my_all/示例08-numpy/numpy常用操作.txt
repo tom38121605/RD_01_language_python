@@ -102,16 +102,9 @@ t错 = (100) # 这只是数字100，不是元组
     isize= 3
     AAA = np.ones(isize)         //[ 1, 1, 1 ]
 
-
-
-
    idata =  [1, 2, 3, 4, 5 ]
 
-
    icore= AAA                   //[ 1, 1, 1 ]
-
-
-
 
    #结果数组result会少isize-1个数据
    result = np.convolve(idata, icore= , mode='valid)    // mode='valid'：只算能完整扫到的部分 
