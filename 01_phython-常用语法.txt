@@ -153,5 +153,23 @@
       哪怕你遍历的是 NumPy 数组，推导完也会从 np.ndarray 变成 list。
 
 
+10. 举例说明  new_datasets = [[] for i in datasets]  #逻辑是否为把外面倒数第二层（及以内所有层）变为0
+
+      datasets = np.array([[1,2], [3,4], [5,6]])
+      print("原始shape：", np.shape(datasets))  # (3, 2)
+
+      new_datasets = [[] for i in datasets]
+      print("新shape：", np.shape(new_datasets))  # (3, 0) 
+
+       核心规律：new_datasets = [[] for i in datasets] 后，np.shape(new_datasets) 永远是 (原始shape[0], 0)；
+      对应你的逻辑：长（shape [0]）不变，宽（shape [1]）强制置 0，面积 = 长 ×0；
+      本质：外层架子（长）保留，倒数第二层（宽）清空为 0。
+
+
+11. range(n) 是 range(0, n, 1) 的简写，从 0 开始，到 n-1 结束（共 n 个数字） 
+
+    举例：range(3) → 0、1、2（共 3 个）
+
+
 
 
