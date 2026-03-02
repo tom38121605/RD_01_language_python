@@ -31,62 +31,35 @@ t错 = (100) # 这只是数字100，不是元组
 
 2.  判断np数组的数据类型
 
-   type = np.int64   if np.issubdtype( idata.  dtype,  np.integer)   else   np.double
+   type = np.int64   
+
+   if np.issubdtype( idata.  dtype,  np.integer)     else      np.double
+
    idata= np.array( idata, dtype=np.int64)  
+
 
 3.  np.shape求np数组的面积，体积或形状
     idata= np.array( [ [0, -1] ] )  //把二维队列转换成np数组
     AAA = np.shape(idata)   // (1, 2)   //1行2列
 
 
-4. np.stack((x,y,z), axis=1)对数组的拼接的就讲解：   //例如：把3个1维数组，拼接成一个2维数组
-   分析： axis=1，表示xyz各占一列
-             axis=0，表示xyz各占一行
-
-   import numpy as np 
-   x = [1,2]
-   y = [3,4]
-   z = [5,6] 
-
-   print(np.stack((x,y,z), axis=1))
-   # 输出：
-   # [[1 3 5]  # 第1行：x1,y1,z1
-   #  [2 4 6]]  # 第2行：x2,y2,z2
- 
-   print(np.stack((x,y,z), axis=0))
-   # 输出：
-   # [[1 2]  # x行
-   #  [3 4]  # y行
-   #  [5 6]] # z行
-
-
-5. flatten的讲解   //把多维数组，展开成一维数组，再按索引列表取值
-
-   delta = np.array([[10000, 20000], [100000, 80000]])  # 2行2列的二维数组
-   ts_event_idx = [0, 3]   
-
-   AAA = delta.flatten()[ts_event_idx]
-   print(AAA)  
-   # 输出：[10000 80000]
-
-
-6.  在np数组里面，插入一个元素
+4.  在np数组里面，插入一个元素
    idata = np.array( [2, 2, ... ] )
    time_passed1 = np.insert( idata, 0, 1)    //在数组idata，0的位置，插入一个1的数据 //# [0 2 2 ...]
 
 
-7. 对np数组里面的值，依次相加累积，生成一个新的数组
+5. 对np数组里面的值，依次相加累积，生成一个新的数组
    time_passed2 = np.cumsum(time_passed1)    //# [0 2 4 ...]
 
 
-8. np.linspace对首尾数字等分的讲解
+6. np.linspace对首尾数字等分的讲解
    ccc = np.linspace(0, aaa , bbb)  // 0 -- 起始值， aaa-1-- 终止值，bbb --  等分个数
 
    ccc = np.linspace(0, 9, 4)
    print(ccc)  # 输出：[0. 3. 6. 9.]
 
 
-9. np.ones创建全是1的数组
+7. np.ones创建全是1的数组
 
     isize= 20
     AAA = np.ones(isize)   // 创建一个全是1的列表， 里面有20个1
@@ -97,7 +70,7 @@ t错 = (100) # 这只是数字100，不是元组
     mask = np.ones(isize, dtype=bool)  # 指定dtype=bool后 1 会转为布尔值True，常用来作为 “掩码”
 
 
-10.  讲解np.convolve() 是 NumPy 里做卷积计算的函数，大白话就是「用一个数组（核）去 “扫” 另一个数组，计算加权求和」，最常用在平滑数据
+8.  讲解np.convolve() 是 NumPy 里做卷积计算的函数，大白话就是「用一个数组（核）去 “扫” 另一个数组，计算加权求和」，最常用在平滑数据
  
     isize= 3
     AAA = np.ones(isize)         //[ 1, 1, 1 ]
@@ -112,7 +85,7 @@ t错 = (100) # 这只是数字100，不是元组
    # 输出：[6 9 12]
 
 
-11. 求平均值
+9. 求平均值
 
    # 例1：一维数组求平均（最基础）
    a = np.array([1, 2, 3, 4, 5])
@@ -137,35 +110,8 @@ t错 = (100) # 这只是数字100，不是元组
    # 输出：[2. 3.]     //第一列(1+3)/2=2，第二列(2+4)/2=3 
 
 
-12.改变数组形状， 韩信点兵
 
-   # 原始一维数组（6个数）
-   a = np.array([1,2,3,4,5,6])
-
-   # 例1：改成2行3列的二维数组
-   b = a.reshape(2, 3)
-   print(b)
-   # 输出：
-   # [[1 2 3]
-   #  [4 5 6]]
-
-   # 例2：改成3行2列的二维数组
-   c = a.reshape(3, 2)
-   print(c)
-   # 输出：
-   # [[1 2]
-   #  [3 4]
-   #  [5 6]]
-
-   # 例3：懒人写法（-1自动算行数/列数）
-   d = a.reshape(-1, 2)  # 固定列数2，行数自动算（6/2=3行）
-   print(d)  # 和例2结果一样
-
-   e = a.reshape(2, -1)  # 固定行数2，列数自动算（6/2=3列）
-   print(e)  # 和例1结果一样
-
-
-13. np.any，判断是否存在有元素为 True
+10. np.any，判断是否存在有元素为 True
 
      aaa = np.any(ccc, axis=1)
 
@@ -173,21 +119,21 @@ t错 = (100) # 这只是数字100，不是元组
       axis=1：指定 “按行判断”（如果写 axis=0 就是按列判断）
 
 
-14. np.all， 判断是否存在所有元素为 True
+11. np.all， 判断是否存在所有元素为 True
 
     np.all()：核心功能是 “判断是否存在所有元素为 True的行或列”
 
 
-15. np.abs  , 求绝对值
+12. np.abs  , 求绝对值
 
      AAA = np.array([0.1, -0.5, 0.3, 0.8, -0.2])
 
     abs_vals = np.abs(AAA)
     
-print(abs_vals)    #  [0.1 0.5 0.3 0.8 0.2]
+    print(abs_vals)    #  [0.1 0.5 0.3 0.8 0.2]
 
 
-16.  np.diff  是对数组 condition 做一阶差分计算，用数组中「后一个元素 - 前一个元素」，最终得到的新数组
+13.  np.diff  是对数组 condition 做一阶差分计算，用数组中「后一个元素 - 前一个元素」，最终得到的新数组
       新数组 长度比原数组少 1   //实际就是检测状态翻转
 
      condition = np.array( [False, False, True, True, False, True] )
@@ -195,7 +141,7 @@ print(abs_vals)    #  [0.1 0.5 0.3 0.8 0.2]
      print(ddd)         # [False  True False  True  True]
 
 
-17.   idx = idx[bbb]      # numpy的特有功能，可以根据真值表中的True，筛选出新的idx列表 （去掉真值表中为False的对应元素）
+14.   idx = idx[bbb]      # numpy的特有功能，可以根据真值表中的True，筛选出新的idx列表 （去掉真值表中为False的对应元素）
 
       idx = np.array( [1, 2, 3, 4, 5] )   
       bbb = np.array( [True, False, True, False, True] )  # 第0、2、4位是True
@@ -203,7 +149,7 @@ print(abs_vals)    #  [0.1 0.5 0.3 0.8 0.2]
       print(idx)      # [1 3 5]
  
 
-18. nonzero是找出布尔数组bbb中所有值为True（非 0）的元素的索引，得到一新数组，里面全是老数组中True元素的位置编号 
+15. nonzero是找出布尔数组bbb中所有值为True（非 0）的元素的索引，得到一新数组，里面全是老数组中True元素的位置编号 
   
       bbb = np.array( [0, 5, 0, -2, 7] )           # 非0数在索引1、3、4   //注意是位置编号，而不是里面的值
       nonzero_result = bbb.nonzero()
@@ -212,34 +158,24 @@ print(abs_vals)    #  [0.1 0.5 0.3 0.8 0.2]
       print(AAA)                                    #  [1 3 4]
 
 
-19.  np.r_ ， 按行拼接
+26. 对数组的一段元素直接赋值
 
-     temp =  np.array([1,3,4])
-     temp = np.r_[0, temp]  # 拼接0和[1,3,4]
+      mask = np.array([1, 2, 3, 4, 5, 6])
+      start = 1
+      end = 4
 
-     print(temp)  # [0 1 3 4]
-
-     temp =  np.array([1,3,4])
-     temp = np.r_[0, 9，temp]  # 拼接0,9和[1,3,4]
-
-     print(temp)  # [0 9 1 3 4]
+      mask[start:end] = 2  # 直接赋值单个数字，无需迭代对象
+      print(mask)  # 输出：[1 2 2 2 5 6]
 
 
-20. shape，reshape把一维变成二维
+17.  np.empty(0)   创建一个长度为 0 的 NumPy 数组（里面没有任何元素）
 
-      idx = np.array([0, 1, 3, 4, 5, 7])     # 长度=6
-      idx.shape = (-1, 2)        # 把idx从1维数组转换成2维数组，2的意思是两列，-1的意思是自动算出行数
+      arr = np.empty(0)
+      print(arr)              # 输出：[]
+      print(len(arr))       # 输出：0
+      print(arr.dtype)    # 输出：float64（默认）
 
-      print(idx)
-      # 输出：
-      # [[0 1]
-      #  [3 4]
-      #  [5 7]]
-
-      print(idx.shape)  #  (3, 2)  
-
-
-21.  np.subtract(idx[:, 1], idx[:, 0])， 第2列减第1列， 等价于idx[:, 1] - idx[:, 0] 
+18.  np.subtract(idx[:, 1], idx[:, 0])， 第2列减第1列， 等价于idx[:, 1] - idx[:, 0] 
 
       idx = np.array([
           [0, 1],   # 第0行：1-0=1
@@ -254,23 +190,17 @@ print(abs_vals)    #  [0.1 0.5 0.3 0.8 0.2]
       print(aaa)  # [1 1 2]
 
 
-22. 对数组的一段元素直接赋值
+19.  np.r_ ， 按行前后拼加数据    //在同一行中，前后拼加数据  （数组的维度不变）
 
-      mask = np.array([1, 2, 3, 4, 5, 6])
-      start = 1
-      end = 4
+     temp =  np.array([1,3,4])
+     temp = np.r_[0, temp]  # 拼接0和[1,3,4]
 
-      mask[start:end] = 2  # 直接赋值单个数字，无需迭代对象
-      print(mask)  # 输出：[1 2 2 2 5 6]
+     print(temp)  # [0 1 3 4]
 
+     temp =  np.array([1,3,4])
+     temp = np.r_[0, 9，temp]  # 拼接0,9和[1,3,4]
 
-23.  np.empty(0)   创建一个长度为 0 的 NumPy 数组（里面没有任何元素）
-
-      arr = np.empty(0)
-      print(arr)              # 输出：[]
-      print(len(arr))       # 输出：0
-      print(arr.dtype)    # 输出：float64（默认）
-
+     print(temp)  # [0 9 1 3 4]
 
      
 
