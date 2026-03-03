@@ -171,8 +171,28 @@
     举例：range(3) → 0、1、2（共 3 个）
 
 
+12. 向上取整  math.ceil
+
+      import math
+      import numpy as np
+ 
+      timestamp = np.array([100, 200, 300, 400, 500, 650])  # 时间戳
+      frame_size = 200  # 单批次时长（比如200ms）
+
+      initial_timestamp = timestamp[0]  # 100
+      frame = timestamp[5]              # 650
+ 
+      AAA = frame.item() - initial_timestamp.item()  # 650-100=550（时间差）
+      BBB = AAA/frame_size                           # 550/200=2.75（批次倍数）
+      last_frame = math.ceil(BBB)                     # 向上取整→3（第3批）
+
+      print(AAA, BBB, last_frame)  # 550 2.75 3
 
 
 
+13. 向下取整 math.floor
 
-
+      import math
+      BBB = 2.75  # 你的批次倍数
+      last_frame_floor = math.floor(BBB)  # 向下取整
+      print(last_frame_floor)  # 2（对比向上取整的3）
