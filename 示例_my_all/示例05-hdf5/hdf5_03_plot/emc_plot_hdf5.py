@@ -34,7 +34,7 @@ def rolling_bidirection_diff(x, x_max = 0 ):
     return AAA
     # return diff
 
-# 功能：对所有的列，即x，y，z取得滑动平均值，然后把3个独立的数组合并成一个新的二维数组
+# 功能：对所有的列，即x，y，z取得滑动平均值，然后把3个独立的数组合并成一个新的二维数组，会少19各元素
 # 参数：position, 20
 def moving_average_3d(data, window_size):
     # Ensure the input is a 2D NumPy array with 3 columns for 3D coordinates
@@ -50,7 +50,7 @@ def moving_average_3d(data, window_size):
     y_smooth = np.convolve(data[:, 0, 1], AAA, mode='valid')   # 后面的1表示y列(表格上面的列)，中间的0行(即表格里的列)，前面的:表示所有的y层(即表格里的行)  easy
     z_smooth = np.convolve(data[:, 0, 2], AAA, mode='valid')   # 后面的2表示z列(表格上面的列)，中间的0行(即表格里的列)，前面的:表示所有的z层(即表格里的行)  easy
 
-    #  把三个独立的n行1列的数组，合并成一个 n行3列的二维数组，axis=-1表示新维度在最后一个维度的下一级(举例：原来是5列，现在变成5行3列)
+    # 把三个独立的n行1列的数组，合并成一个 n行3列的二维数组，axis=-1等价于axis=1，表示xyz各占1列
     smoothed_data = np.stack((x_smooth, y_smooth, z_smooth), axis=-1) # 把三个独立的n行1列的数组，合并成一个 n行3列的二维数组                                                                     # -1是把所有的指列合并
                                                                              # axis=-1，按最后一维堆叠，等价于 axis=1，x,y,z作为列
     # print("\n smoothed_data=", smoothed_data[:3])
@@ -58,43 +58,41 @@ def moving_average_3d(data, window_size):
 
     return smoothed_data
 
-# 功能：取压缩平均值，再 把3个1维数组，拼接成一个2维数组
+# 功能：分解二维数组，取3各一维数组的压缩平均值（5000个数平均成一个数），再把3个1维数组，拼接成一个2维数组
 # 参数：smoothed_position，5000
 def downsample_average(data, chunk_size=1000):
-    # Ensure the input is a 2D NumPy array with 3 columns for 3D coordinates
+
     data = np.array(data, dtype=float)
     # print("\ndata=", data[:3])
     # print("\nshape-data=", np.shape(data))  # (17685, 3)  //117685行，3列 easy
 
-    # Calculate the number of complete chunks
-    num_chunks = len(data) // chunk_size
+    num_chunks = len(data) // chunk_size     # 3 向下取整
 
-    # Reshape each dimension separately, apply averaging for complete chunks
+    AAA = data[:num_chunks * chunk_size, 0]    # 取二维数组data的前 10 行、第 0 列所有元素，降维得到一维数组
 
-    AAA = data[:num_chunks * chunk_size, 0]
-    print("\nAAA=", AAA[:3])      # [294.81233826 294.81216431 294.81199036]
-    print("\nshape-AAA=", np.shape(AAA))   # (15000,)
+    print("\nAAA=", AAA[:3])                   # [294.81233826  294.81216431  294.81199036]
+    print("\nshape-AAA=", np.shape(AAA))       # (15000,)
 
-    BBB = AAA.reshape(-1, chunk_size)
-    x_avg = np.mean(BBB, axis=1)       # 取得每一行x的平均值
-
+    BBB = AAA.reshape(-1, chunk_size)    # 把1维数组，变形成2维数组
+    x_avg = np.mean(BBB, axis=1)         # 取得每一行x的平均值， 又把2维数组降维成1维数组
 
     # x_avg = np.mean(data[:num_chunks * chunk_size, 0].reshape(-1, chunk_size), axis=1)
     y_avg = np.mean(data[:num_chunks * chunk_size, 1].reshape(-1, chunk_size), axis=1)   # 取得每一行y的平均值
     z_avg = np.mean(data[:num_chunks * chunk_size, 2].reshape(-1, chunk_size), axis=1)   # 取得每一行z的平均值
 
-    # Handle any remaining points (the last incomplete chunk)
+    # 不足chunk部分的数据处理
     if len(data) % chunk_size != 0:
-        remainder_mean = np.mean(data[num_chunks * chunk_size:], axis=0)
-        x_avg = np.append(x_avg, remainder_mean[0])
-        y_avg = np.append(y_avg, remainder_mean[1])
-        z_avg = np.append(z_avg, remainder_mean[2])
+        remainder_mean = np.mean(data[num_chunks * chunk_size:], axis=0)   # 同时对xyz按列取平均值
 
-    # Stack the averaged x, y, z back into a 2D array
-    downsampled_data = np.stack((x_avg, y_avg, z_avg), axis=-1)  # 把3个1维数组，拼接成一个2维数组， xyz各占一列
+        x_avg = np.append(x_avg, remainder_mean[0])   # 添加到完整的x_avg末尾
+        y_avg = np.append(y_avg, remainder_mean[1])   # 添加到完整的y_avg末尾
+        z_avg = np.append(z_avg, remainder_mean[2])   # 添加到完整的z_avg末尾
+
+
+     # 把3个1维数组，拼接成一个2维数组， xyz各占一列
+    downsampled_data = np.stack((x_avg, y_avg, z_avg), axis=-1)
 
     return downsampled_data
-
 
 #功能：对真值表的连续个数的位置进行统计，并筛选掉连续个数太小的位置
 # 参数：condition，1
@@ -237,7 +235,7 @@ def process_device(device, t0, time_array:np.ndarray):
         print("shape-position=", np.shape(position) )      # (17704, 1, 3)  //17704层， 1行，3列 easy
         print("shape-mag=", np.shape(mag) )      # (17704, 3, 3)  //17704层， 3行，3列 easy
 
-        # 功能：对所有的列，即x，y，z取得滑动平均值，然后把3个独立的数组合并成一个新的二维数组
+        # 功能：对所有的列，即x，y，z取得滑动平均值，然后把3个独立的数组合并成一个新的二维数组，会少19各元素
         smoothed_position = moving_average_3d(position, 20)
         print("\nsmoothed_position=", smoothed_position[:3])    # add
         print("shape-smoothed_position=", np.shape(smoothed_position))  # (17685, 3)  //117685行，3列 easy
