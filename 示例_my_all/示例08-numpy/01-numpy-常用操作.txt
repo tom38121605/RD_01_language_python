@@ -85,7 +85,7 @@ t错 = (100) # 这只是数字100，不是元组
    # 输出：[6 9 12]
 
 
-9. 求平均值  np.mean
+9. np.mean求平均值  
 
     说明：
     axis = 1， 按行求平均值
@@ -112,6 +112,26 @@ t错 = (100) # 这只是数字100，不是元组
    avg_col = np.mean(b, axis=0)  
    print(avg_col)  
    # 输出：[2. 3.]     //第一列(1+3)/2=2，第二列(2+4)/2=3 
+
+
+9. np.mean 统计超标元素占比   
+
+      示例1： 分步讲解
+      indicator_array = np.array([2, 4, 6, 8, 10])
+      indicator_threshold = 9
+
+      bool_array = indicator_array > indicator_threshold
+      print("bool_array=", bool_array)  #  [False False False False  True]
+
+      over_threshold_ratio = bool_array.mean()
+      print("over_threshold_ratio=", over_threshold_ratio)  # 0.2
+
+      condition_result = over_threshold_ratio <= 0.1
+      print("步骤4 - 最终条件结果：", condition_result)  # 输出：False
+
+      示例2： 合并
+      original_condition = (indicator_array > indicator_threshold).mean() <= 0.1
+      print("原句执行结果：", original_condition)  # 输出：False
 
 
 10. np.any，判断是否存在有元素为 True
@@ -225,6 +245,20 @@ t错 = (100) # 这只是数字100，不是元组
  
       result = np.logical_or(a, b)
       print(result)  # [ True False  True]
+
+
+22. np.squeeze 是去掉数组里长度为 1 的维度（比如把 shape=(5,1) 的二维数组，变成 shape=(5,) 的一维数组），不删数据
+
+      arr = np.array([[1], [2], [3]])
+      print(arr.shape)                              #  (3, 1)
+
+      arr_squeezed = np.squeeze(arr)
+      print(arr_squeezed)                       #  [1 2 3]
+      print(arr_squeezed.shape)             #  (3,)（单维度被删掉）
+
+
+
+
 
 
 
