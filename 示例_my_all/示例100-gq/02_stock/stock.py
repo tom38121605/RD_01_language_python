@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import xlrd
 import xlwt
 from collections import defaultdict
@@ -72,7 +72,7 @@ strategy_dict = {
     "520870": "海外基", "404002": "", "161226": "套利基", "501300": "套利基",
     "161128": "套利基", "127015": "可转债", "160216": "套利基", "160324": "套利基",
     "161032": "超跌基", "164701": "套利基", "161116": "套利基",
-    "161124": "套利基", "113701": "可转债",
+    "161124": "套利基", "113701": "可转债",  "600662": "涨停回调",
     "603132": "涨停回调", "603759": "配债股", "600814": "涨停回调", "603500": "配债股",
     # 补充业绩反转/涨停回调股票代码（根据截图）
     "000698": "业绩反转", "600339": "业绩反转", "600858": "涨停回调", "002076": "业绩反转",
@@ -90,6 +90,13 @@ strategy_dict = {
     "000821": "业绩反转", "300020": "业绩反转",  "600537": "业绩反转",
     "603789": "业绩反转", "300173": "业绩反转", "600421": "业绩反转",
     "600358": "业绩反转", "600892": "业绩反转", "003032": "业绩反转",
+}
+
+# ---------------------- 新增：多策略归属字典 ----------------------
+multi_strategy_codes = {
+    "600681": ["分红股", "涨停回调"],  # 600681同时归属分红股和涨停回调
+    "600755": ["分红股", "涨停回调"],  #
+    "001202": ["配债股", "涨停回调"]  #
 }
 
 # ---------------------- 5. 小盘猛牛年报日期字典 ----------------------
@@ -159,7 +166,6 @@ performance_reversal_delisting_application_dict = {
     "002693": "2025年报 2026-04-29",
     "002076": "2025年报 2026-04-29",
     "600892": "2025年报 2026-04-30",
-    "600735": "2025年报 2026-04-30",
     "600421": "2025年报 2026-04-30",
     "002124": "预重整日期 2026-05-09",
     "300311": "2026-07-18",
@@ -175,11 +181,10 @@ performance_reversal_delisting_application_dict = {
     "300460": "2027-01-12",
     "000821": "2027-01-16",
     "300173": "2027-02-06",
-
     "000488": "摘帽日期 待定",
     "600537": "预重整日期 待定",
     "002055": "摘帽日期 待定",
-
+    "600735": "重整日期 待定",
 }
 
 # ---------------------- 9. 涨停回调年报日期字典 ----------------------
@@ -188,6 +193,7 @@ limit_up_callback_annual_report_dict = {
     "600477": ["2025年报 2026-04-17", ""],  # 杭萧钢构
     "600858": ["待定", "2024年报 2025-04-20"],  # 银座股份
     "000001": ["待定", ""],  # 测试：纯待定
+    "600681": ["2025年年报 2026-04-23", "预案公布日:2025-04-23"],  # 新增600681的涨停回调日期
 }
 
 
@@ -220,6 +226,16 @@ def extract_delisting_apply_date(code):
     delisting_date_str = performance_reversal_delisting_application_dict.get(code, "")
     delisting_date_str = delisting_date_str.strip()  # 清理字符串前后所有空格
     return extract_date_from_str(delisting_date_str)
+
+# ---------------------- 新增：判断摘帽日期是否小于2个月 ----------------------
+def is_delisting_date_less_than_2months(code):
+    """判断摘帽申请日期是否小于2个月（60天）"""
+    delisting_date = extract_delisting_apply_date(code)
+    if delisting_date == datetime(2099, 12, 31):
+        return False
+    current_date = datetime.now()
+    delta = delisting_date - current_date
+    return delta.days < 60 and delta.days >= 0  # 未来60天内（包含当天）
 
 
 # ---------------------- 12. 各策略排序函数 ----------------------
@@ -320,7 +336,7 @@ def get_combined_stock_sort_key(item):
     return (priority, date_key)
 
 
-# ---------------------- 14. 样式创建函数（新增摘帽日期列样式） ----------------------
+# ---------------------- 14. 样式创建函数（新增摘帽日期列样式 + 粉红色样式） ----------------------
 def create_styles():
     styles = {}
     base_style = xlwt.XFStyle()
@@ -409,10 +425,27 @@ def create_styles():
     styles["yellow_delisting_apply_right"].alignment = align_date
     styles["yellow_delisting_apply_right"].pattern = pattern
 
+    # ---------------------- 新增：粉红色字体样式 ----------------------
+    # 普通行摘帽日期粉红色样式
+    pink_delisting_apply = xlwt.XFStyle()
+    pink_font = xlwt.Font()
+    pink_font.height = 9 * 20
+    pink_font.colour_index = 10  # 10=粉红色
+    pink_delisting_apply.font = pink_font
+    pink_delisting_apply.alignment = align_date
+    styles["pink_delisting_apply"] = pink_delisting_apply
+
+    # 黄色行摘帽日期粉红色样式
+    yellow_pink_delisting_apply = xlwt.XFStyle()
+    yellow_pink_delisting_apply.font = pink_font
+    yellow_pink_delisting_apply.alignment = align_date
+    yellow_pink_delisting_apply.pattern = pattern
+    styles["yellow_pink_delisting_apply"] = yellow_pink_delisting_apply
+
     return styles
 
 
-# ---------------------- 15. Sheet写入函数（增强版：新增摘帽申请日期列） ----------------------
+# ---------------------- 15. Sheet写入函数（增强版：新增摘帽申请日期列 + 粉红色字体逻辑） ----------------------
 def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_sheet=False,
                      summary_data=None, summary_percent=None, total_capital=500000, is_dividend_sheet=False,
                      is_fund_sheet=False, is_small_cap_sheet=False, is_hot_development_sheet=False,
@@ -505,9 +538,12 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 dates = performance_reversal_annual_report_dict.get(code, ["", ""])
                 sheet.write(row_idx, 10, dates[0], styles["yellow_date_right"])
                 sheet.write(row_idx, 11, dates[1], styles["yellow_date_right"])
-                # 新增摘帽申请日期列
+                # 新增摘帽申请日期列（判断是否显示粉红色）
                 delisting_date = performance_reversal_delisting_application_dict.get(code, "")
-                sheet.write(row_idx, 12, delisting_date, styles["yellow_delisting_apply_right"])
+                if is_delisting_date_less_than_2months(code):
+                    sheet.write(row_idx, 12, delisting_date, styles["yellow_pink_delisting_apply"])
+                else:
+                    sheet.write(row_idx, 12, delisting_date, styles["yellow_delisting_apply_right"])
             # 其他策略日期列（保留）
             elif is_limit_up_callback_sheet:
                 dates = limit_up_callback_annual_report_dict.get(code, ["", ""])
@@ -564,9 +600,12 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 dates = performance_reversal_annual_report_dict.get(code, ["", ""])
                 sheet.write(row_idx, 10, dates[0], styles["date_right"])
                 sheet.write(row_idx, 11, dates[1], styles["date_right"])
-                # 新增摘帽申请日期列
+                # 新增摘帽申请日期列（判断是否显示粉红色）
                 delisting_date = performance_reversal_delisting_application_dict.get(code, "")
-                sheet.write(row_idx, 12, delisting_date, styles["delisting_apply_right"])
+                if is_delisting_date_less_than_2months(code):
+                    sheet.write(row_idx, 12, delisting_date, styles["pink_delisting_apply"])
+                else:
+                    sheet.write(row_idx, 12, delisting_date, styles["delisting_apply_right"])
             # 其他策略日期列（保留）
             elif is_limit_up_callback_sheet:
                 dates = limit_up_callback_annual_report_dict.get(code, ["", ""])
@@ -679,11 +718,18 @@ rank = 1
 for code, info in sorted_positions:
     cumulative_amount += info["金额"]
     total_cumulative_pct = round((cumulative_amount / total_capital) * 100, 1)
-    strategy = strategy_dict.get(code, "空策略") or "空策略"
-    full_data.append((code, info, strategy, rank, cumulative_amount, total_cumulative_pct))
+    # 获取基础策略
+    base_strategy = strategy_dict.get(code, "空策略") or "空策略"
+    # 处理多策略归属
+    if code in multi_strategy_codes:
+        # 为每个策略生成一条记录
+        for strategy in multi_strategy_codes[code]:
+            full_data.append((code, info, strategy, rank, cumulative_amount, total_cumulative_pct))
+    else:
+        full_data.append((code, info, base_strategy, rank, cumulative_amount, total_cumulative_pct))
     rank += 1
 
-# 按策略分组
+# 按策略分组（支持多策略归属）
 strategy_groups = defaultdict(list)
 for item in full_data:
     strategy_groups[item[2]].append(item)
