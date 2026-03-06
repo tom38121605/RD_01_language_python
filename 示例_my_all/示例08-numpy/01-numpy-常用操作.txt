@@ -257,9 +257,25 @@ t错 = (100) # 这只是数字100，不是元组
       print(arr_squeezed.shape)             #  (3,)（单维度被删掉）
 
 
+23.  global_timestamp = np.array(timestamp)   的作用
+
+      timestamp = [100, 200, 300, 400, 500]  # 普通列表
+      print("timestamp类型：", type(timestamp))  # <class 'list'>
+      print("timestamp取值：", timestamp[0])     # 100 
+ 
+      global_timestamp = np.array(timestamp)
+      print("global_timestamp类型：", type(global_timestamp))  # <class 'numpy.ndarray'>
+      print("global_timestamp取值：", global_timestamp[0])     # 100（取值结果一样）
+
+      # ========== 3. 核心区别：运算能力 ==========
 
 
+      print("数组批量加10：", global_timestamp + 10)  # [110 210 310 410 510]
+      # print(timestamp + 10)  # 报错：can only concatenate list (not "int") to list
 
+      # print("数组均值：", global_timestamp.mean())  # 300.0
+
+      # # print(timestamp.mean())  # 报错：'list' object has no attribute 'mean'
 
 
  
