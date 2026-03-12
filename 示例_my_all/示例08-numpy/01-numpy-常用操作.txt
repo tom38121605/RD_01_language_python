@@ -278,4 +278,7 @@ t错 = (100) # 这只是数字100，不是元组
       # # print(timestamp.mean())  # 报错：'list' object has no attribute 'mean'
 
 
- 
+ 24. np.zeros_like 这行是创建一个和timestamp形状、数据类型完全相同，但所有元素都是 0 的新数组
+      unwrapped_timestamps = np.zeros_like(timestamp)
+
+
