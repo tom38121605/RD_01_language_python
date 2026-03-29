@@ -3,6 +3,7 @@ import xlrd
 import xlwt
 from collections import defaultdict
 import re
+
 # ---------------------- 1. 分红基日期字典 ----------------------
 dividend_fund_date_dict = {
     "180102": ["待定", "权益登记日: 2025-01-24"],
@@ -14,22 +15,7 @@ dividend_fund_date_dict = {
     "515450": ["待定", "权益登记日:2025-07-14"],
     "513820": ["待定", "权益登记日:2025-01-21"],
 }
-# # ---------------------- 2. 分红股基础信息 ----------------------
-# dividend_stock_base_info = {
-#     "000001": {"名称": "平安银行", "数量": 300, "当前价": 11.54},
-#     "605368": {"名称": "蓝天燃气", "数量": 11300, "当前价": 7.78},
-#     "600985": {"名称": "淮北矿业", "数量": 400, "当前价": 11.19},
-#     "601916": {"名称": "浙商银行", "数量": 5500, "当前价": 3.05},
-#     "601169": {"名称": "北京银行", "数量": 2900, "当前价": 5.49},
-#     "002807": {"名称": "江阴银行", "数量": 600, "当前价": 4.65},
-#     "600188": {"名称": "兖矿能源", "数量": 200, "当前价": 13.43},
-#     "600016": {"名称": "民生银行", "数量": 3000, "当前价": 3.86},
-#     "600681": {"名称": "百川能源", "数量": 1000, "当前价": 4.08},
-#     "600256": {"名称": "广汇能源", "数量": 2200, "当前价": 4.96},
-#     "603801": {"名称": "志邦家居", "数量": 1000, "当前价": 9.23},
-#     "002267": {"名称": "陕天然气", "数量": 100, "当前价": 7.53},
-#     "600219": {"名称": "南山铝业", "数量": 1000, "当前价": 3.50},
-# }
+
 # ---------------------- 3. 分红股日期字典 ----------------------
 dividend_date_dict = {
     "000001": ["2025年报 2026-03-21", "预案公布日:2025-03-26"],
@@ -48,6 +34,7 @@ dividend_date_dict = {
     "600755": ["2025年报 2026-04-23", "--"],
     "601006": ["2025年报 2026-04-30", "--"],
 }
+
 # ---------------------- 4. 策略字典 ----------------------
 strategy_dict = {
     "000001": "分红股", "605368": "分红股", "600985": "分红股",
@@ -70,6 +57,7 @@ strategy_dict = {
     "161032": "超跌基", "164701": "套利基", "161116": "套利基",  "601669": "涨停回调",
     "161124": "套利基", "113701": "可转债",  "600662": "涨停回调",  "000639": "热点发展",
     "603132": "涨停回调", "603759": "配债股", "600814": "涨停回调", "603500": "配债股",
+    "600516": "涨停回调",
     # 补充业绩反转/涨停回调股票代码（根据截图）
     "000698": "业绩反转", "600339": "业绩反转", "600858": "涨停回调", "002076": "业绩反转",
     "160719": "套利基", "600777": "业绩反转", "501001": "套利基", "600738": "热点发展",
@@ -87,6 +75,7 @@ strategy_dict = {
     "603789": "业绩反转", "300173": "业绩反转", "600421": "业绩反转",
     "600358": "业绩反转", "600892": "业绩反转", "003032": "业绩反转", "002512": "业绩反转",
 }
+
 # ---------------------- 新增：多策略归属字典 ----------------------
 multi_strategy_codes = {
     "600681": ["分红股", "涨停回调"],  # 600681同时归属分红股和涨停回调
@@ -95,18 +84,21 @@ multi_strategy_codes = {
     "001202": ["配债股", "涨停回调"],  #
     "002267": ["分红股", "涨停回调"],  #
 }
+
 # ---------------------- 5. 小盘猛牛年报日期字典 ----------------------
 small_cap_annual_report_dict = {
     "300891": ["2025年报2026-04-21", ""],  # 惠云钛业
     "605162": ["2025年报2026-04-25", ""],  # 新中港
     "300000": ["待定", "2024年报 2025-04-10"],  # 示例：待定日期
 }
+
 # ---------------------- 6. 热点发展年报日期字典 ----------------------
 hot_development_annual_report_dict = {
     "002385": ["2025年报 2026-04-24", ""],  # 大北农
     "002570": ["2025年报 2026-04-28", ""],  # 贝因美
     "000516": ["待定", ""],  # 国际医学
 }
+
 # ---------------------- 7. 业绩反转年报日期字典 ----------------------
 performance_reversal_annual_report_dict = {
     "002496": ["2025年报 2026-03-31", ""],  # *ST辉丰
@@ -143,6 +135,7 @@ performance_reversal_annual_report_dict = {
     "300366": ["2025年报 2026-04-24", ""],
     "300460": ["2025年报 2026-04-27", ""],
 }
+
 # ---------------------- 8. 业绩反转申请摘帽日期字典（已清理所有空格） ----------------------
 performance_reversal_delisting_application_dict = {
     "600358": "2025年报 2026-03-21",
@@ -182,6 +175,7 @@ performance_reversal_delisting_application_dict = {
     "002512": "摘帽日期 待定",
     "600735": "重整日期 待定",
 }
+
 # ---------------------- 9. 涨停回调年报日期字典 ----------------------
 limit_up_callback_annual_report_dict = {
     "002154": ["2025年报 2026-04-25", ""],  # 报喜鸟
@@ -190,6 +184,7 @@ limit_up_callback_annual_report_dict = {
     "000001": ["待定", ""],  # 测试：纯待定
     "600681": ["2025年年报 2026-04-23", "预案公布日:2025-04-23"],  # 新增600681的涨停回调日期
 }
+
 # ---------------------- 10. 日期解析工具函数 ----------------------
 def extract_date_from_str(date_str):
     """
@@ -212,12 +207,14 @@ def extract_date_from_str(date_str):
         year, month, day = date_match.groups()
         return datetime(int(year), int(month), int(day))
     return datetime(2099, 12, 31)  # 无有效日期 → 极大值
+
 # ---------------------- 11. 摘帽申请日期解析函数（新增空格清理） ----------------------
 def extract_delisting_apply_date(code):
     """提取摘帽申请日期，兼容空值/待定，新增【空格清理】逻辑"""
     delisting_date_str = performance_reversal_delisting_application_dict.get(code, "")
     delisting_date_str = delisting_date_str.strip()  # 清理字符串前后所有空格
     return extract_date_from_str(delisting_date_str)
+
 # ---------------------- 新增：判断摘帽日期是否小于2个月 ----------------------
 def is_delisting_date_less_than_2months(code):
     """判断摘帽申请日期是否小于2个月（60天）"""
@@ -227,6 +224,7 @@ def is_delisting_date_less_than_2months(code):
     current_date = datetime.now()
     delta = delisting_date - current_date
     return delta.days < 60 and delta.days >= 0  # 未来60天内（包含当天）
+
 # ---------------------- 12. 各策略排序函数 ----------------------
 def get_fund_dividend_sort_key(item):
     """分红基排序key：先下期日期升序，待定则按去年日期升序"""
@@ -235,6 +233,7 @@ def get_fund_dividend_sort_key(item):
     next_date = extract_date_from_str(next_date_str)
     last_date = extract_date_from_str(last_date_str)
     return (next_date, last_date)
+
 def get_stock_dividend_sort_key(item):
     """分红股排序key"""
     code = item[0]
@@ -243,6 +242,7 @@ def get_stock_dividend_sort_key(item):
     next_date = extract_date_from_str(next_date_str)
     last_date = extract_date_from_str(last_date_str)
     return (next_date, last_date)
+
 def get_small_cap_sort_key(item):
     """小盘猛牛排序key"""
     code = item[0]
@@ -251,6 +251,7 @@ def get_small_cap_sort_key(item):
     next_date = extract_date_from_str(next_date_str)
     last_date = extract_date_from_str(last_date_str)
     return (next_date, last_date)
+
 def get_hot_development_sort_key(item):
     """热点发展排序key"""
     code = item[0]
@@ -259,6 +260,7 @@ def get_hot_development_sort_key(item):
     next_date = extract_date_from_str(next_date_str)
     last_date = extract_date_from_str(last_date_str)
     return (-next_date.timestamp(), -last_date.timestamp())
+
 def get_performance_reversal_sort_key(item):
     """业绩反转排序key：优先按摘帽申请日期升序，无则按年报日期升序，无摘帽日期统一排最后"""
     code = item[0]
@@ -266,11 +268,11 @@ def get_performance_reversal_sort_key(item):
     delisting_apply_date = extract_delisting_apply_date(code)
     # 2. 摘帽日期为2099-12-31时，按年报日期升序补充排序；否则年报日期仅为次要维度
     next_date_str = performance_reversal_annual_report_dict.get(code, ["待定", ""])[0]
-    last_date_str = performance_reversal_annual_report_dict.get(code, ["", ""])[1]
+    # 移除去年对应年报日期的读取
     next_date = extract_date_from_str(next_date_str)
-    last_date = extract_date_from_str(last_date_str)
     # 核心：摘帽日期为极大值时，年报日期才起主要作用；否则年报日期仅为辅助
-    return (delisting_apply_date, next_date, last_date)
+    return (delisting_apply_date, next_date)
+
 def get_limit_up_callback_sort_key(item):
     """涨停回调排序key：先下期日期升序，待定则按去年日期升序"""
     code = item[0]
@@ -279,6 +281,7 @@ def get_limit_up_callback_sort_key(item):
     next_date = extract_date_from_str(next_date_str)
     last_date = extract_date_from_str(last_date_str)
     return (next_date, last_date)
+
 # ---------------------- 13. 新增：合并股票策略排序函数 ----------------------
 def get_combined_stock_sort_key(item):
     """
@@ -311,6 +314,7 @@ def get_combined_stock_sort_key(item):
     else:
         date_key = (datetime(2099, 12, 31), datetime(2099, 12, 31))
     return (priority, date_key)
+
 # ---------------------- 14. 样式创建函数（新增摘帽日期列样式 + 粉红色样式） ----------------------
 def create_styles():
     styles = {}
@@ -319,6 +323,7 @@ def create_styles():
     font.height = 9 * 20
     base_style.font = font
     styles["base"] = base_style
+
     header_center = xlwt.XFStyle()
     header_center.font = font
     align_header = xlwt.Alignment()
@@ -326,18 +331,21 @@ def create_styles():
     align_header.vert = xlwt.Alignment.VERT_CENTER
     header_center.alignment = align_header
     styles["header"] = header_center
+
     percent_right = xlwt.XFStyle()
     percent_right.font = font
     align_percent = xlwt.Alignment()
     align_percent.horz = xlwt.Alignment.HORZ_RIGHT
     percent_right.alignment = align_percent
     styles["percent"] = percent_right
+
     strategy_right = xlwt.XFStyle()
     strategy_right.font = font
     align_strategy = xlwt.Alignment()
     align_strategy.horz = xlwt.Alignment.HORZ_RIGHT
     strategy_right.alignment = align_strategy
     styles["strategy"] = strategy_right
+
     yellow_bg = xlwt.XFStyle()
     yellow_bg.font = font
     pattern = xlwt.Pattern()
@@ -345,48 +353,58 @@ def create_styles():
     pattern.pattern_fore_colour = 34
     yellow_bg.pattern = pattern
     styles["yellow"] = yellow_bg
+
     styles["yellow_percent"] = xlwt.XFStyle()
     styles["yellow_percent"].font = font
     styles["yellow_percent"].alignment = align_percent
     styles["yellow_percent"].pattern = pattern
+
     styles["yellow_strategy"] = xlwt.XFStyle()
     styles["yellow_strategy"].font = font
     styles["yellow_strategy"].alignment = align_strategy
     styles["yellow_strategy"].pattern = pattern
+
     summary_style = xlwt.XFStyle()
     summary_style.font = font
     align_summary = xlwt.Alignment()
     align_summary.horz = xlwt.Alignment.HORZ_CENTER
     summary_style.alignment = align_summary
     styles["summary"] = summary_style
+
     total_percent_right = xlwt.XFStyle()
     total_percent_right.font = font
     align_total = xlwt.Alignment()
     align_total.horz = xlwt.Alignment.HORZ_RIGHT
     total_percent_right.alignment = align_total
     styles["total_percent"] = total_percent_right
+
     styles["yellow_total_percent"] = xlwt.XFStyle()
     styles["yellow_total_percent"].font = font
     styles["yellow_total_percent"].alignment = align_total
     styles["yellow_total_percent"].pattern = pattern
+
     date_right = xlwt.XFStyle()
     date_right.font = font
     align_date = xlwt.Alignment()
     align_date.horz = xlwt.Alignment.HORZ_RIGHT
     date_right.alignment = align_date
     styles["date_right"] = date_right
+
     styles["yellow_date_right"] = xlwt.XFStyle()
     styles["yellow_date_right"].font = font
     styles["yellow_date_right"].alignment = align_date
     styles["yellow_date_right"].pattern = pattern
+
     # 新增：摘帽申请日期列样式（右对齐，与日期列一致）
     styles["delisting_apply_right"] = xlwt.XFStyle()
     styles["delisting_apply_right"].font = font
     styles["delisting_apply_right"].alignment = align_date
+
     styles["yellow_delisting_apply_right"] = xlwt.XFStyle()
     styles["yellow_delisting_apply_right"].font = font
     styles["yellow_delisting_apply_right"].alignment = align_date
     styles["yellow_delisting_apply_right"].pattern = pattern
+
     # ---------------------- 新增：粉红色字体样式 ----------------------
     # 普通行摘帽日期粉红色样式
     pink_delisting_apply = xlwt.XFStyle()
@@ -396,33 +414,37 @@ def create_styles():
     pink_delisting_apply.font = pink_font
     pink_delisting_apply.alignment = align_date
     styles["pink_delisting_apply"] = pink_delisting_apply
+
     # 黄色行摘帽日期粉红色样式
     yellow_pink_delisting_apply = xlwt.XFStyle()
     yellow_pink_delisting_apply.font = pink_font
     yellow_pink_delisting_apply.alignment = align_date
     yellow_pink_delisting_apply.pattern = pattern
     styles["yellow_pink_delisting_apply"] = yellow_pink_delisting_apply
+
     return styles
-# ---------------------- 15. Sheet写入函数（增强版：新增摘帽申请日期列 + 粉红色字体逻辑） ----------------------
+
+# ---------------------- 15. Sheet写入函数（增强版：移除业绩反转sheet的去年对应年报日期列） ----------------------
 def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_sheet=False,
                      summary_data=None, summary_percent=None, total_capital=500000, is_dividend_sheet=False,
                      is_fund_sheet=False, is_small_cap_sheet=False, is_hot_development_sheet=False,
                      is_performance_reversal_sheet=False, is_limit_up_callback_sheet=False,
                      is_combined_stock_sheet=False):  # 新增合并股票sheet标记
-    # 列宽配置（新增摘帽申请日期列宽）
+    # 列宽配置（调整业绩反转sheet列宽，移除去年对应年报日期列）
     col_widths = {
         0: 8, 1: 13, 2: 8, 3: 8, 4: 10, 5: 9, 6: 6, 7: 12,
-        8: 10, 9: 12, 10: 18, 11: 22, 12: 22  # 新增第12列（摘帽申请日期）宽22
+        8: 10, 9: 12, 10: 18, 11: 22  # 业绩反转sheet：11列为摘帽申请日期（原12列）
     }
     for col_idx, width in col_widths.items():
         sheet.col(col_idx).width = width * 256
-    # 表头配置（业绩反转sheet新增摘帽申请日期列）
+
+    # 表头配置（移除业绩反转sheet的去年对应年报日期列）
     if is_fund_sheet or is_dividend_sheet:
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "下期新分红日期", "去年对应分红日期"]
-    elif is_performance_reversal_sheet:  # 业绩反转sheet表头（新增第12列）
+    elif is_performance_reversal_sheet:  # 业绩反转sheet表头（移除去年对应年报日期列）
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
-                   "总累积仓位%", "策略", "下期新年报日期", "去年对应年报日期", "摘帽申请日期"]
+                   "总累积仓位%", "策略", "下期新年报日期", "摘帽申请日期"]  # 移除第11列（去年对应年报日期）
     elif is_combined_stock_sheet:  # 合并股票sheet表头
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "下期新年报/分红日期", "去年对应年报/分红日期"]
@@ -432,10 +454,12 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
     else:
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略"]
+
     # 写入表头
     sheet.row(0).height = row_height
     for col_idx, header in enumerate(headers):
         sheet.write(0, col_idx, header, styles["header"])
+
     # 策略sheet排序逻辑
     if is_strategy_sheet and data_list:
         # 合并股票sheet排序
@@ -455,6 +479,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             sorted_strategy_data = sorted(data_list, key=get_limit_up_callback_sort_key)
         else:
             sorted_strategy_data = sorted(data_list, key=lambda x: x[1]["金额"], reverse=True)
+
         # 重新计算排名和累积
         strategy_cumulative = 0
         strategy_rank = 1
@@ -466,11 +491,13 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             processed_data.append((code, info, strategy, strategy_rank, strategy_cumulative, total_cumulative_percent))
             strategy_rank += 1
         data_list = processed_data
+
     # 写入数据行
     row_idx = 1
     for item in data_list:
         code, info, strategy, rank, cumulative, total_cumulative_percent = item
         sheet.row(row_idx).height = row_height
+
         # 黄色行（第10行）样式
         if rank == 10:
             sheet.write(row_idx, 0, code, styles["yellow"])
@@ -483,18 +510,19 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             sheet.write(row_idx, 7, cumulative, styles["yellow"])
             sheet.write(row_idx, 8, f"{total_cumulative_percent}%", styles["yellow_total_percent"])
             sheet.write(row_idx, 9, strategy, styles["yellow_strategy"])
-            # 业绩反转sheet：写入摘帽申请日期（黄色行）
+
+            # 业绩反转sheet：移除去年对应年报日期列，仅保留下期新年报日期和摘帽申请日期
             if is_performance_reversal_sheet:
-                # 年报日期列
+                # 仅写入下期新年报日期（第10列）
                 dates = performance_reversal_annual_report_dict.get(code, ["", ""])
                 sheet.write(row_idx, 10, dates[0], styles["yellow_date_right"])
-                sheet.write(row_idx, 11, dates[1], styles["yellow_date_right"])
-                # 新增摘帽申请日期列（判断是否显示粉红色）
+                # 摘帽申请日期移到第11列
                 delisting_date = performance_reversal_delisting_application_dict.get(code, "")
                 if is_delisting_date_less_than_2months(code):
-                    sheet.write(row_idx, 12, delisting_date, styles["yellow_pink_delisting_apply"])
+                    sheet.write(row_idx, 11, delisting_date, styles["yellow_pink_delisting_apply"])
                 else:
-                    sheet.write(row_idx, 12, delisting_date, styles["yellow_delisting_apply_right"])
+                    sheet.write(row_idx, 11, delisting_date, styles["yellow_delisting_apply_right"])
+
             # 其他策略日期列（保留）
             elif is_limit_up_callback_sheet:
                 dates = limit_up_callback_annual_report_dict.get(code, ["", ""])
@@ -531,6 +559,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     dates = ["", ""]
                 sheet.write(row_idx, 10, dates[0], styles["yellow_date_right"])
                 sheet.write(row_idx, 11, dates[1], styles["yellow_date_right"])
+
         # 普通行样式
         else:
             sheet.write(row_idx, 0, code, styles["base"])
@@ -543,18 +572,19 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             sheet.write(row_idx, 7, cumulative, styles["base"])
             sheet.write(row_idx, 8, f"{total_cumulative_percent}%", styles["total_percent"])
             sheet.write(row_idx, 9, strategy, styles["strategy"])
-            # 业绩反转sheet：写入摘帽申请日期（普通行）
+
+            # 业绩反转sheet：移除去年对应年报日期列，仅保留下期新年报日期和摘帽申请日期
             if is_performance_reversal_sheet:
-                # 年报日期列
+                # 仅写入下期新年报日期（第10列）
                 dates = performance_reversal_annual_report_dict.get(code, ["", ""])
                 sheet.write(row_idx, 10, dates[0], styles["date_right"])
-                sheet.write(row_idx, 11, dates[1], styles["date_right"])
-                # 新增摘帽申请日期列（判断是否显示粉红色）
+                # 摘帽申请日期移到第11列
                 delisting_date = performance_reversal_delisting_application_dict.get(code, "")
                 if is_delisting_date_less_than_2months(code):
-                    sheet.write(row_idx, 12, delisting_date, styles["pink_delisting_apply"])
+                    sheet.write(row_idx, 11, delisting_date, styles["pink_delisting_apply"])
                 else:
-                    sheet.write(row_idx, 12, delisting_date, styles["delisting_apply_right"])
+                    sheet.write(row_idx, 11, delisting_date, styles["delisting_apply_right"])
+
             # 其他策略日期列（保留）
             elif is_limit_up_callback_sheet:
                 dates = limit_up_callback_annual_report_dict.get(code, ["", ""])
@@ -591,7 +621,9 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     dates = ["", ""]
                 sheet.write(row_idx, 10, dates[0], styles["date_right"])
                 sheet.write(row_idx, 11, dates[1], styles["date_right"])
+
         row_idx += 1
+
     # 汇总行（仅总仓位sheet）
     if not is_strategy_sheet and summary_data and summary_percent:
         row_idx += 1
@@ -613,9 +645,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
         for pct in summary_percent.values():
             sheet.write(percent_row, col_idx, f"{pct}%", styles["summary"])
             col_idx += 1
+
 # ---------------------- 16. 数据读取与处理（新增代码空格清理） ----------------------
 old_workbook = xlrd.open_workbook("1234.xls")
 position_dict = {}
+
 # 读取原始仓位数据（01-04 sheet）
 for sheet_name in ["01", "02", "03", "04"]:
     sheet = old_workbook.sheet_by_name(sheet_name)
@@ -624,23 +658,28 @@ for sheet_name in ["01", "02", "03", "04"]:
         name = sheet.cell_value(row_idx, 1)
         count_val = sheet.cell_value(row_idx, 2)
         price_val = sheet.cell_value(row_idx, 3)
+
         # 跳过银华日利
         if "银华日利" in name:
             continue
+
         # 数据类型转换
         count = float(count_val) if count_val else 0.0
         price = float(price_val) if price_val else 0.0
+
         # 标准化证券代码（补零到6位，新增【空格清理】）
         try:
             code_str = str(int(float(code))).strip()  # 清理空格
             code = code_str.zfill(6)
         except:
             code = str(code).strip()  # 清理空格
+
         # 合并同代码数量
         if code in position_dict:
             position_dict[code]["总数量"] += count
         else:
             position_dict[code] = {"名称": name, "总数量": count, "当前价": price}
+
 # 计算金额和仓位百分比（总资金50万）
 total_capital = 500000
 for code, info in position_dict.items():
@@ -651,156 +690,141 @@ for code, info in position_dict.items():
 # 策略分组（key: 策略名, value: 该策略下的代码+信息列表）
 strategy_groups = defaultdict(list)
 # 总仓位数据（用于合并多策略代码）
-total_position_data = []
-# 多策略代码的合并缓存（key: 代码, value: 合并后的策略名+金额等信息）
-multi_strategy_merge_cache = {}
+full_data = []
+# 合并股票sheet专用数据（仅包含指定策略）
+combined_stock_data = []
+# 指定要合并的股票策略列表
+combined_strategies = ["分红股", "业绩反转", "小盘猛牛", "热点发展", "涨停回调", "配债股"]
 
-# 第一步：处理所有代码，区分单策略/多策略/无策略
-for code, info in position_dict.items():
-    # 1. 优先判断是否为多策略代码
+# 先构建总仓位数据并计算排名/累积
+sorted_positions = sorted(position_dict.items(), key=lambda x: x[1]["金额"], reverse=True)
+cumulative_amount = 0
+rank = 1
+
+for code, info in sorted_positions:
+    cumulative_amount += info["金额"]
+    total_cumulative_pct = round((cumulative_amount / total_capital) * 100, 1)
+
+    # 处理多策略归属（优先取multi_strategy_codes，无则取strategy_dict）
     if code in multi_strategy_codes:
         strategies = multi_strategy_codes[code]
-        # 缓存多策略代码的基础信息（用于总仓位合并）
-        if code not in multi_strategy_merge_cache:
-            multi_strategy_merge_cache[code] = {
-                "info": info,
-                "strategies": strategies,
-                "merged_strategy_name": ", ".join(strategies)  # 策略名拼接为"分红股, 涨停回调"
-            }
-        # 多策略代码：在每个对应策略sheet中都添加（满足"分红股/涨停回调sheet都有蓝天燃气"）
-        for strategy in strategies:
-            strategy_groups[strategy].append((code, info))
-    # 2. 单策略/无策略代码处理（核心修改：无策略归为空策略）
     else:
-        # 获取策略，若为空/无匹配则归类到"空策略"
-        strategy = strategy_dict.get(code, "").strip()
-        if not strategy:  # 策略为空字符串/空格时
-            strategy = "空策略"
-        strategy_groups[strategy].append((code, info))
-        # 加入总仓位数据（无策略则显示"空策略"）
-        total_position_data.append((code, info, strategy))
+        # 无策略时归为"空策略"
+        base_strategy = strategy_dict.get(code, "空策略") or "空策略"
+        strategies = [base_strategy]
 
-# 第二步：合并多策略代码到总仓位数据
-for code, merge_info in multi_strategy_merge_cache.items():
-    total_position_data.append(
-        (code, merge_info["info"], merge_info["merged_strategy_name"])
-    )
+    # 总仓位数据：仅显示第一个策略（保持原有逻辑）
+    main_strategy = strategies[0]
+    full_data.append((code, info, main_strategy, rank, cumulative_amount, total_cumulative_pct))
 
-# ---------------------- 18. 总仓位数据排序（按金额降序） ----------------------
-total_position_data.sort(key=lambda x: x[1]["金额"], reverse=True)
+    # 策略分组：多策略代码会被分到多个策略组
+    for strategy in strategies:
+        strategy_groups[strategy].append((code, info, strategy, rank, cumulative_amount, total_cumulative_pct))
 
-# 计算总仓位的排名、累积金额、累积仓位百分比
-total_cumulative = 0
-total_rank = 1
-processed_total_data = []
-for item in total_position_data:
-    code, info, strategy = item
-    total_cumulative += info["金额"]
-    total_cumulative_percent = round((total_cumulative / total_capital) * 100, 1)
-    processed_total_data.append((code, info, strategy, total_rank, total_cumulative, total_cumulative_percent))
-    total_rank += 1
-total_position_data = processed_total_data
+        # 合并股票sheet：仅收集指定策略的代码
+        if strategy in combined_strategies:
+            combined_stock_data.append((code, info, strategy, rank, cumulative_amount, total_cumulative_pct))
 
-# ---------------------- 19. 处理各策略sheet数据（补充排名、累积等） ----------------------
-processed_strategy_groups = {}
+    rank += 1
+
+# ---------------------- 18. 计算各策略汇总数据 ----------------------
+# 策略总金额（去重：同一代码在多策略中只计算一次）
+unique_codes = set()
+strategy_total_amount = {}
+
 for strategy, items in strategy_groups.items():
-    # 按金额降序排序
-    items.sort(key=lambda x: x[1]["金额"], reverse=True)
-    cumulative = 0
-    rank = 1
-    processed_items = []
-    for code, info in items:
-        cumulative += info["金额"]
-        cumulative_percent = round((cumulative / total_capital) * 100, 1)
-        processed_items.append((code, info, strategy, rank, cumulative, cumulative_percent))
-        rank += 1
-    processed_strategy_groups[strategy] = processed_items
+    total = 0
+    for item in items:
+        code = item[0]
+        if code not in unique_codes:
+            total += item[1]["金额"]
+            unique_codes.add(code)
+    strategy_total_amount[strategy] = total
 
-# ---------------------- 20. 汇总数据计算 ----------------------
-summary_data = {}
-summary_percent = {}
-for strategy, items in processed_strategy_groups.items():
-    total_amount = sum([item[1]["金额"] for item in items])
-    summary_data[strategy] = total_amount
-    summary_percent[strategy] = round((total_amount / total_capital) * 100, 1)
+# 策略仓位百分比
+strategy_total_percent = {
+    k: round((v / total_capital) * 100, 1)
+    for k, v in strategy_total_amount.items()
+}
 
-# ---------------------- 21. 创建新工作簿并写入数据 ----------------------
-new_workbook = xlwt.Workbook(encoding="utf-8")
+# 策略显示顺序
+strategy_order = [
+    "分红股", "分红基", "reit", "业绩反转", "小盘猛牛",
+    "热点发展", "配债策略", "涨停回调", "可转债",
+    "套利基", "超跌基", "海外基", "配债股", "空策略"
+]
+order_dict = {strategy: idx for idx, strategy in enumerate(strategy_order)}
+sorted_strategy_names = sorted(
+    strategy_total_amount.keys(),
+    key=lambda x: order_dict.get(x, len(strategy_order))
+)
+
+# 汇总数据（用于总仓位sheet底部）
+summary_data = {n: strategy_total_amount[n] for n in sorted_strategy_names}
+summary_percent = {n: strategy_total_percent[n] for n in sorted_strategy_names}
+
+# ---------------------- 19. 生成最终Excel ----------------------
+final_workbook = xlwt.Workbook(encoding="utf-8")
 styles = create_styles()
 
-# 21.1 写入总仓位sheet
-total_sheet = new_workbook.add_sheet("总仓位", cell_overwrite_ok=True)
+# 1. 总仓位sheet
+main_sheet_name = f"总仓位{len(sorted_strategy_names)}"
+main_sheet = final_workbook.add_sheet(main_sheet_name)
 write_sheet_data(
-    total_sheet, total_position_data, styles,
-    summary_data=summary_data, summary_percent=summary_percent,
+    main_sheet, full_data, styles,
+    is_strategy_sheet=False,
+    summary_data=summary_data,
+    summary_percent=summary_percent,
     total_capital=total_capital
 )
 
-# 21.2 写入各策略sheet
-# 分红股sheet
-if "分红股" in processed_strategy_groups:
-    dividend_sheet = new_workbook.add_sheet("分红股", cell_overwrite_ok=True)
+# 2. 合并股票sheet（新增：包含分红股/业绩反转/小盘猛牛/热点发展/涨停回调/配债股）
+if combined_stock_data:
+    combined_sheet = final_workbook.add_sheet("合并股票")
     write_sheet_data(
-        dividend_sheet, processed_strategy_groups["分红股"], styles,
-        is_strategy_sheet=True, is_dividend_sheet=True,
-        total_capital=total_capital
+        combined_sheet, combined_stock_data, styles,
+        is_strategy_sheet=True,
+        total_capital=total_capital,
+        is_combined_stock_sheet=True  # 标记为合并股票sheet
     )
 
-# 分红基sheet
-if "分红基" in processed_strategy_groups:
-    fund_sheet = new_workbook.add_sheet("分红基", cell_overwrite_ok=True)
+# 3. 各策略独立sheet
+for strategy_name in sorted_strategy_names:
+    group_data = strategy_groups[strategy_name]
+    if not group_data:
+        continue
+
+    # 处理sheet名称非法字符（Excel限制）
+    safe_name = strategy_name.replace("/", "").replace("\\", "").replace(":", "").replace("*", "").replace("?",
+                                                                                                           "").replace(
+        "[", "").replace("]", "")[:31]
+    if not safe_name:
+        safe_name = "空策略"
+
+    strategy_sheet = final_workbook.add_sheet(safe_name)
+
+    # 标记各策略类型（用于写入不同列/排序）
+    is_fund_sheet = (strategy_name == "分红基")
+    is_dividend_sheet = (strategy_name == "分红股")
+    is_small_cap_sheet = (strategy_name == "小盘猛牛")
+    is_hot_development_sheet = (strategy_name == "热点发展")
+    is_performance_reversal_sheet = (strategy_name == "业绩反转")
+    is_limit_up_callback_sheet = (strategy_name == "涨停回调")
+
     write_sheet_data(
-        fund_sheet, processed_strategy_groups["分红基"], styles,
-        is_strategy_sheet=True, is_fund_sheet=True,
-        total_capital=total_capital
+        strategy_sheet, group_data, styles,
+        is_strategy_sheet=True,
+        total_capital=total_capital,
+        is_dividend_sheet=is_dividend_sheet,
+        is_fund_sheet=is_fund_sheet,
+        is_small_cap_sheet=is_small_cap_sheet,
+        is_hot_development_sheet=is_hot_development_sheet,
+        is_performance_reversal_sheet=is_performance_reversal_sheet,
+        is_limit_up_callback_sheet=is_limit_up_callback_sheet
     )
 
-# 业绩反转sheet
-if "业绩反转" in processed_strategy_groups:
-    performance_sheet = new_workbook.add_sheet("业绩反转", cell_overwrite_ok=True)
-    write_sheet_data(
-        performance_sheet, processed_strategy_groups["业绩反转"], styles,
-        is_strategy_sheet=True, is_performance_reversal_sheet=True,
-        total_capital=total_capital
-    )
+# 保存Excel文件
+final_workbook.save("__00_总仓位.xls")
 
-# 涨停回调sheet
-if "涨停回调" in processed_strategy_groups:
-    limit_up_sheet = new_workbook.add_sheet("涨停回调", cell_overwrite_ok=True)
-    write_sheet_data(
-        limit_up_sheet, processed_strategy_groups["涨停回调"], styles,
-        is_strategy_sheet=True, is_limit_up_callback_sheet=True,
-        total_capital=total_capital
-    )
-
-# 小盘猛牛sheet
-if "小盘猛牛" in processed_strategy_groups:
-    small_cap_sheet = new_workbook.add_sheet("小盘猛牛", cell_overwrite_ok=True)
-    write_sheet_data(
-        small_cap_sheet, processed_strategy_groups["小盘猛牛"], styles,
-        is_strategy_sheet=True, is_small_cap_sheet=True,
-        total_capital=total_capital
-    )
-
-# 热点发展sheet
-if "热点发展" in processed_strategy_groups:
-    hot_sheet = new_workbook.add_sheet("热点发展", cell_overwrite_ok=True)
-    write_sheet_data(
-        hot_sheet, processed_strategy_groups["热点发展"], styles,
-        is_strategy_sheet=True, is_hot_development_sheet=True,
-        total_capital=total_capital
-    )
-
-# 其他策略sheet（套利基、可转债、配债股、超跌基、海外基、空策略等）
-other_strategies = ["套利基", "可转债", "配债股", "超跌基", "海外基", "空策略", "其他"]
-for strategy in other_strategies:
-    if strategy in processed_strategy_groups:
-        sheet = new_workbook.add_sheet(strategy, cell_overwrite_ok=True)
-        write_sheet_data(
-            sheet, processed_strategy_groups[strategy], styles,
-            is_strategy_sheet=True, total_capital=total_capital
-        )
-
-# ---------------------- 22. 保存文件 ----------------------
-new_workbook.save("__00_总仓位.xls")
-print("文件生成完成！")
+# 打印完成提示
+print("✅ 表格生成完成！")
