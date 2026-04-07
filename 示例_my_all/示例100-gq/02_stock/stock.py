@@ -138,8 +138,8 @@ performance_reversal_annual_report_dict = {
 # ---------------------- 8. 业绩反转申请摘帽日期字典 ----------------------
 performance_reversal_delisting_application_dict = {
     "600358": "2025年报 2026-03-21",
-    "000929": "2025年报 2026-03-31",
-    "002496": "2025年报 2026-03-31",
+    "000929": "2025年报 2026-04-13",
+    "002496": "2025年报 2026-04-18",
     "002762": "2025年报 2026-04-16",
     "000595": "2025年报 2026-04-18",
     "300211": "2025年报 2026-04-24",
@@ -175,41 +175,88 @@ performance_reversal_delisting_application_dict = {
     "600735": "重整日期 待定",
 }
 
+# 远涨远跌字典：key=证券代码，value=远涨/远跌
+performance_reversal_far_up_down_dict = {
+    "600358": "非周线 + 远涨167",    #联合
+    "002496": "非周线 + 远涨66",     #辉丰
+    "002630": "周线涨 + 远涨20",     #华西
+    "600735": "非周线 + 远涨96",     #新华锦
+    "002122": "非周线 + 远涨58",     #汇洲
+    "600759": "非周线 + 远涨197",    #洲际油气
+    "600169": "非周帽 + 远涨38",     #太重
+    "300044": "非周线 + 远涨189",    #赛为
+    "002124": "半周线 + 远涨17",     #天邦食品
+    "600421": "非周线 + 远涨37",     #华嵘
+    "000698": "非周线 + 远涨48",     #沈华
+    "600777": "非周线 + 远涨280",    #新潮
+    "300506": "非周线 + 远涨180",    #名家汇
+    "002689": "周线涨 + 远涨72",     #远智
+    "002762": "非周线 + 远涨70",     #金比
+    "002424": "非周线 + 远涨67",     #百灵
+    "300343": "非周线 + 远涨1.27",   #st联创
+    "002076": "非周线 + 远涨73",     #星光
+    "000903": "非周线 + 远涨63",     #云动
+    "000595": "半周线 + 远涨205",    #宝实
+    "300527": "周线涨 + 远涨61",     #应急
+    "600636": "半周线 + 远涨32",     #国化
+    "002713": "非周线 + 远涨516",    #东易
+    "603595": "周线涨 + 远涨000",    #东尼
+    "300211": "非周线 + 远涨89",     #亿通
+    "002693": "非周线 + 远涨109",    #双成
+    "002305": "非周线 + 远涨85",     #南置
+    "000929": "非周线 + 远涨86",     #兰黄
+    "603789": "非周线 + 远涨12",     #星农
+    "300173": "半周线 + 远涨45",     #福能
+    "300366": "非周线 + 远涨003",    #创意
+    "300460": "非周线 + 远涨53",     #惠伦
+    "003032": "非周线 + 远涨23",     #传智
+    "600892": "非周线 + 远涨52",     #大晟
+    "600624": "非周线 + 远涨62",     #复华
+    "000821": "半周线 + 远涨59",     #京机
+    "002055": "非周线 + 远涨30",     #得润
+    "002512": "半周线 + 远涨62",     #达华
+
+}
 # ---------------------- 新增：业绩反转 要点字典 ----------------------
 performance_reversal_memo_dict = {
-    "600358": "互联网营销 + 润田重组 + 已申请摘帽",
-    "002496": "农药龙头 + 石化仓储 + 生物农业 + 摘帽预期",
-    "002630": "重整进行",
-    "600735": "待重整",
-    "002122": "即将摘帽",
-    "600759": "业绩改善",
-    "600169": "摘帽排队",
-    "300044": "风险较低",
-    "002124": "预重整",
-    "000698": "基本面反转",
-    "600339": "油气回暖",
-    "600777": "摘帽在即",
-    "300506": "扭亏为盈",
-    "002689": "资产优化",
-    "002762": "业绩回升",
-    "002424": "医药回暖",
-    "300343": "业务转型",
-    "002076": "低位反转",
-    "000903": "国企改革",
-    "000595": "设备更新",
-    "300527": "高端制造",
-    "600636": "环保利好",
-    "002713": "地产链复苏",
-    "603595": "消费复苏",
-    "300211": "医药反转",
-    "002693": "物流改善",
-    "002305": "基建受益",
-    "000929": "白酒复苏",
-    "603789": "新材料",
-    "300173": "设备升级",
-    "600421": "重整落地",
-    "300366": "智能装备",
-    "300460": "半导体",
+    "600358": "互联网营销 + 润田重组 + 财务造假 + 已申请摘帽",                   #联合
+    "002496": "农药龙头&石化仓储&生物农业 + 无重整 + 财务亏损 + 或将摘帽",        #辉丰
+    "002630": "锅炉&电厂环保工程&海外大订单 + 重整进行 + 否定意见 + 将披星",       #华西
+    "600735": "石墨转型&发制品&外贸打底 + 挪用4亿 + 正在重整 + 摘帽不明",          #新华锦
+    "002122": "工业母机&AI数据算力 + 财务造假 + 或将摘帽",                        #汇洲
+    "600759": "哈萨克斯坦油田 + 伊拉克油田 + 批发市场 + 已摘帽",                   #洲际油气
+    "600169": "风力发电设备&矿山设备 + 财务造假 + 或将摘帽",                       #太重
+    "300044": "无人机&机器人 + 财务亏损&持续经营 + 正在重整 + 摘帽不明",            #赛为
+    "002124": "生猪&水产饲料 + 预重整押金 + 正在重整 + 或将戴帽",                   #天邦食品
+    "600421": "装配式建筑构件 + 已重整注入保底资产 + 财务亏损 + 或将摘帽 + 负债91",   #华嵘
+    "000698": "烧碱&央企 + 财务造假 + 或将摘帽",                   #沈华
+    "600777": "美国油气 + 审计非标 + 或将摘帽",                    #新潮
+    "300506": "智慧灯杆 + 财务亏损&持续经营 + 或只摘星",            #名家汇
+    "002689": "电梯风电 + 财务造假 + 或将摘帽",                     #远智
+    "002762": "母婴高端品牌&母婴补贴 + 或只摘星",                   #金比
+    "002424": "苗药龙头 + 财务造假 + 正在处罚摘帽不明 + 大幅质押",   #百灵
+    "300343": "氟化工锂电池 + 财务造假 + 或将摘帽",                 #st联创
+    "002076": "传统照明&锂电光伏 + 财务亏损 + 或将摘帽",            #星光
+    "000903": "小缸径柴油机&无人机 + 财务亏损 + 或将摘帽",          #云动
+    "000595": "轴承风电光伏及储能电站 + 财务亏损 + 或将摘帽",        #宝实
+    "300527": "浮桥军工&国资 + 财务造假 + 或将摘帽",                #应急
+    "600636": "教育录播 + 财务亏损 + 或将摘帽",                    #国化
+    "002713": "算力中心 + 已重整优质资产注入 + 或将摘帽",           #东易
+    "603595": "半导体 + 无重整 + 财务造假 + 或将摘帽",             #东尼
+    "300211": "传感器&AI芯片 + 美国华米爹 + 财务亏损 + 或将摘帽",   #亿通
+    "002693": " 多肽药品 + 财务亏损 + 或将摘帽",                  #双成
+    "002305": "长租公寓 + 已央企重整 + 财务造假 + 或将摘帽",        #南置
+    "000929": "白酒饮料 + 已完成重整 + 财务亏损 + 或将摘帽",       #兰黄
+    "603789": "农机汽配 + 已完成重整 + 财务亏损 + 或只摘星",       #星农
+    "300173": "锂电装备龙头 + 财务造假 + 或将摘帽",                #福能
+    "300366": "大数据AI&卫星通信组件 + 财务造假 + 或将摘帽",       #创意
+    "300460": "石英晶体元器件 + 财务造假 + 或将摘帽",              #惠伦
+    "003032": "职业培训 + 财务亏损 + 或将摘帽",                   #传智
+    "600892": "游戏文旅国企老爹 + 财务亏损 + 或将摘帽 + 负债96",    #大晟
+    "600624": "中成药&软件 + 财务造假 + 或将摘帽",                #复华
+    "000821": "钙钛矿光伏设备龙头 + 财务造假 + 或将摘帽",          #京机
+    "002055": "电子连接器 + 财务造假 + 正在整改摘帽未知",          #得润
+    "002512": "卫星组件运行 + 财务造假 + 正在整改摘帽未知",        #达华
 }
 
 # ---------------------- 9. 涨停回调年报日期字典 ----------------------
@@ -427,7 +474,7 @@ def create_styles():
     pink_delisting_apply = xlwt.XFStyle()
     pink_font = xlwt.Font()
     pink_font.height = 9 * 20
-    pink_font.colour_index = 10
+    pink_font.colour_index = 14   # 红色10 粉红色14
     pink_delisting_apply.font = pink_font
     pink_delisting_apply.alignment = align_date
     styles["pink_delisting_apply"] = pink_delisting_apply
@@ -455,7 +502,7 @@ def create_styles():
     return styles
 
 
-# ---------------------- 15. Sheet写入函数（新增业绩反转【要点】列） ----------------------
+# ---------------------- 15. Sheet写入函数（远涨远跌移到摘帽后、要点前） ----------------------
 def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_sheet=False,
                      summary_data=None, summary_percent=None, total_capital=500000, is_dividend_sheet=False,
                      is_fund_sheet=False, is_small_cap_sheet=False, is_hot_development_sheet=False,
@@ -463,18 +510,18 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                      is_combined_stock_sheet=False):
     col_widths = {
         0: 8, 1: 13, 2: 8, 3: 8, 4: 10, 5: 9, 6: 6, 7: 12,
-        8: 10, 9: 12, 10: 18, 11: 22, 12: 25  # 12列=要点
+        8: 10, 9: 12, 10: 22, 11: 20, 12: 25  # 摘帽(10) → 远涨远跌(11,宽15) → 要点(12)
     }
     for col_idx, width in col_widths.items():
         sheet.col(col_idx).width = width * 256
 
-    # 表头：业绩反转新增【要点】
+    # 表头
     if is_fund_sheet or is_dividend_sheet:
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "下期新分红日期", "去年对应分红日期"]
     elif is_performance_reversal_sheet:
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
-                   "总累积仓位%", "策略", "下期新年报日期", "摘帽申请日期", "要点"]  # 这里加了要点
+                   "总累积仓位%", "策略", "摘帽申请日期", "远涨远跌", "要点"]  # 已调整顺序
     elif is_combined_stock_sheet:
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "下期新年报/分红日期", "去年对应年报/分红日期"]
@@ -536,14 +583,16 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             sheet.write(row_idx, 9, strategy, styles["yellow_strategy"])
 
             if is_performance_reversal_sheet:
-                dates = performance_reversal_annual_report_dict.get(code, ["", ""])
-                sheet.write(row_idx, 10, dates[0], styles["yellow_date_right"])
+                # 摘帽申请日期
                 delisting_date = performance_reversal_delisting_application_dict.get(code, "")
                 if is_delisting_date_less_than_2months(code):
-                    sheet.write(row_idx, 11, delisting_date, styles["yellow_pink_delisting_apply"])
+                    sheet.write(row_idx, 10, delisting_date, styles["yellow_pink_delisting_apply"])
                 else:
-                    sheet.write(row_idx, 11, delisting_date, styles["yellow_delisting_apply_right"])
-                # 写入要点
+                    sheet.write(row_idx, 10, delisting_date, styles["yellow_delisting_apply_right"])
+                # 远涨远跌
+                far_up_down = performance_reversal_far_up_down_dict.get(code, "")
+                sheet.write(row_idx, 11, far_up_down, styles["yellow"])
+                # 要点
                 memo = performance_reversal_memo_dict.get(code, "")
                 sheet.write(row_idx, 12, memo, styles["yellow_memo_left"])
 
@@ -595,14 +644,16 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             sheet.write(row_idx, 9, strategy, styles["strategy"])
 
             if is_performance_reversal_sheet:
-                dates = performance_reversal_annual_report_dict.get(code, ["", ""])
-                sheet.write(row_idx, 10, dates[0], styles["date_right"])
+                # 摘帽申请日期
                 delisting_date = performance_reversal_delisting_application_dict.get(code, "")
                 if is_delisting_date_less_than_2months(code):
-                    sheet.write(row_idx, 11, delisting_date, styles["pink_delisting_apply"])
+                    sheet.write(row_idx, 10, delisting_date, styles["pink_delisting_apply"])
                 else:
-                    sheet.write(row_idx, 11, delisting_date, styles["delisting_apply_right"])
-                # 写入要点
+                    sheet.write(row_idx, 10, delisting_date, styles["delisting_apply_right"])
+                # 远涨远跌
+                far_up_down = performance_reversal_far_up_down_dict.get(code, "")
+                sheet.write(row_idx, 11, far_up_down, styles["base"])
+                # 要点
                 memo = performance_reversal_memo_dict.get(code, "")
                 sheet.write(row_idx, 12, memo, styles["memo_left"])
 
@@ -641,7 +692,6 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     dates = ["", ""]
                 sheet.write(row_idx, 10, dates[0], styles["date_right"])
                 sheet.write(row_idx, 11, dates[1], styles["date_right"])
-
         row_idx += 1
 
     if not is_strategy_sheet and summary_data and summary_percent:
@@ -664,7 +714,6 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
         for pct in summary_percent.values():
             sheet.write(percent_row, col_idx, f"{pct}%", styles["summary"])
             col_idx += 1
-
 
 # ---------------------- 16. 数据读取与处理 ----------------------
 old_workbook = xlrd.open_workbook("1234.xls")
@@ -699,8 +748,9 @@ for code, info in position_dict.items():
 # ---------------------- 17. 数据分组 ----------------------
 strategy_groups = defaultdict(list)
 full_data = []
-combined_stock_data = []
-combined_strategies = ["分红股", "业绩反转", "小盘猛牛", "热点发展", "涨停回调", "配债股"]
+# 注释/删除：合并股票相关的数据初始化
+# combined_stock_data = []
+# combined_strategies = ["分红股", "业绩反转", "小盘猛牛", "热点发展", "涨停回调", "配债股"]
 
 sorted_positions = sorted(position_dict.items(), key=lambda x: x[1]["金额"], reverse=True)
 cumulative_amount = 0
@@ -721,8 +771,9 @@ for code, info in sorted_positions:
 
     for strategy in strategies:
         strategy_groups[strategy].append((code, info, strategy, rank, cumulative_amount, total_cumulative_pct))
-        if strategy in combined_strategies:
-            combined_stock_data.append((code, info, strategy, rank, cumulative_amount, total_cumulative_pct))
+        # 注释/删除：合并股票数据添加逻辑
+        # if strategy in combined_strategies:
+        #     combined_stock_data.append((code, info, strategy, rank, cumulative_amount, total_cumulative_pct))
     rank += 1
 
 # ---------------------- 18. 策略汇总 ----------------------
@@ -770,14 +821,15 @@ write_sheet_data(
     total_capital=total_capital
 )
 
-if combined_stock_data:
-    combined_sheet = final_workbook.add_sheet("合并股票")
-    write_sheet_data(
-        combined_sheet, combined_stock_data, styles,
-        is_strategy_sheet=True,
-        total_capital=total_capital,
-        is_combined_stock_sheet=True
-    )
+# 注释/删除：合并股票sheet创建逻辑
+# if combined_stock_data:
+#     combined_sheet = final_workbook.add_sheet("合并股票")
+#     write_sheet_data(
+#         combined_sheet, combined_stock_data, styles,
+#         is_strategy_sheet=True,
+#         total_capital=total_capital,
+#         is_combined_stock_sheet=True
+#     )
 
 for strategy_name in sorted_strategy_names:
     group_data = strategy_groups[strategy_name]
