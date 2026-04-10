@@ -172,7 +172,6 @@
 
 
 12. 向上取整  math.ceil
-
       import math
       import numpy as np
  
@@ -189,10 +188,19 @@
       print(AAA, BBB, last_frame)  # 550 2.75 3
 
 
-
 13. 向下取整 math.floor
-
       import math
       BBB = 2.75  # 你的批次倍数
       last_frame_floor = math.floor(BBB)  # 向下取整
       print(last_frame_floor)  # 2（对比向上取整的3）
+
+
+14. 自动打开当前目录下唯一的.dat文件， 当dat文件数量大于一个或者没有dat文件时直接报错退出
+      import glob
+      import sys
+      dat_files = glob.glob("*.dat")
+      file_num = len(dat_files)
+      if file_num != 1:
+          print("multi files, or no file")
+          sys.exit()
+
