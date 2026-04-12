@@ -175,88 +175,141 @@ performance_reversal_delisting_application_dict = {
     "600735": "重整日期 待定",
 }
 
-# 远涨远跌字典：key=证券代码，value=远涨/远跌
-performance_reversal_far_up_down_dict = {
-    "600358": "非周线 + 远涨167",    #联合
-    "002496": "非周线 + 远涨66",     #辉丰
-    "002630": "周线涨 + 远涨20",     #华西
-    "600735": "非周线 + 远涨96",     #新华锦
-    "002122": "非周线 + 远涨58",     #汇洲
-    "600759": "非周线 + 远涨197",    #洲际油气
-    "600169": "非周帽 + 远涨38",     #太重
-    "300044": "非周线 + 远涨189",    #赛为
-    "002124": "半周线 + 远涨17",     #天邦食品
-    "600421": "非周线 + 远涨37",     #华嵘
-    "000698": "非周线 + 远涨48",     #沈华
-    "600777": "非周线 + 远涨280",    #新潮
-    "300506": "非周线 + 远涨180",    #名家汇
-    "002689": "周线涨 + 远涨72",     #远智
-    "002762": "非周线 + 远涨70",     #金比
-    "002424": "非周线 + 远涨67",     #百灵
-    "300343": "非周线 + 远涨1.27",   #st联创
-    "002076": "非周线 + 远涨73",     #星光
-    "000903": "非周线 + 远涨63",     #云动
-    "000595": "半周线 + 远涨205",    #宝实
-    "300527": "周线涨 + 远涨61",     #应急
-    "600636": "半周线 + 远涨32",     #国化
-    "002713": "非周线 + 远涨516",    #东易
-    "603595": "周线涨 + 远涨000",    #东尼
-    "300211": "非周线 + 远涨89",     #亿通
-    "002693": "非周线 + 远涨109",    #双成
-    "002305": "非周线 + 远涨85",     #南置
-    "000929": "非周线 + 远涨86",     #兰黄
-    "603789": "非周线 + 远涨12",     #星农
-    "300173": "半周线 + 远涨45",     #福能
-    "300366": "非周线 + 远涨003",    #创意
-    "300460": "非周线 + 远涨53",     #惠伦
-    "003032": "非周线 + 远涨23",     #传智
-    "600892": "非周线 + 远涨52",     #大晟
-    "600624": "非周线 + 远涨62",     #复华
-    "000821": "半周线 + 远涨59",     #京机
-    "002055": "非周线 + 远涨30",     #得润
-    "002512": "半周线 + 远涨62",     #达华
+# 周线 字典 (示例：半周线、空、周线等)
+performance_reversal_week_line_dict = {
+    #持仓中
+    "600358": "    否",  # 联合
+    "000929": "    否",  # 兰黄
+    "600636": "    半周线",  # 国化
+    "603789": "    否",  # 星农
+    "003032": "    否",  # 传智
+    "002076": "    否",  # 星光
+    "600421": "    否",  # 华嵘
+    "600892": "    否",  # 大晟
+    "002124": "    半周线",  # 天邦食品
+    "000903": "    否",  # 云动
+    "300527": "    周线涨",  # 应急
+    "300366": "    否",  # 创意
+    "603595": "    周线涨",  # 东尼
+    "002122": "    否",  # 汇洲
+    "600624": "    否",  # 复华
+    "600169": "    非周帽",  # 太重
+    "000821": "    半周线",  # 京机
+    "300173": "    半周线",  # 福能
+    "002630": "    周线涨",  # 华西         //买入
+    "002512": "    半周线",  # 达华
+    "002055": "    否",  # 得润
 
+    # ready
+    "000698": "    否",  # 沈华
+    "002496": "    否",  # 辉丰
+    "600735": "    否",  # 新华锦
+    "600759": "    否",  # 洲际油气
+    "002689": "    周线涨",  # 远智
+    "002762": "    否",  # 金比
+    "002424": "    否",  # 百灵
+    "300460": "    否",  # 惠伦
+
+    # 涨幅过大
+    "300044": "    否",  # 赛为
+    "600777": "    否",  # 新潮
+    "300506": "    否",  # 名家汇
+    "300343": "    否",  # 联创
+    "000595": "    半周线",  # 宝实
+    "002713": "    否",  # 东易
+    "300211": "    否",  # 亿通
+    "002693": "    否",  # 双成
+    "002305": "    否",  # 南置
 }
+
+# ===================== 业绩反转 - 合并字典：远涨,远跌 =====================
+# 格式：key=股票代码, value="远涨数值,远跌数值"
+performance_reversal_far_dict = {
+    #持仓中
+    "000929": "96, 32 ",    # 兰黄
+    "600636": "39, 60 ",    # 国化
+    "603789": "13, 66 ",    # 星农
+    "003032": "28, 70 ",    # 传智
+    "002076": "84, 55 ",    # 星光
+    "600421": "41, 59 ",    # 华嵘
+    "600892": "52, 52 ",    # 大晟
+    "002124": "20, 78 ",    # 天邦食品
+    "000903": "61, 59 ",    # 云动
+    "300527": "64, 38 ",    # 应急
+    "300366": "06, 73 ",   # 创意
+    "603595": "09, 82 ",   # 东尼
+    "002122": "65, 22 ",    # 汇洲
+    "600624": "64, 52 ",    # 复华
+    "600169": "39, 32 ",    # 太重
+    "000821": "61, 59 ",    # 京机
+    "300173": "51, 62 ",    # 福能
+    "002630": "19, 69 ",    # 华西         //买入
+    "002512": "72, 53 ",    # 达华
+    "002055": "39, 65 ",    # 得润
+
+     # ready
+    "600358": "184, 27 ",  # 联合
+    "000698": "51, 55 ",    # 沈华
+    "002496": "66, 51 ",    # 辉丰
+    "600735": "96, 35 ",    # 新华锦
+    "600759": "185, 41 ",   # 洲际油气
+    "002689": "79, 49 ",    # 远智
+    "002762": "75, 67 ",    # 金比
+    "002424": "69, 58 ",    #百灵
+    "300460": "58, 70 ",    # 惠伦
+
+     # 涨幅过大
+    "300044": "375, 12 ",    # 赛为
+    "600777": "294, 11 ",    # 新潮
+    "300506": "290, 57 ",    # 名家汇
+    "300343": "131, 79 ",   # 联创
+    "000595": "209, 50 ",    # 宝实
+    "002713": "626, 23 ",    # 东易
+    "300211": "101, 48 ",     # 亿通
+    "002693": "118, 81 ",    # 双成
+    "002305": "89, 52 ",     # 南置
+}
+
 # ---------------------- 新增：业绩反转 要点字典 ----------------------
 performance_reversal_memo_dict = {
-    "600358": "互联网营销 + 润田重组 + 财务造假 + 已申请摘帽",                   #联合
-    "002496": "农药龙头&石化仓储&生物农业 + 无重整 + 财务亏损 + 或将摘帽",        #辉丰
-    "002630": "锅炉&电厂环保工程&海外大订单 + 重整进行 + 否定意见 + 将披星",       #华西
-    "600735": "石墨转型&发制品&外贸打底 + 挪用4亿 + 正在重整 + 摘帽不明",          #新华锦
-    "002122": "工业母机&AI数据算力 + 财务造假 + 或将摘帽",                        #汇洲
-    "600759": "哈萨克斯坦油田 + 伊拉克油田 + 批发市场 + 已摘帽",                   #洲际油气
-    "600169": "风力发电设备&矿山设备 + 财务造假 + 或将摘帽",                       #太重
-    "300044": "无人机&机器人 + 财务亏损&持续经营 + 正在重整 + 摘帽不明",            #赛为
-    "002124": "生猪&水产饲料 + 预重整押金 + 正在重整 + 或将戴帽",                   #天邦食品
-    "600421": "装配式建筑构件 + 已重整注入保底资产 + 财务亏损 + 或将摘帽 + 负债91",   #华嵘
-    "000698": "烧碱&央企 + 财务造假 + 或将摘帽",                   #沈华
-    "600777": "美国油气 + 审计非标 + 或将摘帽",                    #新潮
-    "300506": "智慧灯杆 + 财务亏损&持续经营 + 或只摘星",            #名家汇
-    "002689": "电梯风电 + 财务造假 + 或将摘帽",                     #远智
-    "002762": "母婴高端品牌&母婴补贴 + 或只摘星",                   #金比
-    "002424": "苗药龙头 + 财务造假 + 正在处罚摘帽不明 + 大幅质押",   #百灵
-    "300343": "氟化工锂电池 + 财务造假 + 或将摘帽",                 #st联创
-    "002076": "传统照明&锂电光伏 + 财务亏损 + 或将摘帽",            #星光
-    "000903": "小缸径柴油机&无人机 + 财务亏损 + 或将摘帽",          #云动
-    "000595": "轴承风电光伏及储能电站 + 财务亏损 + 或将摘帽",        #宝实
-    "300527": "浮桥军工&国资 + 财务造假 + 或将摘帽",                #应急
-    "600636": "教育录播 + 财务亏损 + 或将摘帽",                    #国化
-    "002713": "算力中心 + 已重整优质资产注入 + 或将摘帽",           #东易
-    "603595": "半导体 + 无重整 + 财务造假 + 或将摘帽",             #东尼
-    "300211": "传感器&AI芯片 + 美国华米爹 + 财务亏损 + 或将摘帽",   #亿通
-    "002693": " 多肽药品 + 财务亏损 + 或将摘帽",                  #双成
-    "002305": "长租公寓 + 已央企重整 + 财务造假 + 或将摘帽",        #南置
-    "000929": "白酒饮料 + 已完成重整 + 财务亏损 + 或将摘帽",       #兰黄
-    "603789": "农机汽配 + 已完成重整 + 财务亏损 + 或只摘星",       #星农
-    "300173": "锂电装备龙头 + 财务造假 + 或将摘帽",                #福能
-    "300366": "大数据AI&卫星通信组件 + 财务造假 + 或将摘帽",       #创意
-    "300460": "石英晶体元器件 + 财务造假 + 或将摘帽",              #惠伦
-    "003032": "职业培训 + 财务亏损 + 或将摘帽",                   #传智
-    "600892": "游戏文旅国企老爹 + 财务亏损 + 或将摘帽 + 负债96",    #大晟
-    "600624": "中成药&软件 + 财务造假 + 或将摘帽",                #复华
-    "000821": "钙钛矿光伏设备龙头 + 财务造假 + 或将摘帽",          #京机
-    "002055": "电子连接器 + 财务造假 + 正在整改摘帽未知",          #得润
-    "002512": "卫星组件运行 + 财务造假 + 正在整改摘帽未知",        #达华
+     "600358": "    互联网营销 + 润田重组 + 财务造假 + 已申请摘帽",                   #联合
+    "002496": "    农药龙头&石化仓储&生物农业 + 无重整 + 财务亏损 + 或将摘帽",        #辉丰
+    "002630": "    锅炉&电厂环保工程&海外大订单 + 重整进行 + 否定意见 + 将披星",       #华西
+    "600735": "    石墨转型&发制品&外贸打底 + 挪用4亿 + 正在重整 + 摘帽不明",          #新华锦
+    "002122": "    工业母机&AI数据算力 + 财务造假 + 或将摘帽",                        #汇洲
+    "600759": "    哈萨克斯坦油田 + 伊拉克油田 + 批发市场 + 已摘帽",                   #洲际油气
+    "600169": "    风力发电设备&矿山设备 + 财务造假 + 或将摘帽",                       #太重
+    "300044": "    无人机&机器人 + 财务亏损&持续经营 + 正在重整 + 摘帽不明",            #赛为
+    "002124": "    生猪&水产饲料 + 预重整押金 + 正在重整 + 或将戴帽",                   #天邦食品
+    "600421": "    装配式建筑构件 + 已重整注入保底资产 + 财务亏损 + 或将摘帽 + 负债91",   #华嵘
+    "000698": "    烧碱&央企 + 财务造假 + 或将摘帽",                   #沈华
+    "600777": "    美国油气 + 审计非标 + 或将摘帽",                    #新潮
+    "300506": "    智慧灯杆 + 财务亏损&持续经营 + 或只摘星",            #名家汇
+    "002689": "    电梯风电 + 财务造假 + 或将摘帽",                     #远智
+    "002762": "    母婴高端品牌&母婴补贴 + 或只摘星",                   #金比
+    "002424": "    苗药龙头 + 财务造假 + 正在处罚摘帽不明 + 大幅质押",   #百灵
+    "300343": "    氟化工锂电池 + 财务造假 + 或将摘帽",                 #st联创
+    "002076": "    传统照明&锂电光伏 + 财务亏损 + 或将摘帽",            #星光
+    "000903": "    小缸径柴油机&无人机 + 财务亏损 + 或将摘帽",          #云动
+    "000595": "    轴承风电光伏及储能电站 + 财务亏损 + 或将摘帽",        #宝实
+    "300527": "    浮桥军工&国资 + 财务造假 + 或将摘帽",                #应急
+    "600636": "    教育录播 + 财务亏损 + 或将摘帽",                    #国化
+    "002713": "    算力中心 + 已重整优质资产注入 + 或将摘帽",           #东易
+    "603595": "    半导体 + 无重整 + 财务造假 + 或将摘帽",             #东尼
+    "300211": "    传感器&AI芯片 + 美国华米爹 + 财务亏损 + 或将摘帽",   #亿通
+    "002693": "    多肽药品 + 财务亏损 + 或将摘帽",                   #双成
+    "002305": "    长租公寓 + 已央企重整 + 财务造假 + 或将摘帽",        #南置
+    "000929": "    白酒饮料 + 已完成重整 + 财务亏损 + 或将摘帽",       #兰黄
+    "603789": "    农机汽配 + 已完成重整 + 财务亏损 + 或只摘星",       #星农
+    "300173": "    锂电装备龙头 + 财务造假 + 或将摘帽",                #福能
+    "300366": "    大数据AI&卫星通信组件 + 财务造假 + 或将摘帽",       #创意
+    "300460": "    石英晶体元器件 + 财务造假 + 或将摘帽",              #惠伦
+    "003032": "    职业培训 + 财务亏损 + 或将摘帽",                   #传智
+    "600892": "    游戏文旅国企老爹 + 财务亏损 + 或将摘帽 + 负债96",    #大晟
+    "600624": "    中成药&软件 + 财务造假 + 或将摘帽",                #复华
+    "000821": "    钙钛矿光伏设备龙头 + 财务造假 + 或将摘帽",          #京机
+    "002055": "    电子连接器 + 财务造假 + 正在整改摘帽未知",          #得润
+    "002512": "    卫星组件运行 + 财务造假 + 正在整改摘帽未知",        #达华
 }
 
 # ---------------------- 9. 涨停回调年报日期字典 ----------------------
@@ -499,6 +552,85 @@ def create_styles():
     yellow_memo_left.pattern = pattern
     styles["yellow_memo_left"] = yellow_memo_left
 
+    # 周线列专用：半周线 / 周线涨 粉红色字体
+    week_pink_font = xlwt.Font()
+    week_pink_font.height = 9 * 20
+    week_pink_font.colour_index = 14  # 粉红色
+
+    # 普通行 粉红色
+    week_pink_style = xlwt.XFStyle()
+    week_pink_style.font = week_pink_font
+    styles["week_pink"] = week_pink_style
+
+    # 黄色行 粉红色（黄底）
+    week_yellow_pink_style = xlwt.XFStyle()
+    week_yellow_pink_style.font = week_pink_font
+    week_yellow_pink_style.pattern = pattern
+    week_yellow_pink_style.alignment = align_date
+    styles["week_yellow_pink"] = week_yellow_pink_style
+
+    # 远涨专用颜色
+    far_up_pink_font = xlwt.Font()
+    far_up_pink_font.height = 9 * 20
+    far_up_pink_font.colour_index = 14  # 粉红
+
+    far_up_red_font = xlwt.Font()
+    far_up_red_font.height = 9 * 20
+    far_up_red_font.colour_index = 10  # 红色
+
+    # 普通行
+    far_up_pink = xlwt.XFStyle()
+    far_up_pink.font = far_up_pink_font
+    styles["far_up_pink"] = far_up_pink
+
+    far_up_red = xlwt.XFStyle()
+    far_up_red.font = far_up_red_font
+    styles["far_up_red"] = far_up_red
+
+    # 黄色行（黄底）
+    far_up_yellow_pink = xlwt.XFStyle()
+    far_up_yellow_pink.font = far_up_pink_font
+    far_up_yellow_pink.pattern = pattern
+    far_up_yellow_pink.alignment = align_date
+    styles["far_up_yellow_pink"] = far_up_yellow_pink
+
+    far_up_yellow_red = xlwt.XFStyle()
+    far_up_yellow_red.font = far_up_red_font
+    far_up_yellow_red.pattern = pattern
+    far_up_yellow_red.alignment = align_date
+    styles["far_up_yellow_red"] = far_up_yellow_red
+
+    # 远跌专用颜色
+    far_down_pink_font = xlwt.Font()
+    far_down_pink_font.height = 9 * 20
+    far_down_pink_font.colour_index = 14  # 粉红
+
+    far_down_red_font = xlwt.Font()
+    far_down_red_font.height = 9 * 20
+    far_down_red_font.colour_index = 10  # 红色
+
+    # 普通行
+    far_down_pink = xlwt.XFStyle()
+    far_down_pink.font = far_down_pink_font
+    styles["far_down_pink"] = far_down_pink
+
+    far_down_red = xlwt.XFStyle()
+    far_down_red.font = far_down_red_font
+    styles["far_down_red"] = far_down_red
+
+    # 黄色行（黄底）
+    far_down_yellow_pink = xlwt.XFStyle()
+    far_down_yellow_pink.font = far_down_pink_font
+    far_down_yellow_pink.pattern = pattern
+    far_down_yellow_pink.alignment = align_date
+    styles["far_down_yellow_pink"] = far_down_yellow_pink
+
+    far_down_yellow_red = xlwt.XFStyle()
+    far_down_yellow_red.font = far_down_red_font
+    far_down_yellow_red.pattern = pattern
+    far_down_yellow_red.alignment = align_date
+    styles["far_down_yellow_red"] = far_down_yellow_red
+
     return styles
 
 
@@ -509,8 +641,8 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                      is_performance_reversal_sheet=False, is_limit_up_callback_sheet=False,
                      is_combined_stock_sheet=False):
     col_widths = {
-        0: 8, 1: 13, 2: 8, 3: 8, 4: 10, 5: 9, 6: 6, 7: 12,
-        8: 10, 9: 12, 10: 22, 11: 20, 12: 25  # 摘帽(10) → 远涨远跌(11,宽15) → 要点(12)
+        0: 8, 1: 10, 2: 8, 3: 8, 4: 10, 5: 9, 6: 6, 7: 10,
+        8: 10, 9: 8, 10: 20, 11: 10, 12: 10, 13: 10, 14: 25
     }
     for col_idx, width in col_widths.items():
         sheet.col(col_idx).width = width * 256
@@ -521,7 +653,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                    "总累积仓位%", "策略", "下期新分红日期", "去年对应分红日期"]
     elif is_performance_reversal_sheet:
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
-                   "总累积仓位%", "策略", "摘帽申请日期", "远涨远跌", "要点"]  # 已调整顺序
+                   "总累积仓位%", "策略", "摘帽申请日期", "周线", "远涨", "远跌", "要点"]
     elif is_combined_stock_sheet:
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "下期新年报/分红日期", "去年对应年报/分红日期"]
@@ -589,12 +721,47 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     sheet.write(row_idx, 10, delisting_date, styles["yellow_pink_delisting_apply"])
                 else:
                     sheet.write(row_idx, 10, delisting_date, styles["yellow_delisting_apply_right"])
-                # 远涨远跌
-                far_up_down = performance_reversal_far_up_down_dict.get(code, "")
-                sheet.write(row_idx, 11, far_up_down, styles["yellow"])
+
+                # 周线
+                week_line = performance_reversal_week_line_dict.get(code, "")
+                week_line_stripped = week_line.strip()
+                if week_line_stripped in ("半周线", "周线涨"):
+                    sheet.write(row_idx, 11, week_line, styles["week_yellow_pink"])
+                else:
+                    sheet.write(row_idx, 11, week_line, styles["yellow"])
+
+                # 远涨 + 远跌
+                far_data = performance_reversal_far_dict.get(code, ",").split(",")
+                far_up = far_data[0].strip()
+                far_down = far_data[1].strip()
+
+                # 远涨
+                try:
+                    val = int(far_up)
+                    if val <= 50:
+                        sheet.write(row_idx, 12, far_up, styles["far_up_yellow_pink"])
+                    elif val >= 70:
+                        sheet.write(row_idx, 12, far_up, styles["far_up_yellow_red"])
+                    else:
+                        sheet.write(row_idx, 12, far_up, styles["yellow"])
+                except:
+                    sheet.write(row_idx, 12, far_up, styles["yellow"])
+
+                # 远跌：≥60粉红 ≤30红色
+                try:
+                    val = int(far_down)
+                    if val >= 60:
+                        sheet.write(row_idx, 13, far_down, styles["far_down_yellow_pink"])
+                    elif val <= 30:
+                        sheet.write(row_idx, 13, far_down, styles["far_down_yellow_red"])
+                    else:
+                        sheet.write(row_idx, 13, far_down, styles["yellow"])
+                except:
+                    sheet.write(row_idx, 13, far_down, styles["yellow"])
+
                 # 要点
                 memo = performance_reversal_memo_dict.get(code, "")
-                sheet.write(row_idx, 12, memo, styles["yellow_memo_left"])
+                sheet.write(row_idx, 14, memo, styles["yellow_memo_left"])
 
             elif is_limit_up_callback_sheet:
                 dates = limit_up_callback_annual_report_dict.get(code, ["", ""])
@@ -650,12 +817,47 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     sheet.write(row_idx, 10, delisting_date, styles["pink_delisting_apply"])
                 else:
                     sheet.write(row_idx, 10, delisting_date, styles["delisting_apply_right"])
-                # 远涨远跌
-                far_up_down = performance_reversal_far_up_down_dict.get(code, "")
-                sheet.write(row_idx, 11, far_up_down, styles["base"])
+
+                # 周线（去空格判断粉红色）
+                week_line = performance_reversal_week_line_dict.get(code, "")
+                week_line_stripped = week_line.strip()
+                if week_line_stripped in ("半周线", "周线涨"):
+                    sheet.write(row_idx, 11, week_line, styles["week_pink"])
+                else:
+                    sheet.write(row_idx, 11, week_line, styles["base"])
+
+                # 远涨 + 远跌 合并字典
+                far_data = performance_reversal_far_dict.get(code, ",").split(",")
+                far_up = far_data[0].strip()
+                far_down = far_data[1].strip()
+
+                # 远涨：≤50粉红 ≥70红色
+                try:
+                    val = int(far_up)
+                    if val <= 50:
+                        sheet.write(row_idx, 12, far_up, styles["far_up_pink"])
+                    elif val >= 70:
+                        sheet.write(row_idx, 12, far_up, styles["far_up_red"])
+                    else:
+                        sheet.write(row_idx, 12, far_up, styles["base"])
+                except:
+                    sheet.write(row_idx, 12, far_up, styles["base"])
+
+                # 远跌：≥60粉红 ≤30红色
+                try:
+                    val = int(far_down)
+                    if val >= 60:
+                        sheet.write(row_idx, 13, far_down, styles["far_down_pink"])
+                    elif val <= 30:
+                        sheet.write(row_idx, 13, far_down, styles["far_down_red"])
+                    else:
+                        sheet.write(row_idx, 13, far_down, styles["base"])
+                except:
+                    sheet.write(row_idx, 13, far_down, styles["base"])
+
                 # 要点
                 memo = performance_reversal_memo_dict.get(code, "")
-                sheet.write(row_idx, 12, memo, styles["memo_left"])
+                sheet.write(row_idx, 14, memo, styles["memo_left"])
 
             elif is_limit_up_callback_sheet:
                 dates = limit_up_callback_annual_report_dict.get(code, ["", ""])
