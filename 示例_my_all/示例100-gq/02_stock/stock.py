@@ -1,3 +1,4 @@
+
 # 远涨 -- 小于50时显示粉红色字体，大于70时显示红色字体
 # 远跌 -- 大于60时显示粉红色字体，小于30时显示红色字体
 
@@ -11,8 +12,62 @@ import re
 
 # ============================== 一。每周维护字典  ===============================
 
+# ---------------------- 0.1：分红股， 远涨远跌字典 ----------------------
+stock_dividend_struct_dict = {
+    "605368": "51, 46 ",    # 蓝天燃气
+    "603801": "07, 67 ",   # 志邦家居
+    "601169": "83, 24 ",  # 北京银行
+    "600016": "49, 32 ",  # 民生银行
+    "600755": "39, 30 ",  # 厦门国贸
+    "601916": "42, 23 ",  # 浙商银行
+    "601006": "28, 27 ",  # 大秦铁路
+    "002807": "63, 15 ",  # 江阴银行
+    "000001": "51, 51 ",  # 平安银行
+    "600681": "41, 29 ",  # 百川能源
 
-# ===================== 0.1：业绩反转，远涨远跌字典 =====================
+}
+
+# ---------------------- 0.2：涨停回调, 远涨远跌字典 ----------------------
+limit_up_callback_struct_dict = {
+    "001202": "148, 30 ",    # 炬申股份
+    "605368": "51, 46 ",    # 蓝天燃气
+    "600755": "39, 30 ",    # 厦门国贸
+    "600662": "56, 42 ",    # 外服控股
+    "600858": "70, 29 ",    # 银座股份
+    "600814": "68, 35 ",    # 杭州解百
+    "600681": "41, 29 ",    # 百川能源
+}
+
+
+# ---------------------- 0.3：小盘猛牛, 远涨远跌字典 ----------------------
+
+small_cap_callback_struct_dict = {
+    "300891": "59, 65 ",    # 惠云钛业
+    "601006": "28, 26 ",    # 大秦铁路   //测试数据
+}
+
+# ---------------------- 0.4：热点发展, 远涨远跌字典 ----------------------
+
+hot_development_struct_dict = {
+    "002570": "121, 39 ",    # 贝因美
+    "603801": "06, 68 ",    # 志邦家居  //测试数据
+}
+
+# ---------------------- 0.5：配债股, 远涨远跌字典 ----------------------
+
+bond_allot_struct_dict = {
+    "603759": "74, 53 ",  # 海天股份
+    "001202": "148, 30 ",  # 炬申股份
+}
+
+
+# ---------------------- 0.6：分红基, 远涨远跌字典 ----------------------
+dividend_fund_struct_dict = {
+    "180102": "12, 50 ",    # 合肥高新
+}
+
+
+# ===================== 0.7：业绩反转，远涨远跌字典 =====================
 # 格式：key=股票代码, value="远涨数值,远跌数值"
 performance_reversal_far_dict = {
     #持仓中
@@ -63,85 +118,105 @@ performance_reversal_far_dict = {
     "002305": "89, 52 ",     # 南置
 }
 
-# ---------------------- 0.2：分红股 远涨远跌字典 ----------------------
-dividend_structure_dict = {
-    "605368": "51, 46 ",    # 蓝天燃气
-    "603801": "07, 67 ",   # 志邦家居
-    "601169": "83, 24 ",  # 北京银行
-    "600016": "49, 32 ",  # 民生银行
-    "600755": "39, 30 ",  # 厦门国贸
-    "601916": "42, 23 ",  # 浙商银行
-    "601006": "28, 27 ",  # 大秦铁路
-    "002807": "63, 15 ",  # 江阴银行
-    "000001": "51, 51 ",  # 平安银行
-    "600681": "41, 29 ",  # 百川能源
-
-}
-
-# ---------------------- 0.3：分红基 远涨远跌字典 ----------------------
-dividend_fund_struct_dict = {
-    "180102": "12, 50 ",    # 合肥高新
-}
-
-
 
 # ============================== 二。不常维护字典  ===============================
 
 
-# ---------------------- 1： 单个策略字典 ----------------------
 
-strategy_dict = {
-    "000001": "分红股", "605368": "分红股", "600985": "分红股",
-    "601916": "分红股", "601169": "分红股", "002807": "分红股",
-    "600188": "分红股", "600016": "分红股", "600681": "分红股",
-    "600256": "分红股", "603801": "分红股", "002267": "分红股", "600219": "分红股",
-    "180102": "分红基", "515300": "分红基", "159307": "分红基",
-    "510880": "分红基", "510720": "分红基", "508056": "分红基",
-    "515450": "分红基", "513820": "分红基",
-    "501018": "套利基", "002496": "业绩反转", "127033": "可转债", "160723": "套利基",
-    "161129": "套利基", "512290": "超跌基", "600759": "业绩反转",
-    "511880": "空策略", "002385": "热点发展", "512010": "超跌基", "159329": "海外基",
-    "002570": "热点发展", "515710": "超跌基", "300891": "小盘猛牛",
-    "002630": "业绩反转", "000516": "热点发展", "111024": "可转债", "000537": "热点发展",
-    "002122": "业绩反转", "605058": "配债策略",
-    "110081": "可转债", "600169": "业绩反转", "605162": "小盘猛牛", "002154": "涨停回调",
-    "404003": "可转债", "600735": "业绩反转", "300044": "业绩反转",
-    "520870": "海外基", "404002": "", "161226": "套利基", "501300": "套利基",
-    "161128": "套利基", "127015": "可转债", "160216": "套利基", "160324": "套利基",
-    "161032": "超跌基", "164701": "套利基", "161116": "套利基", "601669": "涨停回调",
-    "161124": "套利基", "113701": "可转债", "600662": "涨停回调", "000639": "热点发展",
-    "603132": "涨停回调", "603759": "配债股", "600814": "涨停回调", "603500": "配债股",
-    "600516": "涨停回调",
-    "000698": "业绩反转", "600339": "业绩反转", "600858": "涨停回调", "002076": "业绩反转",
-    "160719": "套利基", "600777": "业绩反转", "501001": "套利基", "600738": "热点发展",
-    "161031": "套利基", "165525": "套利基", "160416": "套利基", "600755": "分红股",
-    "300506": "业绩反转", "601006": "分红股", "164824": "海外基", "002689": "业绩反转",
-    "128124": "可转债", "002762": "业绩反转", "501225": "套利基", "127025": "可转债",
-    "600477": "涨停回调", "300343": "业绩反转", "002424": "业绩反转", "002055": "业绩反转",
-    "600636": "业绩反转", "002788": "涨停回调", "002877": "涨停回调", "002632": "涨停回调",
-    "000595": "业绩反转", "002693": "业绩反转", "300211": "业绩反转", "161126": "海外基",
-    "162719": "套利基", "162411": "套利基", "001202": "配债股", "600853": "配债股",
-    "000903": "业绩反转", "300527": "业绩反转", "603595": "业绩反转", "300052": "业绩反转",
-    "002713": "业绩反转", "002305": "业绩反转", "300366": "业绩反转", "300460": "业绩反转",
-    "002124": "业绩反转", "600624": "业绩反转", "000488": "业绩反转", "000929": "业绩反转", "300311": "业绩反转",
-    "000821": "业绩反转", "300020": "业绩反转", "600537": "业绩反转",
-    "603789": "业绩反转", "300173": "业绩反转",  "600581": "业绩反转",
-    "600358": "业绩反转", "600892": "业绩反转", "003032": "业绩反转", "002512": "业绩反转",
+# ---------------------- 1： 分红股，字典合集 ----------------------
+
+# ----------------- 1.1： 分红股日期字典 -----------------
+dividend_stock_date_dict = {
+    "000001": ["25年报 26/03/21", "预案 26/03/21", "3.6"],    # 平安银行
+    "600985": ["25年报 26/03/28", "预案 26/03/28", "2.55"],    # 淮北矿业
+    "600188": ["25年报 26/03/28", "预案 26/03/28", "1.8+3.2"],   # 兖矿能源
+    "601916": ["25年报 26/03/31", "预案 26/03/31", "1.31"],    # 浙商银行
+    "600016": ["25年报 26/03/31", "预案 26/03/31", "1.36+0.53"],    # 民生银行
+    "600219": ["25年报 26/03/27", "预案 26/05/05", "0.4+2.584+1.36"],    # 南山铝业
+    "605368": ["25年报 26/04/22", "预案 26/04/22", "4+0"],    # 蓝天燃气
+    "600755": ["25年报 26/04/23", "预案 26/04/23", "1.0+1.2"],   # 厦门国贸
+    "600256": ["25年报 26/04/24", "预案 26/04/24", "0.63"],    # 广汇能源
+
+    "002267": ["25年报 26/04/28", "预案 26/04/28", "2.0"],    # 陕天然气
+    "601169": ["25年报 26/04/28", "预案 26/03/28", "2.78"],    # 北京银行
+    "002807": ["25年报 26/04/29", "预案 26/04/29", "1.0+1.2"],    # 江阴银行
+    "600681": ["25年报 26/04/29", "预案 26/04/29", "0.9+0.6"],    # 百川能源
+    "603801": ["25年报 26/04/30", "预案 26/04/30", "4.0"],    # 志邦家居
+    "601006": ["25年报 26/04/30", "预案 26/04/30", "1.4+0.8"],    # 大秦铁路
 }
 
-# ---------------------- 2： 多策略字典 ----------------------
-multi_strategy_codes = {
-    "600681": ["分红股", "涨停回调"],  # 百川能源
-    "600755": ["分红股", "涨停回调"],  # 厦门国贸
-    "605368": ["分红股", "涨停回调"],  # 蓝天燃气
-    "001202": ["配债股", "涨停回调"],  # 炬申股份
-    "002267": ["分红股", "涨停回调"],  # 陕天然气
+# ---------------------- 2： 涨停回调，字典合集 ----------------------
+
+# ---------------------- 2.1： 涨停回调日期字典 ----------------------
+limit_up_callback_dividend_date_dict = {
+    "600858": ["25年报 26/04/24", "预案 26/04/24", "0.15+0.2"],  # 银座股份
+    "600681": ["25年报 26/04/29", "预案 26/04/29", "0.9+0.6"],  # 百川能源
+    "605368": ["25年报 26/04/29", "预案 26/04/22", "4+0"],  # 蓝天燃气
+    "600755": ["25年报 26/04/23", "预案 26/04/23", "1.0+1.2"],  # 厦门国贸
+    "600814": ["25年报 26/03/27", "预案 26/03/27", "0.41+0.84"],  # 杭州解百
+    "600662": ["25年报 26/04/24", "预案 26/04/24", "1.5"],  # 外服控股
+    "001202": ["25年报 26/04/17", "预案 26/04/17", "0.0"],  # 炬申股份
+
+    # ready：
+    # "002154": ["2025年报 2026-04-25", ""],  # 报喜鸟
+
+    # old：
+    # "600477": ["2025年报 2026-04-17", ""],  # 杭萧钢构
+
 }
 
 
-# ---------------------- 3： 业绩反转，字典合集 ----------------------
 
-# ----------------- 3.1：业绩反转,申请摘帽日期字典 -----------------
+# ---------------------- 3： 小盘猛牛，字典合集 ----------------------
+
+# ---------------------- 3.1. 小盘猛牛年报日期字典 ----------------------
+small_cap_dividend_date__dict = {
+    "300891": ["25年报 26/04/21", "预案 26/04/21", "0.0"], # 惠云钛业
+    "601006": ["25年报 26/04/30", "预案 26/04/30", "1.4+0.8"],  # 大秦铁路  //测试数据
+}
+
+
+# ---------------------- 4： 热点发展，字典合集 ----------------------
+
+# ---------------------- 4.1. 热点发展年报日期字典 ----------------------
+hot_development_dividend_data_dict = {
+    "002570": ["25年报 26/04/28", "预案 26/04/28", "0.0"],  # 贝因美
+    "603801": ["25年报 26/04/30", "预案 26/04/30", "4.0"],  # 志邦家居  //测试数据
+}
+
+
+# ---------------------- 5： 配债股，字典合集 ----------------------
+
+# ---------------------- 5.1. 配债股年报日期字典 ----------------------
+bond_allot_dividend_data_dict = {
+    "603759": ["25年报 26/04/30", "预案 26/04/30", "1.15"],  # 海天股份
+    "001202": ["25年报 26/04/17", "预案 26/04/17", "0.0"],  # 炬申股份
+}
+
+
+
+# ---------------------- 6： 分红基，字典合集 ----------------------
+
+# ----------------- 6.1： 分红基日期字典 ------------------
+fund_dividend_date_dict = {
+    # 每月
+    "510720": ["登记 26/04/13", "预计 26/05/13", "0.03*12" ],  # 红利国企，模仿上次填
+    "513820": ["登记 26/04/24", "预计 26/05/24", "0.01*12" ],  # 港股通红利，模仿上次填
+
+    #每季 （分红3-4次）
+    "180102": ["登记 25/05/30", "预计 26/05/30", "0.36*2"],     # 合肥高新
+    "515300": ["登记  25/06/16", "预计  26/06/16", "0.228*4" ],  # 300红利 ，模仿上次填
+    "159307": ["登记 25/06/19 ", "预计 26/06/19", "0.13*4" ],  # 红利100博时，模仿上次填
+
+    # 每半年
+    "515450": ["登记 25/07/14", "预计 26/07/14", "0.3*2" ],  # 红利50南方，模仿上次填
+    # 每年
+    "510880": ["登记 26/01/20", "预计 27/01/20", "1.43" ],  # 红利ETF华泰柏瑞，模仿上次填
+}
+
+# ---------------------- 7： 业绩反转，字典合集 ----------------------
+
+# ----------------- 7.1：业绩反转,申请摘帽日期字典 -----------------
 performance_reversal_delisting_application_dict = {
     "600358": "25年报 26/03/21",  # 国旅联合
     "000929": "25年报 26/04/13",  # *ST兰黄
@@ -185,7 +260,7 @@ performance_reversal_delisting_application_dict = {
     "600735": "重整日期 待定",  # ST新华锦
 }
 
-# ----------------- 3.2: 业绩反转,周线 字典 -----------------
+# ----------------- 7.2: 业绩反转,周线 字典 -----------------
 performance_reversal_week_line_dict = {
     "000595": "    半周线",  # 宝实
     "000698": "    否",  # 沈华
@@ -229,8 +304,7 @@ performance_reversal_week_line_dict = {
     "603789": "    否",  # 星农
 }
 
-
-# ===================== 3.3：业绩反转,审计列字典 =====================
+# ===================== 7.3：业绩反转,审计列字典 =====================
 performance_reversal_audit_dict = {
     "000595": "    财务亏损 + 营收准ok",  # 宝实
     "000698": "    财务造假 + 已ok",  # 沈华
@@ -276,7 +350,7 @@ performance_reversal_audit_dict = {
 
 }
 
-# ---------------------- 3.4：业绩反转,要点字典 ----------------------
+# ---------------------- 7.4：业绩反转,要点字典 ----------------------
 performance_reversal_memo_dict = {
     "000595": "    轴承风电光伏及储能电站 + 财务亏损 + 或将摘帽",  # 宝实
     "000698": "    烧碱&央企 + 财务造假 + 或将摘帽",  # 沈华
@@ -323,84 +397,68 @@ performance_reversal_memo_dict = {
 }
 
 
-# ---------------------- 4： 分红股，字典合集 ----------------------
 
-# ----------------- 4.1： 分红股日期字典 -----------------
-dividend_date_dict = {
-    "000001": ["25年报 26/03/21", "预案 26/03/21", "3.6"],    # 平安银行
-    "600985": ["25年报 26/03/28", "预案 26/03/28", "2.55"],    # 淮北矿业
-    "600188": ["25年报 26/03/28", "预案 26/03/28", "1.8+3.2"],   # 兖矿能源
-    "601916": ["25年报 26/03/31", "预案 26/03/31", "1.31"],    # 浙商银行
-    "600016": ["25年报 26/03/31", "预案 26/03/31", "1.36+0.53"],    # 民生银行
-    "600219": ["25年报 26/03/27", "预案 26/05/05", "0.4+2.584+1.36"],    # 南山铝业
-    "605368": ["25年报 26/04/22", "预案 26/04/22", "4+0"],    # 蓝天燃气
-    "600755": ["25年报 26/04/23", "预案 26/04/23", "1.0+1.2"],   # 厦门国贸
-    "600256": ["25年报 26/04/24", "预案 26/04/24", "0.63"],    # 广汇能源
+# ============================== 三。策略名称总字典  ===============================
 
-    "002267": ["25年报 26/04/28", "预案 26/04/28", "2.0"],    # 陕天然气
-    "601169": ["25年报 26/04/28", "预案 26/03/28", "2.78"],    # 北京银行
-    "002807": ["25年报 26/04/29", "预案 26/04/29", "1.0+1.2"],    # 江阴银行
-    "600681": ["25年报 26/04/29", "预案 26/04/29", "0.9+0.6"],    # 百川能源
-    "603801": ["25年报 26/04/30", "预案 26/04/30", "4.0"],    # 志邦家居
-    "601006": ["25年报 26/04/30", "预案 26/04/30", "1.4+0.8"],    # 大秦铁路
+
+# ---------------------- A1： 单个策略字典 ----------------------
+
+strategy_dict = {
+    "000001": "分红股", "605368": "分红股", "600985": "分红股",
+    "601916": "分红股", "601169": "分红股", "002807": "分红股",
+    "600188": "分红股", "600016": "分红股", "600681": "分红股",
+    "600256": "分红股", "603801": "分红股", "002267": "分红股", "600219": "分红股",
+    "180102": "分红基", "515300": "分红基", "159307": "分红基",
+    "510880": "分红基", "510720": "分红基", "508056": "分红基",
+    "515450": "分红基", "513820": "分红基",
+    "501018": "套利基", "002496": "业绩反转", "127033": "可转债", "160723": "套利基",
+    "161129": "套利基", "512290": "超跌基", "600759": "业绩反转",
+    "511880": "空策略", "002385": "热点发展", "512010": "超跌基", "159329": "海外基",
+    "002570": "热点发展", "515710": "超跌基", "300891": "小盘猛牛",
+    "002630": "业绩反转", "000516": "热点发展", "111024": "可转债", "000537": "热点发展",
+    "002122": "业绩反转", "605058": "配债策略",
+    "110081": "可转债", "600169": "业绩反转", "605162": "小盘猛牛", "002154": "涨停回调",
+    "404003": "可转债", "600735": "业绩反转", "300044": "业绩反转",
+    "520870": "海外基", "404002": "", "161226": "套利基", "501300": "套利基",
+    "161128": "套利基", "127015": "可转债", "160216": "套利基", "160324": "套利基",
+    "161032": "超跌基", "164701": "套利基", "161116": "套利基", "601669": "涨停回调",
+    "161124": "套利基", "113701": "可转债", "600662": "涨停回调", "000639": "热点发展",
+    "603132": "涨停回调", "603759": "配债股", "600814": "涨停回调", "603500": "配债股",
+    "600516": "涨停回调",
+    "000698": "业绩反转", "600339": "业绩反转", "600858": "涨停回调", "002076": "业绩反转",
+    "160719": "套利基", "600777": "业绩反转", "501001": "套利基", "600738": "热点发展",
+    "161031": "套利基", "165525": "套利基", "160416": "套利基", "600755": "分红股",
+    "300506": "业绩反转", "601006": "分红股", "164824": "海外基", "002689": "业绩反转",
+    "128124": "可转债", "002762": "业绩反转", "501225": "套利基", "127025": "可转债",
+    "600477": "涨停回调", "300343": "业绩反转", "002424": "业绩反转", "002055": "业绩反转",
+    "600636": "业绩反转", "002788": "涨停回调", "002877": "涨停回调", "002632": "涨停回调",
+    "000595": "业绩反转", "002693": "业绩反转", "300211": "业绩反转", "161126": "海外基",
+    "162719": "套利基", "162411": "套利基", "001202": "配债股", "600853": "配债股",
+    "000903": "业绩反转", "300527": "业绩反转", "603595": "业绩反转", "300052": "业绩反转",
+    "002713": "业绩反转", "002305": "业绩反转", "300366": "业绩反转", "300460": "业绩反转",
+    "002124": "业绩反转", "600624": "业绩反转", "000488": "业绩反转", "000929": "业绩反转", "300311": "业绩反转",
+    "000821": "业绩反转", "300020": "业绩反转", "600537": "业绩反转",
+    "603789": "业绩反转", "300173": "业绩反转",  "600581": "业绩反转",
+    "600358": "业绩反转", "600892": "业绩反转", "003032": "业绩反转", "002512": "业绩反转",
+}
+
+# ---------------------- A2： 多策略字典 ----------------------
+multi_strategy_codes = {
+    "600681": ["分红股", "涨停回调"],  # 百川能源
+    "600755": ["分红股", "涨停回调"],  # 厦门国贸
+    "605368": ["分红股", "涨停回调"],  # 蓝天燃气
+    "001202": ["配债股", "涨停回调"],  # 炬申股份
+    "002267": ["分红股", "涨停回调"],  # 陕天然气
+
+    #测试数据
+    "601006": ["分红股", "小盘猛牛"],  # 大秦铁路   //测试数据
+    "603801": ["分红股", "热点发展"],  # 志邦家居   //测试数据
 }
 
 
-# ---------------------- 5： 分红基，字典合集 ----------------------
 
-# ----------------- 5.1： 分红基日期字典 ------------------
-dividend_fund_date_dict = {
-    # 每月
-    "510720": ["登记 26/04/13", "预计 26/05/13", "0.03*12" ],  # 红利国企，模仿上次填
-    "513820": ["登记 26/04/24", "预计 26/05/24", "0.01*12" ],  # 港股通红利，模仿上次填
+# ============================== 四。暂不归类字典  ===============================
 
-    #每季 （分红3-4次）
-    "180102": ["登记 25/05/30", "预计 26/05/30", "0.36*2"],     # 合肥高新
-    "515300": ["登记  25/06/16", "预计  26/06/16", "0.228*4" ],  # 300红利 ，模仿上次填
-    "159307": ["登记 25/06/19 ", "预计 26/06/19", "0.13*4" ],  # 红利100博时，模仿上次填
-
-    # 每半年
-    "515450": ["登记 25/07/14", "预计 26/07/14", "0.3*2" ],  # 红利50南方，模仿上次填
-    # 每年
-    "510880": ["登记 26/01/20", "预计 27/01/20", "1.43" ],  # 红利ETF华泰柏瑞，模仿上次填
-}
-
-
-# ---------------------- 6： 涨停回调，字典合集 ----------------------
-
-# ---------------------- 7： 小盘猛牛，字典合集 ----------------------
-
-# ---------------------- 8： 配债股，字典合集 ----------------------
-
-
-
-
-
-# ---------------------- 5. 小盘猛牛年报日期字典 --------待整理--------------
-small_cap_annual_report_dict = {
-    "300891": ["2025年报2026-04-21", ""],
-    "605162": ["2025年报2026-04-25", ""],
-    "300000": ["待定", "2024年报 2025-04-10"],
-}
-
-
-# ---------------------- 9. 涨停回调年报日期字典 -------待整理---------------
-limit_up_callback_annual_report_dict = {
-    "002154": ["2025年报 2026-04-25", ""],
-    "600477": ["2025年报 2026-04-17", ""],
-    "600858": ["待定", "2024年报 2025-04-20"],
-    "600681": ["2025年年报 2026-04-23", "预案公布日:2025-04-23"],
-}
-
-
-# ============================== 三。暂不归类字典  ===============================
-
-# ---------------------- 6. 热点发展年报日期字典 ----------------------
-hot_development_annual_report_dict = {
-    "002385": ["2025年报 2026-04-24", ""],
-    "002570": ["2025年报 2026-04-28", ""],
-    "000516": ["待定", ""],
-}
 
 
 
@@ -439,45 +497,16 @@ def is_delisting_date_less_than_2months(code):
 
 
 # ---------------------- 12. 各策略排序函数 ----------------------
-def get_fund_dividend_sort_key(item):   #  ["登记 26/04/13", "预计 26/05/13", "0.03*12" ]
-    code = item[0]
-    # 修正：dividend_fund_date_dict的value是 [登记日期, 预计日期, 分红金额]，共3个元素
-    # 按实际字段含义解包（根据业务逻辑选择“登记日期”作为next_date_str，“预计日期”作为last_date_str）
-    fund_info = dividend_fund_date_dict.get(code, ["待定", "待定", "0"])
-    next_date_str, last_date_str, _ = fund_info  # 忽略第三个元素（分红金额）
 
-    # 解析下期新分红日期（核心排序依据）
-    def parse_dividend_date(date_str):
-        if not date_str or date_str.strip() == "待定":
-            # 待定映射为2099年（极晚日期，排在最后）
-            return datetime(2099, 12, 31)
-        # 匹配 "登记 26/01/20" 或 "预计 26/06/19" 格式
-        date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
-        if date_match:
-            # 提取 日/月/年（两位年），转换为完整日期
-            day, month, two_digit_year = date_match.groups()
-            year = 2000 + int(two_digit_year)  # 26 → 2026
-            return datetime(year, int(month), int(day))
-        # 其他无法解析的日期也排在最后
-        return datetime(2099, 12, 31)
-
-    next_date = parse_dividend_date(next_date_str)
-    # 次要排序依据：去年对应分红日期（可选，保持原逻辑）
-    last_date = parse_dividend_date(last_date_str)
-
-    # 排序键：先按下期新分红日期升序，再按去年日期升序
-    return (next_date, last_date)
-
-
-def get_stock_dividend_sort_key(item):  # ["25年报 26/03/21", "预案 25/03/21", "3.6"]
+def get_stock_dividend_sort_key(item):  # 分红股， ["25年报 26/03/21", "预案 25/03/21", "3.6"]
     code = item[0]    #item--所有股票的列，item[0]--股票代码
     # 取分红日期字典中的预案日期（第二个元素）作为排序依据
-    dividend_info = dividend_date_dict.get(code, ["", "", ""])  #根据股票代码，取得字典dividend_date_dict里的数据
+    dividend_info = dividend_stock_date_dict.get(code, ["", "", ""])  #根据股票代码，取得字典dividend_stock_date_dict里的数据
     # 分红日期（预案日期）是第二个元素，优先用这个排序
     dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""
 
     # 解析分红日期
-    def parse_dividend_date(date_str):
+    def parse_dividend_date(date_str):   # 内部子函数
         if not date_str or date_str.strip() == "待定" or "预案" not in date_str:
             return datetime(2099, 12, 31)
         # 匹配 "预案 25/03/21" 或 "预案 2025-04-23" 格式
@@ -501,39 +530,189 @@ def get_stock_dividend_sort_key(item):  # ["25年报 26/03/21", "预案 25/03/21
     # 优先按分红日期升序，再按年报日期升序
     return (dividend_date, report_date)
 
+# ==================== 涨停回调 - 按分红日期升序排序 ====================
+def get_limit_up_callback_sort_key(item):   # 涨停回调
+    code = item[0]  # 股票代码
+
+    # 从 涨停回调的分红日期字典 中取数据
+    dividend_info = limit_up_callback_dividend_date_dict.get(code, ["", ""])
+
+    # 排序用：分红日期（第二个字段）
+    dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""
+
+    # 日期解析函数（和你原来风格完全一致）
+    def parse_date(date_str):
+        if not date_str or date_str.strip() == "待定":
+            return datetime(2099, 12, 31)
+
+        # 匹配 日/月/年 26/03/21
+        date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
+        if date_match:
+            day, month, yy = date_match.groups()
+            return datetime(2000 + int(yy), int(month), int(day))
+
+        # 匹配 年-月-日 2025-03-26
+        date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
+        if date_match:
+            return datetime(*map(int, date_match.groups()))
+
+        return datetime(2099, 12, 31)
+
+    dividend_date = parse_date(dividend_date_str)
+
+    # 次要排序：年报日期（第一个字段）
+    report_date_str = dividend_info[0] if len(dividend_info) >= 1 else ""
+    report_date = parse_date(report_date_str)
+
+    # 先按分红日期升序，再按年报日期升序
+    return (dividend_date, report_date)
+
+# ==================== 小盘猛牛 - 按分红日期升序排序 ====================
 def get_small_cap_sort_key(item):
+    code = item[0]  # 股票代码
+
+    # 从小盘猛牛分红日期字典 中取数据
+    dividend_info = small_cap_dividend_date__dict.get(code, ["", "", ""])
+
+    # 排序用：分红日期（第二个字段）
+    dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""
+
+    # 日期解析函数
+    def parse_date(date_str):
+        if not date_str or date_str.strip() == "待定":
+            return datetime(2099, 12, 31)
+
+        # 匹配 日/月/年 26/03/21
+        date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
+        if date_match:
+            day, month, yy = date_match.groups()
+            return datetime(2000 + int(yy), int(month), int(day))
+
+        # 匹配 年-月-日 2025-03-26
+        date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
+        if date_match:
+            return datetime(*map(int, date_match.groups()))
+
+        return datetime(2099, 12, 31)
+
+    dividend_date = parse_date(dividend_date_str)
+
+    # 次要排序：年报日期
+    report_date_str = dividend_info[0] if len(dividend_info) >= 1 else ""
+    report_date = parse_date(report_date_str)
+
+    # 先按分红日期升序，再按年报日期升序
+    return (dividend_date, report_date)
+
+def get_hot_development_sort_key(item):  # 热点发展
+    code = item[0]  # 股票代码
+
+    # 从热点发展分红字典取数据
+    dividend_info = hot_development_dividend_data_dict.get(code, ["", "", ""])
+
+    # 排序用：分红日期（第二个字段）
+    dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""
+
+    # 日期解析函数（和你项目完全统一）
+    def parse_date(date_str):
+        if not date_str or date_str.strip() == "待定":
+            return datetime(2099, 12, 31)
+
+        # 匹配 日/月/年 26/03/21
+        date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
+        if date_match:
+            day, month, yy = date_match.groups()
+            return datetime(2000 + int(yy), int(month), int(day))
+
+        # 匹配 年-月-日 2025-03-26
+        date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
+        if date_match:
+            return datetime(*map(int, date_match.groups()))
+
+        return datetime(2099, 12, 31)
+
+    dividend_date = parse_date(dividend_date_str)
+
+    # 次要排序：年报日期
+    report_date_str = dividend_info[0] if len(dividend_info) >= 1 else ""
+    report_date = parse_date(report_date_str)
+
+    # 先按分红日期升序，再按年报日期升序
+    return (dividend_date, report_date)
+
+# ==================== 配债股 - 按分红日期升序排序 ====================
+def get_bond_allot_sort_key(item):
+    code = item[0]  # 股票代码
+
+    # 从配债股分红字典取数据
+    dividend_info = bond_allot_dividend_data_dict.get(code, ["", "", ""])
+
+    # 排序用：分红日期（第二个字段）
+    dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""
+
+    # 日期解析函数（和你项目完全统一）
+    def parse_date(date_str):
+        if not date_str or date_str.strip() == "待定":
+            return datetime(2099, 12, 31)
+
+        # 匹配 日/月/年 26/03/21
+        date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
+        if date_match:
+            day, month, yy = date_match.groups()
+            return datetime(2000 + int(yy), int(month), int(day))
+
+        # 匹配 年-月-日 2025-03-26
+        date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
+        if date_match:
+            return datetime(*map(int, date_match.groups()))
+
+        return datetime(2099, 12, 31)
+
+    dividend_date = parse_date(dividend_date_str)
+
+    # 次要排序：年报日期
+    report_date_str = dividend_info[0] if len(dividend_info) >= 1 else ""
+    report_date = parse_date(report_date_str)
+
+    # 先按分红日期升序，再按年报日期升序
+    return (dividend_date, report_date)
+
+def get_fund_dividend_sort_key(item):   # 分红基， ["登记 26/04/13", "预计 26/05/13", "0.03*12" ]
     code = item[0]
-    next_date_str = small_cap_annual_report_dict.get(code, ["待定", ""])[0]
-    last_date_str = small_cap_annual_report_dict.get(code, ["", ""])[1]
-    next_date = extract_date_from_str(next_date_str)
-    last_date = extract_date_from_str(last_date_str)
+    # 修正：fund_dividend_date_dict [登记日期, 预计日期, 分红金额]，共3个元素
+    # 按实际字段含义解包（根据业务逻辑选择“登记日期”作为next_date_str，“预计日期”作为last_date_str）
+    fund_info = fund_dividend_date_dict.get(code, ["待定", "待定", "0"])
+    next_date_str, last_date_str, _ = fund_info  # 忽略第三个元素（分红金额）
+
+    # 解析下期新分红日期（核心排序依据）
+    def parse_dividend_date(date_str): # 内部子函数
+        if not date_str or date_str.strip() == "待定":
+            # 待定映射为2099年（极晚日期，排在最后）
+            return datetime(2099, 12, 31)
+        # 匹配 "登记 26/01/20" 或 "预计 26/06/19" 格式
+        date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
+        if date_match:
+            # 提取 日/月/年（两位年），转换为完整日期
+            day, month, two_digit_year = date_match.groups()
+            year = 2000 + int(two_digit_year)  # 26 → 2026
+            return datetime(year, int(month), int(day))
+        # 其他无法解析的日期也排在最后
+        return datetime(2099, 12, 31)
+
+    next_date = parse_dividend_date(next_date_str)
+    # 次要排序依据：去年对应分红日期（可选，保持原逻辑）
+    last_date = parse_dividend_date(last_date_str)
+
+    # 排序键：先按下期新分红日期升序，再按去年日期升序
     return (next_date, last_date)
 
 
-def get_hot_development_sort_key(item):
-    code = item[0]
-    next_date_str = hot_development_annual_report_dict.get(code, ["待定", ""])[0]
-    last_date_str = hot_development_annual_report_dict.get(code, ["", ""])[1]
-    next_date = extract_date_from_str(next_date_str)
-    last_date = extract_date_from_str(last_date_str)
-    return (-next_date.timestamp(), -last_date.timestamp())
-
-
-def get_performance_reversal_sort_key(item):
+def get_performance_reversal_sort_key(item):  # 业绩反转
     code = item[0]
     date_str = performance_reversal_delisting_application_dict.get(code, "")
     return date_str or "9999-12-31"  # 空日期排最后
 
-def get_limit_up_callback_sort_key(item):
-    code = item[0]
-    next_date_str = limit_up_callback_annual_report_dict.get(code, ["待定", ""])[0]
-    last_date_str = limit_up_callback_annual_report_dict.get(code, ["", ""])[1]
-    next_date = extract_date_from_str(next_date_str)
-    last_date = extract_date_from_str(last_date_str)
-    return (next_date, last_date)
-
-
-# ---------------------- 13. 合并股票策略排序函数 ----------------------
+# ---------------------- 13. 合并股票策略排序函数 ----nouse------------------
 def get_combined_stock_sort_key(item):
     code, info, strategy = item[0], item[1], item[2]
     strategy_priority = {
@@ -555,6 +734,8 @@ def get_combined_stock_sort_key(item):
         date_key = get_hot_development_sort_key(item)
     elif strategy == "涨停回调":
         date_key = get_limit_up_callback_sort_key(item)
+    elif strategy == "配债股":
+        date_key = get_bond_allot_sort_key(item)
     else:
         date_key = (datetime(2099, 12, 31), datetime(2099, 12, 31))
     return (priority, date_key)
@@ -809,10 +990,10 @@ def create_styles():
 
 # ---------------------- 15. Sheet写入函数（远涨远跌移到摘帽后、要点前） ----------------------
 def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_sheet=False,
-                     summary_data=None, summary_percent=None, total_capital=500000, is_dividend_sheet=False,
-                     is_fund_sheet=False, is_small_cap_sheet=False, is_hot_development_sheet=False,
+                     summary_data=None, summary_percent=None, total_capital=500000, is_stock_dividend_sheet=False,
+                     is_fund_dividend_sheet=False, is_small_cap_sheet=False, is_hot_development_sheet=False,
                      is_performance_reversal_sheet=False, is_limit_up_callback_sheet=False,
-                     is_combined_stock_sheet=False):
+                     is_combined_stock_sheet=False, is_bond_allot_sheet=False):
     col_widths = {
         0: 8, 1: 10, 2: 8, 3: 8, 4: 10, 5: 9, 6: 6, 7: 10,
         8: 10, 9: 8, 10: 13, 11: 12, 12: 12, 13: 8, 14: 25, 15: 25
@@ -823,7 +1004,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
     }  # K是10
 
     # 应用列宽（5个特殊表用col_widths2，其他用col_widths）
-    special_sheets = ["分红股", "分红基", "涨停回调", "配债股", "小盘猛牛"]
+    special_sheets = ["分红股", "分红基", "涨停回调", "配债股", "小盘猛牛", "热点发展"]
     current_sheet_name = sheet.name.strip()
 
     if current_sheet_name in special_sheets:
@@ -836,25 +1017,24 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             sheet.col(col).width = width * 256
 
     # 表头
-    # 分红股
-    if is_dividend_sheet:
+    if is_stock_dividend_sheet:  # 分红股
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "下期新年报日期", "分红日期", "每十股分红", "年化收益",
                    "远涨", "远跌"]
-    # 分红基金（保持不变）
-    elif is_fund_sheet:
+    elif is_small_cap_sheet or is_hot_development_sheet or is_limit_up_callback_sheet or is_bond_allot_sheet:
+        headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
+                   "总累积仓位%", "策略", "下期新年报日期", "分红日期", "每十股分红", "年化收益",
+                   "远涨", "远跌"]
+    elif is_fund_dividend_sheet:  # 分红基金
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "去年对应分红日期", "下期新分红日期", "每十股分红", "年化收益",
                    "远涨", "远跌"]
-    elif is_performance_reversal_sheet:
+    elif is_performance_reversal_sheet: #业绩反转
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "摘帽申请日期", "周线", "远涨", "远跌", "审计", "要点"]
-    elif is_combined_stock_sheet:
+    elif is_combined_stock_sheet: # 股票合并
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "下期新年报/分红日期", "去年对应年报/分红日期"]
-    elif is_small_cap_sheet or is_hot_development_sheet or is_limit_up_callback_sheet:
-        headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
-                   "总累积仓位%", "策略", "下期新年报日期", "去年对应年报日期"]
     else:
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略"]
@@ -864,20 +1044,22 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
         sheet.write(0, col_idx, header, styles["header"])
 
     if is_strategy_sheet and data_list:
-        if is_combined_stock_sheet:
+        if is_combined_stock_sheet:  # 股票策略合并
             sorted_strategy_data = sorted(data_list, key=get_combined_stock_sort_key)
-        elif is_fund_sheet:
+        elif is_fund_dividend_sheet:  # 分红基
             sorted_strategy_data = sorted(data_list, key=get_fund_dividend_sort_key)
-        elif is_dividend_sheet:
+        elif is_stock_dividend_sheet:  # 分红股
             sorted_strategy_data = sorted(data_list, key=get_stock_dividend_sort_key)  #没有传入item参数，是因为会自动调用每一个股票item
-        elif is_small_cap_sheet:
+        elif is_small_cap_sheet:  # 小盘猛牛
             sorted_strategy_data = sorted(data_list, key=get_small_cap_sort_key)
-        elif is_hot_development_sheet:
+        elif is_hot_development_sheet:  # 热点发展
             sorted_strategy_data = sorted(data_list, key=get_hot_development_sort_key)
-        elif is_performance_reversal_sheet:
+        elif is_performance_reversal_sheet:  # 业绩反转
             sorted_strategy_data = sorted(data_list, key=get_performance_reversal_sort_key)
-        elif is_limit_up_callback_sheet:
+        elif is_limit_up_callback_sheet:  #涨停回调
             sorted_strategy_data = sorted(data_list, key=get_limit_up_callback_sort_key)
+        elif  is_bond_allot_sheet:  # 配债股
+            sorted_strategy_data = sorted(data_list, key=get_bond_allot_sort_key)
         else:
             sorted_strategy_data = sorted(data_list, key=lambda x: x[1]["金额"], reverse=True)
 
@@ -909,71 +1091,379 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             sheet.write(row_idx, 8, f"{total_cumulative_percent}%", styles["yellow_total_percent"])
             sheet.write(row_idx, 9, strategy, styles["yellow_strategy"])
 
-            if is_performance_reversal_sheet:
-                # 摘帽申请日期
-                delisting_date = performance_reversal_delisting_application_dict.get(code, "")
-                if is_delisting_date_less_than_2months(code):
-                    sheet.write(row_idx, 10, delisting_date, styles["yellow_pink_delisting_apply"])
-                else:
-                    sheet.write(row_idx, 10, delisting_date, styles["yellow_delisting_apply_right"])
+            if is_stock_dividend_sheet:  # 分红股
+                item_list = dividend_stock_date_dict.get(code, ["", "", ""])
+                next_report = item_list[0]
+                div_date = item_list[1]
+                per_div = item_list[2]
 
-                # 周线
-                week_line = performance_reversal_week_line_dict.get(code, "")
-                week_line_stripped = week_line.strip()
-                if week_line_stripped in ("半周线", "周线涨"):
-                    sheet.write(row_idx, 11, week_line, styles["week_yellow_pink"])
-                else:
-                    sheet.write(row_idx, 11, week_line, styles["yellow"])
+                sheet.write(row_idx, 10, next_report, styles["yellow"])
+                sheet.write(row_idx, 11, div_date, styles["yellow"])
+                sheet.write(row_idx, 12, per_div, styles["yellow_date_right"])
 
-                # 远涨 + 远跌
-                far_data = performance_reversal_far_dict.get(code, ",").split(",")
-                far_up = far_data[0].strip()
-                far_down = far_data[1].strip()
-
-                # 远涨
+                # 年化收益
+                annual_rate_text = ""
                 try:
-                    val = int(far_up)
-                    if val <= 50:
-                        sheet.write(row_idx, 12, far_up, styles["far_up_yellow_pink"])
-                    elif val >= 70:
-                        sheet.write(row_idx, 12, far_up, styles["far_up_yellow_red"])
-                    else:
-                        sheet.write(row_idx, 12, far_up, styles["yellow"])
+                    div_str = str(per_div).strip()
+                    clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
+                    div_val = float(eval(clean_expr))
+                    current_price = float(info["当前价"])
+                    if current_price > 0 and div_val >= 0:
+                        annual_rate = (div_val / 10) / current_price * 100
+                        annual_rate_text = f"{annual_rate:.2f}"
                 except:
-                    sheet.write(row_idx, 12, far_up, styles["yellow"])
+                    annual_rate_text = ""
 
-                # 远跌
+                # sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
+
+                # 年化收益颜色：≥4.5 粉红；≤1.5 红色
+                annual_val = 0.0
                 try:
-                    val = int(far_down.strip())
-                    if val >= 60:
-                        sheet.write(row_idx, 13, far_down, styles["far_down_yellow_pink"])
-                    elif val <= 30:
-                        sheet.write(row_idx, 13, far_down, styles["far_down_yellow_red"])
-                    else:
-                        sheet.write(row_idx, 13, far_down, styles["yellow"])
+                    annual_val = float(annual_rate_text)
                 except:
-                    sheet.write(row_idx, 13, far_down, styles["yellow"])
+                    annual_val = 0.0
 
-                # 审计：已ok → 粉红，雷 → 红色
-                audit_text = performance_reversal_audit_dict.get(code, "")
-                audit_stripped = audit_text.strip()
-                if audit_stripped.endswith("已ok"):
-                    sheet.write(row_idx, 14, audit_text, styles["audit_yellow_pink"])
-                elif audit_stripped.endswith("雷"):
-                    sheet.write(row_idx, 14, audit_text, styles["audit_yellow_red"])
+                if annual_val >= 4.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
+                elif annual_val <= 1.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
                 else:
-                    sheet.write(row_idx, 14, audit_text, styles["yellow"])
+                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
 
-                # 要点
-                memo = performance_reversal_memo_dict.get(code, "")
-                sheet.write(row_idx, 15, memo, styles["yellow_memo_left"])
+                # ===================== 新增：远涨 远跌 =====================
+                structure_str = stock_dividend_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if structure_str:
+                    parts = structure_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
 
-            elif is_limit_up_callback_sheet:
-                dates = limit_up_callback_annual_report_dict.get(code, ["", ""])
-                sheet.write(row_idx, 10, dates[0], styles["yellow_date_right"])
-                sheet.write(row_idx, 11, dates[1], styles["yellow_date_right"])
-            elif is_fund_sheet:   # 分红基
-                item_list = dividend_fund_date_dict.get(code, ["", "", ""])
+                # sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])  # 远涨
+
+                # ==================== 分红股 - 远涨 列颜色 ====================
+                far_up_val = 0
+                try:
+                    # 从字典取远涨数值
+                    far_up_val = int(stock_dividend_struct_dict[code].split(',')[0].strip())
+                except:
+                    far_up_val = 999
+
+                # 黄色背景行
+                if far_up_val < 50:
+                    sheet.write(row_idx, 14, far_up, styles["yellow_pink_delisting_apply"])
+                elif far_up_val > 70:
+                    sheet.write(row_idx, 14, far_up, styles["yellow_red_text"])
+                else:
+                    sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
+
+                # sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])  # 远跌
+
+                # 远跌 颜色：>60粉红，<30红色
+                far_down_val = 0
+                try:
+                    far_down_val = int(stock_dividend_struct_dict[code].split(',')[1].strip())
+                except:
+                    far_down_val = 0
+
+                if far_down_val > 60:
+                    sheet.write(row_idx, 15, far_down, styles["yellow_pink_delisting_apply"])
+                elif far_down_val < 30:
+                    sheet.write(row_idx, 15, far_down, styles["yellow_red_text"])
+                else:
+                    sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
+
+            elif is_limit_up_callback_sheet:  # 涨停回调
+                # 取出字典 3 个值：年报日期、分红日期、每十股分红
+                item_list = limit_up_callback_dividend_date_dict.get(code, ["", "", ""])
+                next_report = item_list[0]
+                div_date = item_list[1]
+                per_div = item_list[2]
+
+                sheet.write(row_idx, 10, item_list[0], styles["yellow_date_right"])
+                sheet.write(row_idx, 11, item_list[1], styles["yellow_date_right"])
+                sheet.write(row_idx, 12, item_list[2], styles["yellow_date_right"])
+
+                # ===================== 年化收益 =====================
+                annual_rate_text = ""
+                try:
+                    div_str = str(per_div).strip()
+                    clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
+                    div_val = float(eval(clean_expr))
+                    current_price = float(info["当前价"])
+
+                    if current_price > 0 and div_val >= 0:
+                        annual_rate = (div_val / 10) / current_price * 100
+                        annual_rate_text = f"{annual_rate:.2f}"
+                except:
+                    annual_rate_text = ""
+
+                annual_val = 0.0
+                try:
+                    annual_val = float(annual_rate_text)
+                except:
+                    annual_val = 0.0
+
+                if annual_val >= 4.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
+                elif annual_val <= 1.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
+                else:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
+
+                # ===================== 远涨 / 远跌（黄色背景 + 完整 try except） =====================
+                struct_str = limit_up_callback_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if struct_str:
+                    parts = struct_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
+
+                # -------------------- 远涨 颜色（完整 try/except） --------------------
+                try:
+                    val = float(far_up)
+                    if val < 50:
+                        sheet.write(row_idx, 14, far_up, styles["yellow_pink_delisting_apply"])
+                    elif val > 70:
+                        sheet.write(row_idx, 14, far_up, styles["yellow_red_text"])
+                    else:
+                        sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
+                except:
+                    sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
+
+                # -------------------- 远跌 颜色（完整 try/except） --------------------
+                try:
+                    val = float(far_down)
+                    if val > 60:
+                        sheet.write(row_idx, 15, far_down, styles["yellow_pink_delisting_apply"])
+                    elif val < 30:
+                        sheet.write(row_idx, 15, far_down, styles["yellow_red_text"])
+                    else:
+                        sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
+                except:
+                    sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
+
+            elif is_small_cap_sheet:  # 小盘猛牛  黄色
+                # 取出字典 3 个值：年报日期、分红日期、每十股分红
+                item_list = small_cap_dividend_date__dict.get(code, ["", "", ""])
+                next_report = item_list[0]
+                div_date = item_list[1]
+                per_div = item_list[2]
+
+                sheet.write(row_idx, 10, item_list[0], styles["yellow_date_right"])
+                sheet.write(row_idx, 11, item_list[1], styles["yellow_date_right"])
+                sheet.write(row_idx, 12, item_list[2], styles["yellow_date_right"])
+
+                # ===================== 年化收益 =====================
+                annual_rate_text = ""
+                try:
+                    div_str = str(per_div).strip()
+                    clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
+                    div_val = float(eval(clean_expr))
+                    current_price = float(info["当前价"])
+
+                    if current_price > 0 and div_val >= 0:
+                        annual_rate = (div_val / 10) / current_price * 100
+                        annual_rate_text = f"{annual_rate:.2f}"
+                except:
+                    annual_rate_text = ""
+
+                annual_val = 0.0
+                try:
+                    annual_val = float(annual_rate_text)
+                except:
+                    annual_val = 0.0
+
+                if annual_val >= 4.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
+                elif annual_val <= 1.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
+                else:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
+
+                # ===================== 远涨 / 远跌 =====================
+                struct_str = small_cap_callback_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if struct_str:
+                    parts = struct_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
+
+                # -------------------- 远涨 颜色规则 --------------------
+                try:
+                    val = float(far_up)
+                    if val < 50:
+                        sheet.write(row_idx, 14, far_up, styles["yellow_pink_delisting_apply"])
+                    elif val > 70:
+                        sheet.write(row_idx, 14, far_up, styles["yellow_red_text"])
+                    else:
+                        sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
+                except:
+                    sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
+
+                # -------------------- 远跌 颜色规则 --------------------
+                try:
+                    val = float(far_down)
+                    if val > 60:
+                        sheet.write(row_idx, 15, far_down, styles["yellow_pink_delisting_apply"])
+                    elif val < 30:
+                        sheet.write(row_idx, 15, far_down, styles["yellow_red_text"])
+                    else:
+                        sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
+                except:
+                    sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
+
+            elif is_hot_development_sheet:  # 热点发展
+                # 取出字典 3 个值：年报日期、分红日期、每十股分红
+                item_list = hot_development_dividend_data_dict.get(code, ["", "", ""])
+                next_report = item_list[0]
+                div_date = item_list[1]
+                per_div = item_list[2]
+
+                sheet.write(row_idx, 10, item_list[0], styles["yellow_date_right"])
+                sheet.write(row_idx, 11, item_list[1], styles["yellow_date_right"])
+                sheet.write(row_idx, 12, item_list[2], styles["yellow_date_right"])
+
+                # ===================== 年化收益 =====================
+                annual_rate_text = ""
+                try:
+                    div_str = str(per_div).strip()
+                    clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
+                    div_val = float(eval(clean_expr))
+                    current_price = float(info["当前价"])
+
+                    if current_price > 0 and div_val >= 0:
+                        annual_rate = (div_val / 10) / current_price * 100
+                        annual_rate_text = f"{annual_rate:.2f}"
+                except:
+                    annual_rate_text = ""
+
+                annual_val = 0.0
+                try:
+                    annual_val = float(annual_rate_text)
+                except:
+                    annual_val = 0.0
+
+                if annual_val >= 4.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
+                elif annual_val <= 1.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
+                else:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
+
+                # ===================== 远涨 / 远跌 =====================
+                struct_str = hot_development_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if struct_str:
+                    parts = struct_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
+
+                # -------------------- 远涨 颜色规则 --------------------
+                try:
+                    val = float(far_up)
+                    if val < 50:
+                        sheet.write(row_idx, 14, far_up, styles["yellow_pink_delisting_apply"])
+                    elif val > 70:
+                        sheet.write(row_idx, 14, far_up, styles["yellow_red_text"])
+                    else:
+                        sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
+                except:
+                    sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
+
+                # -------------------- 远跌 颜色规则 --------------------
+                try:
+                    val = float(far_down)
+                    if val > 60:
+                        sheet.write(row_idx, 15, far_down, styles["yellow_pink_delisting_apply"])
+                    elif val < 30:
+                        sheet.write(row_idx, 15, far_down, styles["yellow_red_text"])
+                    else:
+                        sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
+                except:
+                    sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
+
+            elif is_bond_allot_sheet:  # 配债股 黄色背景色
+                # 取出字典 3 个值：下期新年报日期、分红日期、每十股分红
+                item_list = bond_allot_dividend_data_dict.get(code, ["", "", ""])
+                next_report = item_list[0]
+                div_date = item_list[1]
+                per_div = item_list[2]
+
+                sheet.write(row_idx, 10, next_report, styles["yellow_date_right"])
+                sheet.write(row_idx, 11, div_date, styles["yellow_date_right"])
+                sheet.write(row_idx, 12, per_div, styles["yellow_date_right"])
+
+                # ===================== 年化收益 =====================
+                annual_rate_text = ""
+                try:
+                    div_str = str(per_div).strip()
+                    clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
+                    div_val = float(eval(clean_expr))
+                    current_price = float(info["当前价"])
+
+                    if current_price > 0 and div_val >= 0:
+                        annual_rate = (div_val / 10) / current_price * 100
+                        annual_rate_text = f"{annual_rate:.2f}"
+                except:
+                    annual_rate_text = ""
+
+                annual_val = 0.0
+                try:
+                    annual_val = float(annual_rate_text)
+                except:
+                    annual_val = 0.0
+
+                if annual_val >= 4.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
+                elif annual_val <= 1.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
+                else:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
+
+                # ===================== 远涨 / 远跌 =====================
+                struct_str = bond_allot_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if struct_str:
+                    parts = struct_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
+
+                # -------------------- 远涨 颜色规则 --------------------
+                try:
+                    val = float(far_up)
+                    if val < 50:
+                        sheet.write(row_idx, 14, far_up, styles["yellow_pink_delisting_apply"])
+                    elif val > 70:
+                        sheet.write(row_idx, 14, far_up, styles["yellow_red_text"])
+                    else:
+                        sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
+                except:
+                    sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
+
+                # -------------------- 远跌 颜色规则 --------------------
+                try:
+                    val = float(far_down)
+                    if val > 60:
+                        sheet.write(row_idx, 15, far_down, styles["yellow_pink_delisting_apply"])
+                    elif val < 30:
+                        sheet.write(row_idx, 15, far_down, styles["yellow_red_text"])
+                    else:
+                        sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
+                except:
+                    sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
+
+            elif is_fund_dividend_sheet:   # 分红基
+                item_list = fund_dividend_date_dict.get(code, ["", "", ""])
                 last_date = item_list[0]
                 next_date = item_list[1]
                 per_div = item_list[2]
@@ -989,7 +1479,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
                     div_val = float(eval(clean_expr))
                     current_price = float(info["当前价"])
-                    if current_price > 0 and div_val > 0:
+                    if current_price > 0 and div_val >= 0:
                         annual_rate = (div_val / 10) / current_price * 100
                         annual_rate_text = f"{annual_rate:.2f}"
                 except:
@@ -1052,114 +1542,80 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 else:
                     sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
 
-
-            elif is_dividend_sheet:  # 分红股
-                item_list = dividend_date_dict.get(code, ["", "", ""])
-                next_report = item_list[0]
-                div_date = item_list[1]
-                per_div = item_list[2]
-
-                sheet.write(row_idx, 10, next_report, styles["yellow"])
-                sheet.write(row_idx, 11, div_date, styles["yellow"])
-                sheet.write(row_idx, 12, per_div, styles["yellow_date_right"])
-
-                # 年化收益
-                annual_rate_text = ""
-                try:
-                    div_str = str(per_div).strip()
-                    clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
-                    div_val = float(eval(clean_expr))
-                    current_price = float(info["当前价"])
-                    if current_price > 0 and div_val > 0:
-                        annual_rate = (div_val / 10) / current_price * 100
-                        annual_rate_text = f"{annual_rate:.2f}"
-                except:
-                    annual_rate_text = ""
-
-                # sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
-
-                # 年化收益颜色：≥4.5 粉红；≤1.5 红色
-                annual_val = 0.0
-                try:
-                    annual_val = float(annual_rate_text)
-                except:
-                    annual_val = 0.0
-
-                if annual_val >= 4.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
-                elif annual_val <= 1.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
+            elif is_performance_reversal_sheet:  # 业绩反转
+                # 摘帽申请日期
+                delisting_date = performance_reversal_delisting_application_dict.get(code, "")
+                if is_delisting_date_less_than_2months(code):
+                    sheet.write(row_idx, 10, delisting_date, styles["yellow_pink_delisting_apply"])
                 else:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
+                    sheet.write(row_idx, 10, delisting_date, styles["yellow_delisting_apply_right"])
 
-                # ===================== 新增：远涨 远跌 =====================
-                structure_str = dividend_structure_dict.get(code, "")
-                far_up = ""
-                far_down = ""
-                if structure_str:
-                    parts = structure_str.split(",")
-                    if len(parts) >= 2:
-                        far_up = parts[0].strip()
-                        far_down = parts[1].strip()
+                # 周线
+                week_line = performance_reversal_week_line_dict.get(code, "")
+                week_line_stripped = week_line.strip()
+                if week_line_stripped in ("半周线", "周线涨"):
+                    sheet.write(row_idx, 11, week_line, styles["week_yellow_pink"])
+                else:
+                    sheet.write(row_idx, 11, week_line, styles["yellow"])
 
-                # sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])  # 远涨
+                # 远涨 + 远跌
+                far_data = performance_reversal_far_dict.get(code, ",").split(",")
+                far_up = far_data[0].strip()
+                far_down = far_data[1].strip()
 
-                # ==================== 分红股 - 远涨 列颜色 ====================
-                far_up_val = 0
+                # 远涨
                 try:
-                    # 从字典取远涨数值
-                    far_up_val = int(dividend_structure_dict[code].split(',')[0].strip())
+                    val = int(far_up)
+                    if val <= 50:
+                        sheet.write(row_idx, 12, far_up, styles["far_up_yellow_pink"])
+                    elif val >= 70:
+                        sheet.write(row_idx, 12, far_up, styles["far_up_yellow_red"])
+                    else:
+                        sheet.write(row_idx, 12, far_up, styles["yellow"])
                 except:
-                    far_up_val = 999
+                    sheet.write(row_idx, 12, far_up, styles["yellow"])
 
-                # 黄色背景行
-                if far_up_val < 50:
-                    sheet.write(row_idx, 14, far_up, styles["yellow_pink_delisting_apply"])
-                elif far_up_val > 70:
-                    sheet.write(row_idx, 14, far_up, styles["yellow_red_text"])
-                else:
-                    sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
-
-                # sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])  # 远跌
-
-                # 远跌 颜色：>60粉红，<30红色
-                far_down_val = 0
+                # 远跌
                 try:
-                    far_down_val = int(dividend_structure_dict[code].split(',')[1].strip())
+                    val = int(far_down.strip())
+                    if val >= 60:
+                        sheet.write(row_idx, 13, far_down, styles["far_down_yellow_pink"])
+                    elif val <= 30:
+                        sheet.write(row_idx, 13, far_down, styles["far_down_yellow_red"])
+                    else:
+                        sheet.write(row_idx, 13, far_down, styles["yellow"])
                 except:
-                    far_down_val = 0
+                    sheet.write(row_idx, 13, far_down, styles["yellow"])
 
-                if far_down_val > 60:
-                    sheet.write(row_idx, 15, far_down, styles["yellow_pink_delisting_apply"])
-                elif far_down_val < 30:
-                    sheet.write(row_idx, 15, far_down, styles["yellow_red_text"])
+                # 审计：已ok → 粉红，雷 → 红色
+                audit_text = performance_reversal_audit_dict.get(code, "")
+                audit_stripped = audit_text.strip()
+                if audit_stripped.endswith("已ok"):
+                    sheet.write(row_idx, 14, audit_text, styles["audit_yellow_pink"])
+                elif audit_stripped.endswith("雷"):
+                    sheet.write(row_idx, 14, audit_text, styles["audit_yellow_red"])
                 else:
-                    sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
+                    sheet.write(row_idx, 14, audit_text, styles["yellow"])
 
+                # 要点
+                memo = performance_reversal_memo_dict.get(code, "")
+                sheet.write(row_idx, 15, memo, styles["yellow_memo_left"])
 
-            elif is_small_cap_sheet:
-                dates = small_cap_annual_report_dict.get(code, ["", ""])
-                sheet.write(row_idx, 10, dates[0], styles["yellow_date_right"])
-                sheet.write(row_idx, 11, dates[1], styles["yellow_date_right"])
-            elif is_hot_development_sheet:
-                dates = hot_development_annual_report_dict.get(code, ["", ""])
-                sheet.write(row_idx, 10, dates[0], styles["yellow_date_right"])
-                sheet.write(row_idx, 11, dates[1], styles["yellow_date_right"])
-            elif is_combined_stock_sheet:
-                if strategy == "分红股":
-                    dates = dividend_date_dict.get(code, ["", ""])
-                elif strategy == "业绩反转":
-                    dates = performance_reversal_annual_report_dict.get(code, ["", ""])
-                elif strategy == "小盘猛牛":
-                    dates = small_cap_annual_report_dict.get(code, ["", ""])
-                elif strategy == "热点发展":
-                    dates = hot_development_annual_report_dict.get(code, ["", ""])
-                elif strategy == "涨停回调":
-                    dates = limit_up_callback_annual_report_dict.get(code, ["", ""])
-                else:
-                    dates = ["", ""]
-                sheet.write(row_idx, 10, dates[0], styles["yellow_date_right"])
-                sheet.write(row_idx, 11, dates[1], styles["yellow_date_right"])
+            # elif is_combined_stock_sheet:  # 股票策略合并
+            #     if strategy == "分红股":
+            #         dates = dividend_stock_date_dict.get(code, ["", ""])
+            #     elif strategy == "业绩反转":
+            #         dates = performance_reversal_annual_report_dict.get(code, ["", ""])
+            #     elif strategy == "小盘猛牛":
+            #         dates = small_cap_dividend_date__dict.get(code, ["", ""])
+            #     elif strategy == "热点发展":
+            #         dates = hot_development_dividend_data_dict.get(code, ["", ""])
+            #     elif strategy == "涨停回调":
+            #         dates = limit_up_callback_dividend_date_dict.get(code, ["", ""])
+            #     else:
+            #         dates = ["", ""]
+            #     sheet.write(row_idx, 10, dates[0], styles["yellow_date_right"])
+            #     sheet.write(row_idx, 11, dates[1], styles["yellow_date_right"])
         else:
             sheet.write(row_idx, 0, code, styles["base"])
             sheet.write(row_idx, 1, info["名称"], styles["base"])
@@ -1172,71 +1628,377 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             sheet.write(row_idx, 8, f"{total_cumulative_percent}%", styles["total_percent"])
             sheet.write(row_idx, 9, strategy, styles["strategy"])
 
-            if is_performance_reversal_sheet:
-                # 摘帽申请日期
-                delisting_date = performance_reversal_delisting_application_dict.get(code, "")
-                if is_delisting_date_less_than_2months(code):
-                    sheet.write(row_idx, 10, delisting_date, styles["pink_delisting_apply"])
-                else:
-                    sheet.write(row_idx, 10, delisting_date, styles["delisting_apply_right"])
+            if is_stock_dividend_sheet:  # 分红股
+                item_list = dividend_stock_date_dict.get(code, ["", "", ""])
+                next_report = item_list[0]
+                div_date = item_list[1]
+                per_div = item_list[2]
 
-                # 周线
-                week_line = performance_reversal_week_line_dict.get(code, "")
-                week_line_stripped = week_line.strip()
-                if week_line_stripped in ("半周线", "周线涨"):
-                    sheet.write(row_idx, 11, week_line, styles["week_pink"])
-                else:
-                    sheet.write(row_idx, 11, week_line, styles["base"])
+                sheet.write(row_idx, 10, next_report, styles["base"])
+                sheet.write(row_idx, 11, div_date, styles["base"])
+                sheet.write(row_idx, 12, per_div, styles["date_right"])
 
-                # 远涨 + 远跌
-                far_data = performance_reversal_far_dict.get(code, ",").split(",")
-                far_up = far_data[0].strip()
-                far_down = far_data[1].strip()
-
-                # 远涨
+                # 年化收益
+                annual_rate_text = ""
                 try:
-                    val = int(far_up)
-                    if val <= 50:
-                        sheet.write(row_idx, 12, far_up, styles["far_up_pink"])
-                    elif val >= 70:
-                        sheet.write(row_idx, 12, far_up, styles["far_up_red"])
-                    else:
-                        sheet.write(row_idx, 12, far_up, styles["base"])
-                except:
-                    sheet.write(row_idx, 12, far_up, styles["base"])
+                    div_str = str(per_div).strip()
+                    clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
+                    div_val = float(eval(clean_expr))
+                    current_price = float(info["当前价"])
 
-                # 远跌
+                    if current_price > 0 and div_val >= 0:
+                        annual_rate = (div_val / 10) / current_price * 100
+                        annual_rate_text = f"{annual_rate:.2f}"
+                except:
+                    annual_rate_text = ""
+
+                # sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
+
+                annual_val = 0.0
                 try:
-                    val = int(far_down.strip())
-                    if val >= 60:
-                        sheet.write(row_idx, 13, far_down, styles["far_down_pink"])
-                    elif val <= 30:
-                        sheet.write(row_idx, 13, far_down, styles["far_down_red"])
-                    else:
-                        sheet.write(row_idx, 13, far_down, styles["base"])
+                    annual_val = float(annual_rate_text)
                 except:
-                    sheet.write(row_idx, 13, far_down, styles["base"])
+                    annual_val = 0.0
 
-                # 审计：已ok → 粉红，雷 → 红色
-                audit_text = performance_reversal_audit_dict.get(code, "")
-                audit_stripped = audit_text.strip()
-                if audit_stripped.endswith("已ok"):
-                    sheet.write(row_idx, 14, audit_text, styles["audit_pink"])
-                elif audit_stripped.endswith("雷"):
-                    sheet.write(row_idx, 14, audit_text, styles["audit_red"])
+                # 普通行
+                if annual_val >= 4.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
+                elif annual_val <= 1.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["red_text"])
                 else:
-                    sheet.write(row_idx, 14, audit_text, styles["base"])
+                    sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
 
-                # 要点
-                memo = performance_reversal_memo_dict.get(code, "")
-                sheet.write(row_idx, 15, memo, styles["memo_left"])
+                # ===================== 新增：远涨 远跌 =====================
+                structure_str = stock_dividend_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if structure_str:
+                    parts = structure_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
 
-            elif is_limit_up_callback_sheet:
-                dates = limit_up_callback_annual_report_dict.get(code, ["", ""])
-                sheet.write(row_idx, 10, dates[0], styles["date_right"])
-                sheet.write(row_idx, 11, dates[1], styles["date_right"])
-            elif is_fund_sheet:
-                item_list = dividend_fund_date_dict.get(code, ["", "", ""])
+                # sheet.write(row_idx, 14, far_up, styles["date_right"])  # 远涨
+                far_up_val = 0
+                try:
+                    far_up_val = int(stock_dividend_struct_dict[code].split(',')[0].strip())
+                except:
+                    far_up_val = 0
+
+                if far_up_val < 50:
+                    sheet.write(row_idx, 14, far_up, styles["pink_delisting_apply"])
+                elif far_up_val > 70:
+                    sheet.write(row_idx, 14, far_up, styles["red_text"])
+                else:
+                    sheet.write(row_idx, 14, far_up, styles["date_right"])
+
+                # sheet.write(row_idx, 15, far_down, styles["date_right"])  # 远跌
+
+                # 远跌 颜色：>60粉红，<30红色
+                far_down_val = 0
+                try:
+                    far_down_val = int(stock_dividend_struct_dict[code].split(',')[1].strip())
+                except:
+                    far_down_val = 0
+
+                if far_down_val > 60:
+                    sheet.write(row_idx, 15, far_down, styles["pink_delisting_apply"])
+                elif far_down_val < 30:
+                    sheet.write(row_idx, 15, far_down, styles["red_text"])
+                else:
+                    sheet.write(row_idx, 15, far_down, styles["date_right"])
+
+            elif is_limit_up_callback_sheet:  # 涨停回调  普通背景色
+                # 取出字典 3 个值：年报日期、分红日期、每十股分红
+                item_list = limit_up_callback_dividend_date_dict.get(code, ["", "", ""])
+                next_report = item_list[0]
+                div_date = item_list[1]
+                per_div = item_list[2]
+
+                sheet.write(row_idx, 10, item_list[0], styles["date_right"])
+                sheet.write(row_idx, 11, item_list[1], styles["date_right"])
+                sheet.write(row_idx, 12, item_list[2], styles["date_right"])
+
+                # ===================== 年化收益 =====================
+                annual_rate_text = ""
+                try:
+                    div_str = str(per_div).strip()
+                    clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
+                    div_val = float(eval(clean_expr))
+                    current_price = float(info["当前价"])
+
+                    if current_price > 0 and div_val >= 0:
+                        annual_rate = (div_val / 10) / current_price * 100
+                        annual_rate_text = f"{annual_rate:.2f}"
+                except:
+                    annual_rate_text = ""
+
+                annual_val = 0.0
+                try:
+                    annual_val = float(annual_rate_text)
+                except:
+                    annual_val = 0.0
+
+                if annual_val >= 4.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
+                elif annual_val <= 1.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["red_text"])
+                else:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
+
+                # ===================== 远涨 / 远跌 =====================
+                struct_str = limit_up_callback_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if struct_str:
+                    parts = struct_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
+
+                # -------------------- 远涨 普通背景 + 完整 try/except --------------------
+                try:
+                    val = float(far_up)
+                    if val < 50:
+                        sheet.write(row_idx, 14, far_up, styles["pink_delisting_apply"])
+                    elif val > 70:
+                        sheet.write(row_idx, 14, far_up, styles["red_text"])
+                    else:
+                        sheet.write(row_idx, 14, far_up, styles["date_right"])
+                except:
+                    sheet.write(row_idx, 14, far_up, styles["date_right"])
+
+                # -------------------- 远跌 普通背景 + 完整 try/except --------------------
+                try:
+                    val = float(far_down)
+                    if val > 60:
+                        sheet.write(row_idx, 15, far_down, styles["pink_delisting_apply"])
+                    elif val < 30:
+                        sheet.write(row_idx, 15, far_down, styles["red_text"])
+                    else:
+                        sheet.write(row_idx, 15, far_down, styles["date_right"])
+                except:
+                    sheet.write(row_idx, 15, far_down, styles["date_right"])
+
+            elif is_small_cap_sheet:  # 小盘猛牛 普通背景色
+                # 取出字典 3 个值：年报日期、分红日期、每十股分红
+                item_list = small_cap_dividend_date__dict.get(code, ["", "", ""])
+                next_report = item_list[0]
+                div_date = item_list[1]
+                per_div = item_list[2]
+
+                sheet.write(row_idx, 10, item_list[0], styles["date_right"])
+                sheet.write(row_idx, 11, item_list[1], styles["date_right"])
+                sheet.write(row_idx, 12, item_list[2], styles["date_right"])
+
+                # ===================== 年化收益 =====================
+                annual_rate_text = ""
+                try:
+                    div_str = str(per_div).strip()
+                    clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
+                    div_val = float(eval(clean_expr))
+                    current_price = float(info["当前价"])
+
+                    if current_price > 0 and div_val >= 0:
+                        annual_rate = (div_val / 10) / current_price * 100
+                        annual_rate_text = f"{annual_rate:.2f}"
+                except:
+                    annual_rate_text = ""
+
+                annual_val = 0.0
+                try:
+                    annual_val = float(annual_rate_text)
+                except:
+                    annual_val = 0.0
+
+                if annual_val >= 4.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
+                elif annual_val <= 1.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["red_text"])
+                else:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
+
+                # ===================== 远涨 / 远跌 =====================
+                struct_str = small_cap_callback_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if struct_str:
+                    parts = struct_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
+
+                # -------------------- 远涨 颜色规则 --------------------
+                try:
+                    val = float(far_up)
+                    if val < 50:
+                        sheet.write(row_idx, 14, far_up, styles["pink_delisting_apply"])
+                    elif val > 70:
+                        sheet.write(row_idx, 14, far_up, styles["red_text"])
+                    else:
+                        sheet.write(row_idx, 14, far_up, styles["date_right"])
+                except:
+                    sheet.write(row_idx, 14, far_up, styles["date_right"])
+
+                # -------------------- 远跌 颜色规则 --------------------
+                try:
+                    val = float(far_down)
+                    if val > 60:
+                        sheet.write(row_idx, 15, far_down, styles["pink_delisting_apply"])
+                    elif val < 30:
+                        sheet.write(row_idx, 15, far_down, styles["red_text"])
+                    else:
+                        sheet.write(row_idx, 15, far_down, styles["date_right"])
+                except:
+                    sheet.write(row_idx, 15, far_down, styles["date_right"])
+
+            elif is_hot_development_sheet:  # 热点发展
+                # 取出字典 3 个值：年报日期、分红日期、每十股分红
+                item_list = hot_development_dividend_data_dict.get(code, ["", "", ""])
+                next_report = item_list[0]
+                div_date = item_list[1]
+                per_div = item_list[2]
+
+                sheet.write(row_idx, 10, item_list[0], styles["date_right"])
+                sheet.write(row_idx, 11, item_list[1], styles["date_right"])
+                sheet.write(row_idx, 12, item_list[2], styles["date_right"])
+
+                # ===================== 年化收益 =====================
+                annual_rate_text = ""
+                try:
+                    div_str = str(per_div).strip()
+                    clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
+                    div_val = float(eval(clean_expr))
+                    current_price = float(info["当前价"])
+
+                    if current_price > 0 and div_val >= 0:
+                        annual_rate = (div_val / 10) / current_price * 100
+                        annual_rate_text = f"{annual_rate:.2f}"
+                except:
+                    annual_rate_text = ""
+
+                annual_val = 0.0
+                try:
+                    annual_val = float(annual_rate_text)
+                except:
+                    annual_val = 0.0
+
+                if annual_val >= 4.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
+                elif annual_val <= 1.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["red_text"])
+                else:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
+
+                # ===================== 远涨 / 远跌 =====================
+                struct_str = hot_development_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if struct_str:
+                    parts = struct_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
+
+                # -------------------- 远涨 颜色规则 --------------------
+                try:
+                    val = float(far_up)
+                    if val < 50:
+                        sheet.write(row_idx, 14, far_up, styles["pink_delisting_apply"])
+                    elif val > 70:
+                        sheet.write(row_idx, 14, far_up, styles["red_text"])
+                    else:
+                        sheet.write(row_idx, 14, far_up, styles["date_right"])
+                except:
+                    sheet.write(row_idx, 14, far_up, styles["date_right"])
+
+                # -------------------- 远跌 颜色规则 --------------------
+                try:
+                    val = float(far_down)
+                    if val > 60:
+                        sheet.write(row_idx, 15, far_down, styles["pink_delisting_apply"])
+                    elif val < 30:
+                        sheet.write(row_idx, 15, far_down, styles["red_text"])
+                    else:
+                        sheet.write(row_idx, 15, far_down, styles["date_right"])
+                except:
+                    sheet.write(row_idx, 15, far_down, styles["date_right"])
+
+
+            elif is_bond_allot_sheet:  # 配债股 普通背景色
+                # 取出字典 3 个值：下期新年报日期、分红日期、每十股分红
+                item_list = bond_allot_dividend_data_dict.get(code, ["", "", ""])
+                next_report = item_list[0]
+                div_date = item_list[1]
+                per_div = item_list[2]
+
+                sheet.write(row_idx, 10, next_report, styles["date_right"])
+                sheet.write(row_idx, 11, div_date, styles["date_right"])
+                sheet.write(row_idx, 12, per_div, styles["date_right"])
+
+                # ===================== 年化收益 =====================
+                annual_rate_text = ""
+                try:
+                    div_str = str(per_div).strip()
+                    clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
+                    div_val = float(eval(clean_expr))
+                    current_price = float(info["当前价"])
+
+                    if current_price > 0 and div_val >= 0:
+                        annual_rate = (div_val / 10) / current_price * 100
+                        annual_rate_text = f"{annual_rate:.2f}"
+                except:
+                    annual_rate_text = ""
+
+                annual_val = 0.0
+                try:
+                    annual_val = float(annual_rate_text)
+                except:
+                    annual_val = 0.0
+
+                if annual_val >= 4.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
+                elif annual_val <= 1.5:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["red_text"])
+                else:
+                    sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
+
+                # ===================== 远涨 / 远跌 =====================
+                struct_str = bond_allot_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if struct_str:
+                    parts = struct_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
+
+                # -------------------- 远涨 颜色规则 --------------------
+                try:
+                    val = float(far_up)
+                    if val < 50:
+                        sheet.write(row_idx, 14, far_up, styles["pink_delisting_apply"])
+                    elif val > 70:
+                        sheet.write(row_idx, 14, far_up, styles["red_text"])
+                    else:
+                        sheet.write(row_idx, 14, far_up, styles["date_right"])
+                except:
+                    sheet.write(row_idx, 14, far_up, styles["date_right"])
+
+                # -------------------- 远跌 颜色规则 --------------------
+                try:
+                    val = float(far_down)
+                    if val > 60:
+                        sheet.write(row_idx, 15, far_down, styles["pink_delisting_apply"])
+                    elif val < 30:
+                        sheet.write(row_idx, 15, far_down, styles["red_text"])
+                    else:
+                        sheet.write(row_idx, 15, far_down, styles["date_right"])
+                except:
+                    sheet.write(row_idx, 15, far_down, styles["date_right"])
+
+            elif is_fund_dividend_sheet:  # 分红基
+                item_list = fund_dividend_date_dict.get(code, ["", "", ""])
                 last_date = item_list[0]
                 next_date = item_list[1]
                 per_div = item_list[2]
@@ -1252,7 +2014,8 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
                     div_val = float(eval(clean_expr))
                     current_price = float(info["当前价"])
-                    if current_price > 0 and div_val > 0:
+
+                    if current_price > 0 and div_val >= 0:
                         annual_rate = (div_val / 10) / current_price * 100
                         annual_rate_text = f"{annual_rate:.2f}"
                 except:
@@ -1318,109 +2081,81 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 else:
                     sheet.write(row_idx, 15, far_down, styles["date_right"])
 
-            elif is_dividend_sheet:
-                item_list = dividend_date_dict.get(code, ["", "", ""])
-                next_report = item_list[0]
-                div_date = item_list[1]
-                per_div = item_list[2]
-
-                sheet.write(row_idx, 10, next_report, styles["base"])
-                sheet.write(row_idx, 11, div_date, styles["base"])
-                sheet.write(row_idx, 12, per_div, styles["date_right"])
-
-                # 年化收益
-                annual_rate_text = ""
-                try:
-                    div_str = str(per_div).strip()
-                    clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
-                    div_val = float(eval(clean_expr))
-                    current_price = float(info["当前价"])
-                    if current_price > 0 and div_val > 0:
-                        annual_rate = (div_val / 10) / current_price * 100
-                        annual_rate_text = f"{annual_rate:.2f}"
-                except:
-                    annual_rate_text = ""
-
-                # sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
-
-                annual_val = 0.0
-                try:
-                    annual_val = float(annual_rate_text)
-                except:
-                    annual_val = 0.0
-
-                # 普通行
-                if annual_val >= 4.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
-                elif annual_val <= 1.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["red_text"])
+            elif is_performance_reversal_sheet:  # 业绩反转
+                # 摘帽申请日期
+                delisting_date = performance_reversal_delisting_application_dict.get(code, "")
+                if is_delisting_date_less_than_2months(code):
+                    sheet.write(row_idx, 10, delisting_date, styles["pink_delisting_apply"])
                 else:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
+                    sheet.write(row_idx, 10, delisting_date, styles["delisting_apply_right"])
 
+                # 周线
+                week_line = performance_reversal_week_line_dict.get(code, "")
+                week_line_stripped = week_line.strip()
+                if week_line_stripped in ("半周线", "周线涨"):
+                    sheet.write(row_idx, 11, week_line, styles["week_pink"])
+                else:
+                    sheet.write(row_idx, 11, week_line, styles["base"])
 
-                # ===================== 新增：远涨 远跌 =====================
-                structure_str = dividend_structure_dict.get(code, "")
-                far_up = ""
-                far_down = ""
-                if structure_str:
-                    parts = structure_str.split(",")
-                    if len(parts) >= 2:
-                        far_up = parts[0].strip()
-                        far_down = parts[1].strip()
+                # 远涨 + 远跌
+                far_data = performance_reversal_far_dict.get(code, ",").split(",")
+                far_up = far_data[0].strip()
+                far_down = far_data[1].strip()
 
-                # sheet.write(row_idx, 14, far_up, styles["date_right"])  # 远涨
-                far_up_val = 0
+                # 远涨
                 try:
-                    far_up_val = int(dividend_structure_dict[code].split(',')[0].strip())
+                    val = int(far_up)
+                    if val <= 50:
+                        sheet.write(row_idx, 12, far_up, styles["far_up_pink"])
+                    elif val >= 70:
+                        sheet.write(row_idx, 12, far_up, styles["far_up_red"])
+                    else:
+                        sheet.write(row_idx, 12, far_up, styles["base"])
                 except:
-                    far_up_val = 0
+                    sheet.write(row_idx, 12, far_up, styles["base"])
 
-                if far_up_val < 50:
-                    sheet.write(row_idx, 14, far_up, styles["pink_delisting_apply"])
-                elif far_up_val > 70:
-                    sheet.write(row_idx, 14, far_up, styles["red_text"])
-                else:
-                    sheet.write(row_idx, 14, far_up, styles["date_right"])
-
-                # sheet.write(row_idx, 15, far_down, styles["date_right"])  # 远跌
-
-                # 远跌 颜色：>60粉红，<30红色
-                far_down_val = 0
+                # 远跌
                 try:
-                    far_down_val = int(dividend_structure_dict[code].split(',')[1].strip())
+                    val = int(far_down.strip())
+                    if val >= 60:
+                        sheet.write(row_idx, 13, far_down, styles["far_down_pink"])
+                    elif val <= 30:
+                        sheet.write(row_idx, 13, far_down, styles["far_down_red"])
+                    else:
+                        sheet.write(row_idx, 13, far_down, styles["base"])
                 except:
-                    far_down_val = 0
+                    sheet.write(row_idx, 13, far_down, styles["base"])
 
-                if far_down_val > 60:
-                    sheet.write(row_idx, 15, far_down, styles["pink_delisting_apply"])
-                elif far_down_val < 30:
-                    sheet.write(row_idx, 15, far_down, styles["red_text"])
+                # 审计：已ok → 粉红，雷 → 红色
+                audit_text = performance_reversal_audit_dict.get(code, "")
+                audit_stripped = audit_text.strip()
+                if audit_stripped.endswith("已ok"):
+                    sheet.write(row_idx, 14, audit_text, styles["audit_pink"])
+                elif audit_stripped.endswith("雷"):
+                    sheet.write(row_idx, 14, audit_text, styles["audit_red"])
                 else:
-                    sheet.write(row_idx, 15, far_down, styles["date_right"])
+                    sheet.write(row_idx, 14, audit_text, styles["base"])
 
-            elif is_small_cap_sheet:
-                dates = small_cap_annual_report_dict.get(code, ["", ""])
-                sheet.write(row_idx, 10, dates[0], styles["date_right"])
-                sheet.write(row_idx, 11, dates[1], styles["date_right"])
-            elif is_hot_development_sheet:
-                dates = hot_development_annual_report_dict.get(code, ["", ""])
-                sheet.write(row_idx, 10, dates[0], styles["date_right"])
-                sheet.write(row_idx, 11, dates[1], styles["date_right"])
-            elif is_combined_stock_sheet:
-                if strategy == "分红股":
-                    dates = dividend_date_dict.get(code, ["", ""])
-                elif strategy == "业绩反转":
-                    dates = performance_reversal_annual_report_dict.get(code, ["", ""])
-                elif strategy == "小盘猛牛":
-                    dates = small_cap_annual_report_dict.get(code, ["", ""])
-                elif strategy == "热点发展":
-                    dates = hot_development_annual_report_dict.get(code, ["", ""])
-                elif strategy == "涨停回调":
-                    dates = limit_up_callback_annual_report_dict.get(code, ["", ""])
-                else:
-                    dates = ["", ""]
-                sheet.write(row_idx, 10, dates[0], styles["date_right"])
-                sheet.write(row_idx, 11, dates[1], styles["date_right"])
+                # 要点
+                memo = performance_reversal_memo_dict.get(code, "")
+                sheet.write(row_idx, 15, memo, styles["memo_left"])
+
+
+            # elif is_combined_stock_sheet:  # 股票策略合并   //nouse
+            #     if strategy == "分红股":
+            #         dates = dividend_stock_date_dict.get(code, ["", ""])
+            #     elif strategy == "业绩反转":
+            #         dates = performance_reversal_annual_report_dict.get(code, ["", ""])
+            #     elif strategy == "小盘猛牛":
+            #         dates = small_cap_dividend_date__dict.get(code, ["", ""])
+            #     elif strategy == "热点发展":
+            #         dates = hot_development_dividend_data_dict.get(code, ["", ""])
+            #     elif strategy == "涨停回调":
+            #         dates = limit_up_callback_dividend_date_dict.get(code, ["", ""])
+            #     else:
+            #         dates = ["", ""]
+            #     sheet.write(row_idx, 10, dates[0], styles["date_right"])
+            #     sheet.write(row_idx, 11, dates[1], styles["date_right"])
         row_idx += 1
 
     if not is_strategy_sheet and summary_data and summary_percent:
@@ -1444,7 +2179,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             sheet.write(percent_row, col_idx, f"{pct}%", styles["summary"])
             col_idx += 1
 
-# ---------------------- 16. 数据读取与处理 ----------------------
+# ---------------------- 16. 数据读取与处理 -------应是程序运行start---------------
 old_workbook = xlrd.open_workbook("1234.xls")
 position_dict = {}
 
@@ -1574,23 +2309,26 @@ for strategy_name in sorted_strategy_names:
 
     strategy_sheet = final_workbook.add_sheet(safe_name)
 
-    is_fund_sheet = (strategy_name == "分红基")
-    is_dividend_sheet = (strategy_name == "分红股")
+    is_fund_dividend_sheet = (strategy_name == "分红基")
+    is_stock_dividend_sheet = (strategy_name == "分红股")
     is_small_cap_sheet = (strategy_name == "小盘猛牛")
     is_hot_development_sheet = (strategy_name == "热点发展")
     is_performance_reversal_sheet = (strategy_name == "业绩反转")
     is_limit_up_callback_sheet = (strategy_name == "涨停回调")
+    is_bond_allot_sheet = (strategy_name == "配债股")
 
     write_sheet_data(
         strategy_sheet, group_data, styles,
         is_strategy_sheet=True,
         total_capital=total_capital,
-        is_dividend_sheet=is_dividend_sheet,
-        is_fund_sheet=is_fund_sheet,
+        is_stock_dividend_sheet=is_stock_dividend_sheet,
+        is_fund_dividend_sheet=is_fund_dividend_sheet,
         is_small_cap_sheet=is_small_cap_sheet,
         is_hot_development_sheet=is_hot_development_sheet,
         is_performance_reversal_sheet=is_performance_reversal_sheet,
-        is_limit_up_callback_sheet=is_limit_up_callback_sheet
+        is_limit_up_callback_sheet=is_limit_up_callback_sheet,
+        is_bond_allot_sheet=is_bond_allot_sheet   # 这里加上
+
     )
 
 final_workbook.save("__00_总仓位.xls")
