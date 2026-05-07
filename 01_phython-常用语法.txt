@@ -1,52 +1,4 @@
 ﻿
-0.    python中，定义全局变量
-
-      global_last = 0
-
-      def outer():
-          # 外层嵌套变量
-          nonlocal_last = 0
-
-          def inner():
-              global global_last       # 声明改全局变量
-              nonlocal nonlocal_last  # 声明改外层嵌套变量
-              global_last += 1
-              nonlocal_last += 1
-              print(global_last, nonlocal_last)  # 输出：1 1
-
-          inner()
-
-      outer()
-
-
-0.  python中，定义预编译选项
-
-      DEFINES = \
-      {
-          "TXMODE": True,
-          "DEBUG": False,
-      }
-
-      # DEFINES = {
-      #     "TXMODE": False,
-      #     "DEBUG": True,
-      # }
-
-
-      def defined(macro_name):
-          is_defined = macro_name in DEFINES
-          is_enabled = DEFINES[macro_name]
-          return is_defined and is_enabled
-
-
-      if defined("TXMODE"):
-          print("tx")
-
-      elif defined("DEBUG"):
-          print("debug")
-      else:
-          print("默认模式执行")
-
 
 1。 为什么下面语句打印结果后面有个逗号 
 
@@ -203,4 +155,119 @@
       if file_num != 1:
           print("multi files, or no file")
           sys.exit()
+
+15. 如何import导入上一级目录中py文件
+ 
+      目录及文件结构： 
+
+
+      ommo_python_core/
+      ├── ommo_io_defs.py
+      └── UI/
+          └── device_calibration_gui.py
+        
+      导入指令：
+      import ommo_io_defs as ommo
+          
+          
+      找不到文件的解决方法：
+
+      方法1：添加环境变量 （添加到系统变量里面）
+             变量名： PYTHONPATH
+             变量值： C:\workspace\ommo_python_core
+         
+      方法2： 添加绝大路径
+              import sys
+              sys.path.append("C:/workspace/ommo_python_core")
+
+      方法3： 添加相对路径
+              import sys
+              sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+      查看路径：
+              import sys
+              print(sys.path)
+
+
+
+
+
+
+
+----------------------------------- c语言功能 ----------------------------------------------
+
+
+1.    python中，定义全局变量
+
+      global_last = 0
+
+      def outer():
+          # 外层嵌套变量
+          nonlocal_last = 0
+
+          def inner():
+              global global_last       # 声明改全局变量
+              nonlocal nonlocal_last  # 声明改外层嵌套变量
+              global_last += 1
+              nonlocal_last += 1
+              print(global_last, nonlocal_last)  # 输出：1 1
+
+          inner()
+
+      outer()
+
+
+2.  python中，定义预编译选项
+
+      DEFINES = \
+      {
+          "TXMODE": True,
+          "DEBUG": False,
+      }
+
+      # DEFINES = {
+      #     "TXMODE": False,
+      #     "DEBUG": True,
+      # }
+
+
+      def defined(macro_name):
+          is_defined = macro_name in DEFINES
+          is_enabled = DEFINES[macro_name]
+          return is_defined and is_enabled
+
+
+      if defined("TXMODE"):
+          print("tx")
+
+      elif defined("DEBUG"):
+          print("debug")
+      else:
+          print("默认模式执行")
+
+
+
+3. 定义预编译选择变量简化版
+
+
+      DEFINES = \
+      {
+          # "MODE_X": True,
+          "MODE_XYZ": True,
+      }
+
+      def defined(macro_name):
+          is_defined = macro_name in DEFINES
+          return is_defined
+
+      if defined("MODE_X"):
+          print("use x")
+
+      elif defined("MODE_XYZ"):
+          print("use xyz")
+
+
+
+
+
 
