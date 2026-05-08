@@ -1,4 +1,16 @@
 ﻿
+0.   print打印_多种方法
+
+      print("\ntimestamp", timestamp)
+
+      print("delta=", delta[:3])
+
+      print("Timestamp=", f"{AAA}") 
+
+      print('device={} time={}'.format(device.name, time_array[row]) )
+
+      print('device='+f'{device.name}' + ' time=' + f'{time_array[row]}' )
+
 
 1。 为什么下面语句打印结果后面有个逗号 
 
@@ -120,8 +132,8 @@
 
 11. range 的讲解  (起始，结束，步长)
  
-    例1：range(3) 是 range(0,3,1) 的简写，值是  [ 0, 1, 2 ]        //共3个数字, 后面的1是步长
-    例2：range(1,3) 是 range(1,3,1) 的简写，值是   [1, 2 ]
+    例1：range(3) 是 range(0,3,1) 的简写，值是    0, 1, 2         //共3个数字, 后面的1是步长
+    例2：range(1,3) 是 range(1,3,1) 的简写，值是    1, 2  
 
 
 12. 向上取整  math.ceil

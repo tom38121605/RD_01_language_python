@@ -1,0 +1,43 @@
+
+1.  字典定义为普通空字典， 直接对键赋值
+
+     示例1：
+        mydict = { }
+       mydict["a01"] = 100
+       mydict["a02"] = 200
+       print(mydict)    # {'a01': 100, 'a02': 200}
+
+    示例2：
+       mydict = { }
+      mydict["a01"] = {"名称": "名一", "数量": 10, "当前J": 1.0}
+      mydict["a02"] = {"名称": "名两", "数量": 20,  "当前J": 2.0}
+      print(mydict)  # {'a01': {'名称': '名一', '数量': 10, '当前J': 1.0}, 'a02': {'名称': '名两', '数量': 20, '当前J': 2.0}}
+
+
+2.  字典定义为 defaultdict ， 可用append赋值
+
+      示例1： 字典的值为list列表
+
+      from collections import defaultdict
+      d = defaultdict(list)                              # 这种方式定义的字典，可用append加入值
+
+      # 直接追加
+      d["001"].append(100)
+      d["001"].append(200)
+
+      print(d["001"])   # [100, 200]
+      print(d)            # defaultdict(<class 'list'>, {'001': [100, 200]})
+
+
+      示例2：  字典的值为int整数
+
+      dd = defaultdict(int)
+      dd["key1"] += 1
+
+      print(dd)  # defaultdict(<class 'int'>, {'key1': 1})
+
+
+
+
+
+
