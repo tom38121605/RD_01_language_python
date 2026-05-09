@@ -1,0 +1,69 @@
+
+1.  字符串转换成数字，并取整数部分
+
+    code:   "48.9"
+
+    AAA = int(float(code))
+
+      float:  "48.9" → 48.9
+      int:     48.9 → 48
+
+2. 数字转换成字符串
+
+    BBB = str(AAA)
+
+      str:     48 → "48"
+
+3. 字符串去掉前后空格
+
+   CCC = BBB.strip()
+
+4. 字符串去掉所有空格
+
+      s = "hello    world   python"
+      result = " ".join(s.split())
+      print(result)  # hello world python
+
+
+5. 把多个空格压缩成一个空格
+
+      s = "hello    world   python"
+      result = " ".join(s.split())
+      print(result)  # hello world python
+
+
+6. 字符串右边补0或空格
+ 
+      "48".ljust(6, '0')  # 右边补0 → "480000"
+      "48".ljust(6, ' ')  # 右边补空格 → "48    "
+
+7. 字符串左边补0或空格
+ 
+      "48".ljust(6, '0')  # 右边补0 → "000048"
+      "48".ljust(6, ' ')  # 右边补空格 → "    48"
+
+
+8. 数字字符串右边补0      //zfill的优点是处理带负号的数字字符串
+
+     示例1： 
+      code_str = "48"
+      code = code_str.zfill(6)
+      # 结果："000048"
+
+
+     示例2： zfill的优点是处理带负号的数字字符串
+
+      s = "-123"
+      print(s.zfill(6))        # 输出：-00123
+      print(s.rjust(6, '0'))  # 输出：00-123
+
+
+
+
+
+
+
+
+
+
+
