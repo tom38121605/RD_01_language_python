@@ -67,73 +67,58 @@ bond_allot_struct_dict = {
 
 
 # ---------------------- 0.6：分红基, 远涨远跌字典 ----------------------
-dividend_fund_struct_dict = {
+overdown_fund_struct_dict = {
     "180102": "05, 46 ",    # 合肥高新
 }
 
-# ===================== 0.7：业绩反转，远涨远跌字典 =====================
+# ---------------------- 0.7：超跌基, 远涨远跌字典 ----------------------
+dividend_fund_struct_dict = {
+    "512290": "19, 62 ",  # 生物医药
+}
+
+# ---------------------- 0.8：海外基, 远涨远跌字典 ----------------------
+oversea_fund_struct_dict = {
+    "161126": "11, 18 ",  # 标普医药
+}
+
+# ---------------------- 0.9：可转债, 远涨远跌字典 ----------------------
+swapbond_fund_struct_dict = {
+    "127025": "11, 18 ",  # 冀东转债
+}
+
+
+# ===================== 1.0：业绩反转，远涨远跌字典 =====================
 # 格式：key=股票代码, value="远涨数值,远跌数值"
 performance_reversal_far_dict = {
-    #持仓中
-
-    "003032": "45, 47 ",    # 传智
-    "002076": "98, 51 ",    # 星光
-    "600735": "93, 36 ",  # 新华锦
-    "000903": "39, 64 ",    # 云动
-    "300527": "64, 38 ",    # 应急
-    "300366": "18, 71 ",   # 创意    //买入
-    "002122": "68, 51 ",    # 汇洲
-    "600624": "68, 51 ",    # 复华
-    "600169": "38, 33 ",    # 太重
-    "000821": "48, 62 ",    # 京机
-    "300173": "49, 63 ",    # 福能
-
-    "002055": "44, 64 ",    # 得润
-    "600537": "48, 65 ",   # 亿晶光电
-    "300460": "83, 685 ",  # 惠伦
-    "002496": "97, 42 ",  # 辉丰
-    "002124": "32, 73 ",  # 天邦食品
-    "600581": "11, 76 ",  # 八钢
-    "000826": "54, 65 ",  # 启环
-    "301030": "24, 78 ",  # 仕净
-
-    # 加空
-    "603595": "29, 78 ",  # 东尼
-    "600476": "32, 45 ",  # 湘邮
-    "000698": "54, 54 ",  # 沈化
-    "002321": "63, 54 ",  # 华英农业
-
-
-    # ready
-    "000929": "130, 20 ",    # 兰黄
-    "600759": "109, 4156 ",   # 洲际油气
-    "002689": "71, 52 ",    # 远智
-    "002424": "697, 58 ",    #百灵
-    "002512": "96, 46 ",  # 达华
-
-    # 涨幅过大
-    "300044": "375, 12 ",    # 赛为
-    "600777": "294, 11 ",    # 新潮
-    "300506": "290, 57 ",    # 名家汇
-    "300343": "131, 79 ",   # 联创
-    "000595": "209, 50 ",    # 宝实
-    "002713": "626, 23 ",    # 东易
-    "300211": "101, 48 ",     # 亿通
-    "002693": "118, 81 ",    # 双成
-    "002305": "89, 52 ",     # 南置
-    "600889": "452, 44 ",  # *ST京化
-
-    # 风险验证
-    "603789": "19, 64 ",  # 星农
-    "002630": "26, 67 ",  # 华西
-    "000639": "03, 72 ",  # 西王
-
-    # old
-    "600636": "01, 73 ",  # 国化
-    "600892": "52, 52 ",  # 大晟
-    "600358": "184, 27 ",  # 联合
-    "002762": "75, 67 ",  # 金比
-
+    "003032": "0.504, -0.647",  # *ST传智
+    "000903": "0.191, -0.694",  # ST云动
+    "300527": "0.534, -0.400",  # ST应急
+    "300366": "0.171, -0.712",  # ST创意
+    "002122": "0.574, -0.528",  # ST汇洲
+    "002689": "0.589, -0.437",  # ST远智
+    "600624": "0.644, -0.520",  # ST复华
+    "600169": "0.317, -0.231",  # ST太重
+    "300460": "0.849, -0.432",  # ST惠伦
+    "000821": "0.071, -0.637",  # ST京机
+    "300173": "0.336, -0.604",  # ST福能
+    "600759": "0.350, -0.708",  # ST洲际
+    "000639": "0.068, -0.724",  # ST西王
+    "600370": "0.149, -0.661",  # *ST三房
+    "688201": "0.474, -0.717",  # ST信安
+    "000010": "0.604, -0.575",  # *ST美丽
+    "301030": "0.268, -0.778",  # *ST壮净
+    "600053": "0.049, -0.628",  # *ST九鼎
+    "002691": "0.398, -0.619",  # *ST冀凯
+    "002360": "0.539, -0.237",  # ST同德
+    "000826": "0.674, -0.576",  # *ST启环
+    "600734": "0.104, -0.694",  # *ST实达
+    "600581": "0.082, -0.523",  # *ST八钢
+    "000488": "0.350, -0.585",  # ST晨鸣
+    "002512": "0.727, -0.427",  # ST达华
+    "002055": "0.609, -0.365",  # ST得润
+    "600735": "0.885, -0.364",  # ST新华锦
+    "002124": "0.414, -0.576",  # 天邦食品
+    "600537": "0.463, -0.650",  # *ST亿晶
 }
 
 
@@ -195,7 +180,6 @@ limit_up_callback_dividend_date_dict = {
 # ---------------------- 3.1. 小盘猛牛年报日期字典 ----------------------
 small_cap_dividend_date__dict = {
     "300891": ["25年报 26/04/21", "预案 26/04/21", "0.0"], # 惠云钛业
-    "601006": ["25年报 26/04/30", "预案 26/04/30", "1.4+0.8"],  # 大秦铁路  //测试数据
 }
 
 
@@ -204,7 +188,6 @@ small_cap_dividend_date__dict = {
 # ---------------------- 4.1. 热点发展年报日期字典 ----------------------
 hot_development_dividend_data_dict = {
     "002570": ["25年报 26/04/28", "预案 26/04/28", "0.0"],  # 贝因美
-    "603801": ["25年报 26/04/30", "预案 26/04/30", "4.0"],  # 志邦家居  //测试数据
 }
 
 
@@ -255,7 +238,6 @@ performance_reversal_delisting_application_dict = {
     "002693": "25年报 26/04/29",  # *ST双成
     "002076": "25年报 26/04/29",  # *ST星光
 
-    "600636": "25年报 26/04/30",  # *ST国化
     "600892": "25年报 26/04/30",  # *ST大晟
 
     "002124": "预重整日期 26/05/09",  # 天邦食品
@@ -289,9 +271,13 @@ performance_reversal_delisting_application_dict = {
 
 # ----------------- 7.2: 业绩反转,周线 字典 -----------------
 performance_reversal_week_line_dict = {
+    "000010": "    否",  # 美丽
+    "000488": "    周线涨",  # 晨鸣
     "000595": "    半周线",  # 宝实
+    "000639": "    否",  # ST西王
     "000698": "    否",  # 沈华
     "000821": "    半周线",  # 京机
+    "000826": "    否",  # 同德
     "000903": "    否",  # 云动
     "000929": "    否",  # 兰黄
     "002055": "    否",  # 得润
@@ -299,14 +285,17 @@ performance_reversal_week_line_dict = {
     "002122": "    否",  # 汇洲
     "002124": "    半周线",  # 天邦食品
     "002305": "    否",  # 南置
+    "002360": "    否",  # 同德
     "002424": "    否",  # 百灵
     "002496": "    否",  # 辉丰
     "002512": "    半周线",  # 达华
     "002630": "    周线涨",  # 华西         //买入
     "002689": "    周线涨",  # 远智
+    "002691": "    否",  # 冀凯
     "002693": "    否",  # 双成
     "002713": "    否",  # 东易
     "002762": "    否",  # 金比
+
     "003032": "    否",  # 传智
     "300044": "    否",  # 赛为
     "300173": "    半周线",  # 福能
@@ -316,13 +305,16 @@ performance_reversal_week_line_dict = {
     "300460": "    否",  # 惠伦
     "300506": "    否",  # 名家汇
     "300527": "    周线涨",  # 应急
+    "301030": "    否",  # 仕净
+
+    "600053": "    否",  # 九鼎
     "600169": "    否",  # 太重
     "600358": "    否",  # 联合
     "600476": "    否",  # 湘邮
-
     "600581": "    否",  # 八钢
     "600624": "    否",  # 复华
-    "600636": "    半周线",  # 国化
+    "600370": "    否",  # 三房
+    "600734": "    否",  # 实达
     "600735": "    否",  # 新华锦
     "600759": "    否",  # 洲际油气
     "600777": "    否",  # 新潮
@@ -333,6 +325,7 @@ performance_reversal_week_line_dict = {
     "600537": "    否",  # *ST亿晶
     "002321": "    否",  # 华英农业
     "600889": "    否", # *ST京化
+    "688201": "    否",  # ST信安
 }
 
 # ===================== 7.3：业绩反转,审计列字典 =====================
@@ -453,7 +446,7 @@ strategy_dict = {
     "511880": "空策略", "002385": "热点发展", "512010": "超跌基", "605162": "小盘猛牛",
     "002570": "热点发展", "515710": "超跌基", "300891": "小盘猛牛",  "600169": "业绩反转",
     "002630": "业绩反转", "000516": "热点发展", "111024": "可转债",  "110081": "可转债",
-    "002122": "业绩反转", "605058": "配债策略", "600516": "涨停回调", "003032": "业绩反转",
+    "002122": "业绩反转", "600516": "涨停回调", "003032": "业绩反转",
     "404003": "可转债", "600735": "业绩反转", "300044": "业绩反转", "002076": "业绩反转",
     "520870": "海外基", "404002": "", "161226": "套利基", "600858": "涨停回调",
     "161128": "套利基", "127015": "可转债", "160216": "套利基", "600339": "业绩反转",
@@ -468,13 +461,18 @@ strategy_dict = {
     "600636": "业绩反转", "002788": "涨停回调", "002877": "涨停回调", "002632": "涨停回调",
     "000595": "业绩反转", "002693": "业绩反转", "300211": "业绩反转", "161126": "海外基",
     "162719": "套利基", "162411": "套利基", "001202": "配债股", "600853": "配债股",
+    "605388": "涨停回调", "113575": "可转债",
+
     "000903": "业绩反转", "300527": "业绩反转", "603595": "业绩反转", "300052": "业绩反转",
     "002713": "业绩反转", "002305": "业绩反转", "300366": "业绩反转", "300460": "业绩反转",
     "002124": "业绩反转", "600624": "业绩反转", "000488": "业绩反转", "000929": "业绩反转",
     "000821": "业绩反转", "300020": "业绩反转", "600537": "业绩反转", "600892": "业绩反转",
     "603789": "业绩反转", "300173": "业绩反转",  "600581": "业绩反转", "000639": "业绩反转",
-    "600358": "业绩反转", "002321": "业绩反转", "600889": "业绩反转",
-    "000826": "业绩反转", "301030": "业绩反转",
+    "600358": "业绩反转", "002321": "业绩反转", "600889": "业绩反转", "000016": "业绩反转",
+    "000826": "业绩反转", "301030": "业绩反转", "688201": "业绩反转", "000010": "业绩反转",
+    "600053": "业绩反转", "603959": "业绩反转", "002726": "业绩反转", "600476": "业绩反转",
+    "600370": "业绩反转", "002691": "业绩反转", "002360": "业绩反转", "600734": "业绩反转",
+
 }
 
 # ---------------------- A2： 多策略字典 ----------------------
@@ -486,8 +484,8 @@ multi_strategy_codes = {
     "002267": ["分红股", "涨停回调"],  # 陕天然气
 
     #测试数据
-    "601006": ["分红股", "小盘猛牛"],  # 大秦铁路   //测试数据
-    "603801": ["分红股", "热点发展"],  # 志邦家居   //测试数据
+    # "601006": ["分红股", "小盘猛牛"],  # 大秦铁路   //测试数据
+    # "603801": ["分红股", "热点发展"],  # 志邦家居   //测试数据
 }
 
 
@@ -1029,7 +1027,8 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                      summary_data=None, summary_percent=None, total_capital=500000, is_stock_dividend_sheet=False,
                      is_fund_dividend_sheet=False, is_small_cap_sheet=False, is_hot_development_sheet=False,
                      is_performance_reversal_sheet=False, is_limit_up_callback_sheet=False,
-                     is_combined_stock_sheet=False, is_bond_allot_sheet=False):
+                     is_combined_stock_sheet=False, is_bond_allot_sheet=False,is_overdown_sheet=False,
+                     is_oversea_sheet=False,is_swapbond_sheet=False):
     col_widths = {
         0: 8, 1: 10, 2: 8, 3: 8, 4: 10, 5: 9, 6: 6, 7: 10,
         8: 10, 9: 8, 10: 13, 11: 12, 12: 12, 13: 8, 14: 25, 15: 25
@@ -1065,6 +1064,16 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "去年对应分红日期", "下期新分红日期", "每十股分红", "年化收益",
                    "远涨", "远跌"]
+    elif is_overdown_sheet:  # 超跌基金
+        headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
+                   "总累积仓位%", "策略", "远涨", "远跌"]
+    elif is_oversea_sheet:  # 超跌基金
+        headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
+                   "总累积仓位%", "策略", "远涨", "远跌"]
+    elif is_swapbond_sheet:  # 可转债
+        headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
+                   "总累积仓位%", "策略", "远涨", "远跌"]
+
     elif is_performance_reversal_sheet: #业绩反转
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "摘帽申请日期", "周线", "远涨", "远跌", "审计", "要点"]
@@ -1073,7 +1082,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                    "总累积仓位%", "策略", "下期新年报/分红日期", "去年对应年报/分红日期"]
     else:
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
-                   "总累积仓位%", "策略"]
+                   "总累积仓位%", "策略", "远涨", "远跌"]
 
     sheet.row(0).height = row_height
     for col_idx, header in enumerate(headers):
@@ -1578,6 +1587,113 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 else:
                     sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
 
+            # ---------------------- 超跌基 黄色背景 ----------------------
+            elif is_overdown_sheet:
+                # 远涨 远跌
+                struct_str = dividend_fund_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if struct_str:
+                    parts = struct_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
+
+                # -------------------- 远涨 --------------------
+                try:
+                    val = float(far_up)
+                    if val < 50:
+                        sheet.write(row_idx, 10, far_up, styles["yellow_pink_delisting_apply"])
+                    elif val > 70:
+                        sheet.write(row_idx, 10, far_up, styles["yellow_red_text"])
+                    else:
+                        sheet.write(row_idx, 10, far_up, styles["yellow_date_right"])
+                except:
+                    sheet.write(row_idx, 10, far_up, styles["yellow_date_right"])
+
+                # -------------------- 远跌 --------------------
+                try:
+                    val = float(far_down)
+                    if val > 60:
+                        sheet.write(row_idx, 11, far_down, styles["yellow_pink_delisting_apply"])
+                    elif val < 30:
+                        sheet.write(row_idx, 11, far_down, styles["yellow_red_text"])
+                    else:
+                        sheet.write(row_idx, 11, far_down, styles["yellow_date_right"])
+                except:
+                    sheet.write(row_idx, 11, far_down, styles["yellow_date_right"])
+
+            # ---------------------- 海外基 黄色背景 ----------------------
+            elif is_oversea_sheet:
+                struct_str = oversea_fund_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if struct_str:
+                    parts = struct_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
+
+                # 远涨
+                try:
+                    val = float(far_up)
+                    if val < 50:
+                        sheet.write(row_idx, 10, far_up, styles["yellow_pink_delisting_apply"])
+                    elif val > 70:
+                        sheet.write(row_idx, 10, far_up, styles["yellow_red_text"])
+                    else:
+                        sheet.write(row_idx, 10, far_up, styles["yellow_date_right"])
+                except:
+                    sheet.write(row_idx, 10, far_up, styles["yellow_date_right"])
+
+                # 远跌
+                try:
+                    val = float(far_down)
+                    if val > 60:
+                        sheet.write(row_idx, 11, far_down, styles["yellow_pink_delisting_apply"])
+                    elif val < 30:
+                        sheet.write(row_idx, 11, far_down, styles["yellow_red_text"])
+                    else:
+                        sheet.write(row_idx, 11, far_down, styles["yellow_date_right"])
+                except:
+                    sheet.write(row_idx, 11, far_down, styles["yellow_date_right"])
+
+            # ---------------------- 可转债 黄色背景 ----------------------
+            elif is_swapbond_sheet:
+                struct_str = swapbond_fund_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if struct_str:
+                    parts = struct_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
+
+                # 远涨
+                try:
+                    val = float(far_up)
+                    if val < 50:
+                        sheet.write(row_idx, 10, far_up, styles["yellow_pink_delisting_apply"])
+                    elif val > 70:
+                        sheet.write(row_idx, 10, far_up, styles["yellow_red_text"])
+                    else:
+                        sheet.write(row_idx, 10, far_up, styles["yellow_date_right"])
+                except:
+                    sheet.write(row_idx, 10, far_up, styles["yellow_date_right"])
+
+                # 远跌
+                try:
+                    val = float(far_down)
+                    if val > 60:
+                        sheet.write(row_idx, 11, far_down, styles["yellow_pink_delisting_apply"])
+                    elif val < 30:
+                        sheet.write(row_idx, 11, far_down, styles["yellow_red_text"])
+                    else:
+                        sheet.write(row_idx, 11, far_down, styles["yellow_date_right"])
+                except:
+                    sheet.write(row_idx, 11, far_down, styles["yellow_date_right"])
+
+
             elif is_performance_reversal_sheet:  # 业绩反转
                 # 摘帽申请日期
                 delisting_date = performance_reversal_delisting_application_dict.get(code, "")
@@ -1598,6 +1714,20 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 far_data = performance_reversal_far_dict.get(code, ",").split(",")
                 far_up = far_data[0].strip()
                 far_down = far_data[1].strip()
+
+                # print(far_up)
+
+                # 乘100 并 取整
+                try:
+                    far_up = str(int(float(far_up) * 100))
+                except:
+                    far_up = ""
+                # print(far_up)
+
+                try:
+                    far_down = str(int(abs(float(far_down)) * 100))
+                except:
+                    far_down = ""
 
                 # 远涨
                 try:
@@ -2117,6 +2247,112 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 else:
                     sheet.write(row_idx, 15, far_down, styles["date_right"])
 
+            # ---------------------- 超跌基 ----------------------
+            elif is_overdown_sheet:
+                # 远涨 远跌
+                struct_str = dividend_fund_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if struct_str:
+                    parts = struct_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
+
+                # -------------------- 远涨 --------------------
+                try:
+                    val = float(far_up)
+                    if val < 50:
+                        sheet.write(row_idx, 10, far_up, styles["pink_delisting_apply"])
+                    elif val > 70:
+                        sheet.write(row_idx, 10, far_up, styles["red_text"])
+                    else:
+                        sheet.write(row_idx, 10, far_up, styles["date_right"])
+                except:
+                    sheet.write(row_idx, 10, far_up, styles["date_right"])
+
+                # -------------------- 远跌 --------------------
+                try:
+                    val = float(far_down)
+                    if val > 60:
+                        sheet.write(row_idx, 11, far_down, styles["pink_delisting_apply"])
+                    elif val < 30:
+                        sheet.write(row_idx, 11, far_down, styles["red_text"])
+                    else:
+                        sheet.write(row_idx, 11, far_down, styles["date_right"])
+                except:
+                    sheet.write(row_idx, 11, far_down, styles["date_right"])
+
+            # ---------------------- 海外基 ----------------------
+            elif is_oversea_sheet:
+                struct_str = oversea_fund_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if struct_str:
+                    parts = struct_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
+
+                # 远涨
+                try:
+                    val = float(far_up)
+                    if val < 50:
+                        sheet.write(row_idx, 10, far_up, styles["pink_delisting_apply"])
+                    elif val > 70:
+                        sheet.write(row_idx, 10, far_up, styles["red_text"])
+                    else:
+                        sheet.write(row_idx, 10, far_up, styles["date_right"])
+                except:
+                    sheet.write(row_idx, 10, far_up, styles["date_right"])
+
+                # 远跌
+                try:
+                    val = float(far_down)
+                    if val > 60:
+                        sheet.write(row_idx, 11, far_down, styles["pink_delisting_apply"])
+                    elif val < 30:
+                        sheet.write(row_idx, 11, far_down, styles["red_text"])
+                    else:
+                        sheet.write(row_idx, 11, far_down, styles["date_right"])
+                except:
+                    sheet.write(row_idx, 11, far_down, styles["date_right"])
+
+            # ---------------------- 可转债 ----------------------
+            elif is_swapbond_sheet:
+                struct_str = swapbond_fund_struct_dict.get(code, "")
+                far_up = ""
+                far_down = ""
+                if struct_str:
+                    parts = struct_str.split(",")
+                    if len(parts) >= 2:
+                        far_up = parts[0].strip()
+                        far_down = parts[1].strip()
+
+                # 远涨
+                try:
+                    val = float(far_up)
+                    if val < 50:
+                        sheet.write(row_idx, 10, far_up, styles["pink_delisting_apply"])
+                    elif val > 70:
+                        sheet.write(row_idx, 10, far_up, styles["red_text"])
+                    else:
+                        sheet.write(row_idx, 10, far_up, styles["date_right"])
+                except:
+                    sheet.write(row_idx, 10, far_up, styles["date_right"])
+
+                # 远跌
+                try:
+                    val = float(far_down)
+                    if val > 60:
+                        sheet.write(row_idx, 11, far_down, styles["pink_delisting_apply"])
+                    elif val < 30:
+                        sheet.write(row_idx, 11, far_down, styles["red_text"])
+                    else:
+                        sheet.write(row_idx, 11, far_down, styles["date_right"])
+                except:
+                    sheet.write(row_idx, 11, far_down, styles["date_right"])
+
             elif is_performance_reversal_sheet:  # 业绩反转
                 # 摘帽申请日期
                 delisting_date = performance_reversal_delisting_application_dict.get(code, "")
@@ -2137,6 +2373,18 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 far_data = performance_reversal_far_dict.get(code, ",").split(",")
                 far_up = far_data[0].strip()
                 far_down = far_data[1].strip()
+
+                # 乘100 并 取整
+                try:
+                    far_up = str(int(float(far_up) * 100))
+                except:
+                    far_up = ""
+                # print(far_up)
+
+                try:
+                    far_down = str(int(abs(float(far_down)) * 100))
+                except:
+                    far_down = ""
 
                 # 远涨
                 try:
@@ -2313,9 +2561,9 @@ strategy_total_percent = {
 }
 
 strategy_order = [
-    "分红股", "分红基", "reit", "业绩反转", "小盘猛牛",
-    "热点发展", "配债策略", "涨停回调", "可转债",
-    "套利基", "超跌基", "海外基", "配债股", "空策略"
+    "分红股", "业绩反转", "小盘猛牛",  "涨停回调","配债股",  "热点发展",
+     "分红基","套利基", "超跌基", "海外基",
+    "可转债", "空策略"
 ]
 order_dict = {strategy: idx for idx, strategy in enumerate(strategy_order)}
 sorted_strategy_names = sorted(
@@ -2412,6 +2660,9 @@ for strategy_name in sorted_strategy_names:
     is_performance_reversal_sheet = (strategy_name == "业绩反转")
     is_limit_up_callback_sheet = (strategy_name == "涨停回调")
     is_bond_allot_sheet = (strategy_name == "配债股")
+    is_overdown_sheet = (strategy_name == "超跌基")  # <--- 加这一行
+    is_oversea_sheet = (strategy_name == "海外基")
+    is_swapbond_sheet = (strategy_name == "可转债")
 
     write_sheet_data(
         strategy_sheet, group_data, styles,
@@ -2423,7 +2674,10 @@ for strategy_name in sorted_strategy_names:
         is_hot_development_sheet=is_hot_development_sheet,
         is_performance_reversal_sheet=is_performance_reversal_sheet,
         is_limit_up_callback_sheet=is_limit_up_callback_sheet,
-        is_bond_allot_sheet=is_bond_allot_sheet   # 这里加上
+        is_bond_allot_sheet=is_bond_allot_sheet,
+        is_overdown_sheet=is_overdown_sheet,
+        is_oversea_sheet=is_oversea_sheet,
+        is_swapbond_sheet=is_swapbond_sheet
 
     )
 
