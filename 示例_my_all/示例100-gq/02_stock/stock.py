@@ -1948,6 +1948,30 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 except:
                     far_down = ""
 
+                # 远涨
+                try:
+                    val = int(far_up)
+                    if val <= 50:
+                        sheet.write(row_idx, 14, far_up, styles["far_up_pink"])
+                    elif val >= 70:
+                        sheet.write(row_idx, 14, far_up, styles["far_up_red"])
+                    else:
+                        sheet.write(row_idx, 14, far_up, styles["base"])
+                except:
+                    sheet.write(row_idx, 14, far_up, styles["base"])
+
+                # 远跌
+                try:
+                    val = int(far_down.strip())
+                    if val >= 60:
+                        sheet.write(row_idx, 15, far_down, styles["far_down_pink"])
+                    elif val <= 30:
+                        sheet.write(row_idx, 15, far_down, styles["far_down_red"])
+                    else:
+                        sheet.write(row_idx, 15, far_down, styles["base"])
+                except:
+                    sheet.write(row_idx, 15, far_down, styles["base"])
+
                 # # sheet.write(row_idx, 14, far_up, styles["date_right"])  # 远涨
                 # far_up_val = 0
                 # try:
@@ -1978,29 +2002,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 # else:
                 #     sheet.write(row_idx, 15, far_down, styles["date_right"])
 
-                # 远涨
-                try:
-                    val = int(far_up)
-                    if val <= 50:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_yellow_pink"])
-                    elif val >= 70:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_yellow_red"])
-                    else:
-                        sheet.write(row_idx, 14, far_up, styles["yellow"])
-                except:
-                    sheet.write(row_idx, 14, far_up, styles["yellow"])
 
-                # 远跌
-                try:
-                    val = int(far_down.strip())
-                    if val >= 60:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_yellow_pink"])
-                    elif val <= 30:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_yellow_red"])
-                    else:
-                        sheet.write(row_idx, 15, far_down, styles["yellow"])
-                except:
-                    sheet.write(row_idx, 15, far_down, styles["yellow"])
 
             elif is_limit_up_callback_sheet:  # 涨停回调  普通背景色
                 # 取出字典 3 个值：年报日期、分红日期、每十股分红
