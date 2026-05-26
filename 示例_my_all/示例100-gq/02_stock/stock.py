@@ -3146,90 +3146,118 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
 old_workbook = xlrd.open_workbook("1234.xls")
 position_dict = {}
 
-for sheet_name in ["01", "02", "03", "04"]:
-    sheet = old_workbook.sheet_by_name(sheet_name)
+# 依次遍历下面的sheet
+# for sheet_name in ["01", "02", "03", "04"]:
+for sheet_name in ["01", "02"]:
+
+    sheet = old_workbook.sheet_by_name(sheet_name)  # 当前的sheet neme，如 “01”
+
+    # 依次遍历本sheet中的每一行
     for row_idx in range(1, sheet.nrows):
-        code = sheet.cell_value(row_idx, 0)
-        name = sheet.cell_value(row_idx, 1)
-        count_val = sheet.cell_value(row_idx, 2)
-        price_val = sheet.cell_value(row_idx, 3)
+
+        code = sheet.cell_value(row_idx, 0)        # “代码” 列
+        name = sheet.cell_value(row_idx, 1)        # “名称” 列
+        count_val = sheet.cell_value(row_idx, 2)   # “数量” 列
+        price_val = sheet.cell_value(row_idx, 3)   # “价格” 列
 
         if code in ("511880", "404002", "600636"):
             continue
 
-        count = float(count_val) if count_val else 0.0
-        price = float(price_val) if price_val else 0.0
+        count = float(count_val) if count_val else 0.0  # 字符串转数字
+        price = float(price_val) if price_val else 0.0  # 字符串转数字
+
+        # 下面是把代码前面补0，补足6位数字
         try:
             code_str = str(int(float(code))).strip()
             code = code_str.zfill(6)
         except:
             code = str(code).strip()
+
+        # 把当前行加入到字典position_dict，如果是相同的股票则只增大数量
         if code in position_dict:
-            position_dict[code]["总数量"] += count
+            position_dict[code]["总数量"] += count   # 相同股票
         else:
-            position_dict[code] = {"名称": name, "总数量": count, "当前价": price}
+            position_dict[code] = {"名称": name, "总数量": count, "当前价": price}  # 新股票
 
 # print(position_dict)    #--test
 
 total_capital = 500000
 for code, info in position_dict.items():
-    info["金额"] = int(info["总数量"] * info["当前价"])
-    info["仓位百分比"] = round((info["金额"] / total_capital) * 100, 1)
+    info["金额"] = int(info["总数量"] * info["当前价"])                   #或字典position_dict新增了“金额”列
+    info["仓位百分比"] = round((info["金额"] / total_capital) * 100, 1)  #或字典position_dict新增了"仓位百分比"列
 
 
 # print(position_dict)   #--test
 
 # ---------------------- 17. 数据分组 ----------------------
-strategy_groups = defaultdict(list)
+strategy_groups = defaultdict(list)  # 新定义一个列表strategy_groups，可直接用append添加键和键值
 full_data = []
 # 注释/删除：合并股票相关的数据初始化
 # combined_stock_data = []
 # combined_strategies = ["分红股", "业绩反转", "小盘猛牛", "热点发展", "涨停回调", "配债股"]
 
+# 下面的x是position_dict的每一行数据，x[1]是每一行除键值code之外的数据 (相当于嵌套里的子字典)
 sorted_positions = sorted(position_dict.items(), key=lambda x: x[1]["金额"], reverse=True)   # 按金额从大到小排序
 
 # print(sorted_positions)    #--test
 
-cumulative_amount = 0
+cumulative_amount = 0  # 累积金额
 rank = 1
 
+# 遍历所有股票排序后的字典 sorted_positions
 for code, info in sorted_positions:
-    cumulative_amount += info["金额"]
-    total_cumulative_pct = round((cumulative_amount / total_capital) * 100, 1)
 
+    cumulative_amount += info["金额"]                                            # 每一行相加的累积金额
+    total_cumulative_pct = round((cumulative_amount / total_capital) * 100, 1)  # 每一行相加后的累积百分比
+
+    # 判断是多策略，还是单策略
     if code in multi_strategy_codes:
-        strategies = multi_strategy_codes[code]
+        strategies = multi_strategy_codes[code]     # 多策略  //肯定存在，所以不用.get
     else:
         base_strategy = strategy_dict.get(code, "空策略") or "空策略"
         strategies = [base_strategy]
+        # print(code)
 
-    main_strategy = strategies[0]
+    main_strategy = strategies[0]   # 该股票的主策略
 
+    # 把这一行的基本数据和汇总数据，添加到full_data列表中(总仓位sheet用)  //总仓位没有"策略"键值，列表即可以
     if(info["当前价"]!=0):
         full_data.append((code, info, main_strategy, rank, cumulative_amount, total_cumulative_pct))
 
+    # 把这一行的基本数据和汇总数据，添加到对应的策略字典中 (个策略sheet用)
     for strategy in strategies:
         strategy_groups[strategy].append((code, info, strategy, rank, cumulative_amount, total_cumulative_pct))
+
         # 注释/删除：合并股票数据添加逻辑
         # if strategy in combined_strategies:
         #     combined_stock_data.append((code, info, strategy, rank, cumulative_amount, total_cumulative_pct))
-    rank += 1
 
-# print(full_data)    #--test
+    rank += 1  #该股票金额最大排第一名，后面的股票依次名次+1
+
+# print(full_data)          #--test
 # print(strategy_groups)    #--test
 
+
 # ---------------------- 18. 策略汇总 ----------------------
+
 unique_codes = set()
 strategy_total_amount = {}
+
 for strategy, items in strategy_groups.items():
     total = 0
+
     for item in items:
-        code = item[0]
+
+        code = item[0]  # 股票代码
+
+        # 对于多策略的股票， 总金额只在排在前面第一个的策略里计算   //应是总仓位里面的各策略数据
         if code not in unique_codes:
             total += item[1]["金额"]
             unique_codes.add(code)
-    strategy_total_amount[strategy] = total
 
+    strategy_total_amount[strategy] = total  # 持仓策略各占多少金额统计
+
+# 持仓策略各占多少仓位百分比计算
 strategy_total_percent = {
     k: round((v / total_capital) * 100, 1)
     for k, v in strategy_total_amount.items()
@@ -3264,56 +3292,6 @@ write_sheet_data(
     total_capital=total_capital
 )
 
-
-# # ---------------------- 19. 生成Excel ----------------------
-# final_workbook = xlwt.Workbook(encoding="utf-8")
-# styles = create_styles()
-#
-# main_sheet_name = f"总仓位{len(sorted_strategy_names)}"
-# main_sheet = final_workbook.add_sheet(main_sheet_name)
-#
-# # ===================== 【关键修改在这里】 =====================
-# # 总仓位：过滤掉 当前价=0 的票券，业绩反转sheet不受影响
-# filtered_full_data = []
-# for item in full_data:
-#     code = item[0]
-#     info = item[1]
-#
-#     # print(item[0])
-#
-#
-#     try:
-#         # current_price = float(info.get("当前价", 0))
-#         current_price = float(info)
-#     except:
-#         current_price = 0
-#
-#     # 规则：当前价为0，不加入总仓位
-#     # if current_price <= 0:
-#     #     continue  # 跳过，不统计
-#
-#     if current_price > 0:
-#        filtered_full_data.append(item)
-#
-# # 把过滤后的数据写入总仓位
-# write_sheet_data(
-#     main_sheet, filtered_full_data, styles,
-#     is_strategy_sheet=False,
-#     summary_data=summary_data,
-#     summary_percent=summary_percent,
-#     total_capital=total_capital
-# )
-
-
-# 注释/删除：合并股票sheet创建逻辑
-# if combined_stock_data:
-#     combined_sheet = final_workbook.add_sheet("合并股票")
-#     write_sheet_data(
-#         combined_sheet, combined_stock_data, styles,
-#         is_strategy_sheet=True,
-#         total_capital=total_capital,
-#         is_combined_stock_sheet=True
-#     )
 
 for strategy_name in sorted_strategy_names:
     group_data = strategy_groups[strategy_name]
