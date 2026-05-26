@@ -220,5 +220,6 @@
        字典 position_dict.items() 遍历出来，每一项格式永远是：
            ( key , value )
 
+       x[1]其实是字典 position_dict里面，嵌套的一个子字典
 
 
