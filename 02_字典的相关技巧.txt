@@ -223,3 +223,26 @@
        x[1]其实是字典 position_dict里面，这里是嵌套的一个子字典 （每一行除键值之外的数据）
 
 
+9.  给列表添加下标，合成一个字典
+
+      some_order = ["苹果", "香蕉", "橙子"]
+
+      order_dict = {some: idx for idx, some in enumerate(some_order)}
+
+
+      #合成的字典如下：
+
+      order_dict = {
+          "苹果": 0,
+          "香蕉": 1,
+          "橙子": 2
+      }
+
+      # 下面是等价写法（容易看懂）
+
+      for idx, some in enumerate(some_order):
+          order_dict
+
+
+
+
