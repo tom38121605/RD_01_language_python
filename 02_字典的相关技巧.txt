@@ -206,7 +206,7 @@
          相当于调用下面的函数：
 
          def lambda(x):
- 
+        # 重点： x -- 当前行的所有数据
             return x[1]["Je"]
 
    答2： 调用x时传入什么数据   //sorted会自动依次调用每一行数据
@@ -226,9 +226,7 @@
 9.  给列表添加下标，合成一个字典
 
       some_order = ["苹果", "香蕉", "橙子"]
-
       order_dict = {some: idx for idx, some in enumerate(some_order)}
-
 
       #合成的字典如下：
 
@@ -242,6 +240,44 @@
 
       for idx, some in enumerate(some_order):
           order_dict
+
+
+10.  用第一个字典的编号，给第二个字典的名称/键值 排序
+
+      举例说明：
+      order_dict = {"张三":0, "李四":1, "王五":2}
+      some_total_amount = {"张三":100, "赵六":50, "李四":80}
+
+      sorted_some_names = sorted(
+          some_total_amount.keys(),
+          key=lambda x: order_dict.get(x, len(order_dict))  # 重点： x -- 当前行的所有数据
+      )
+     print(sorted_some_names)    #  ["张三", "李四", "赵六"]  
+
+
+      分析：
+
+      1). some_total_amount.keys()     //easy 
+          拿出所有要排序的名字列表。
+
+      2). key=lambda x:  order_dict.get(x, len(order_dict))  
+          排序的依据是：
+          去 order_dict 里查这个名字对应的编号（0、1、2…）
+          找不到的名字，统一排在最后面
+
+      3).sorted(...)                           //easy 
+         按照编号从小到大排序。
+
+
+     答1： lambda的作用
+
+         lambda x:  order_dict.get(x, len(order_dict))  
+
+         相当于调用下面的函数：
+
+         def lambda(x):
+        # 重点： x -- 当前行的所有数据
+            return  order_dict.get(x, len(order_dict))    # len(order_dict)  -- 指默认最大值，就是排在最后面的意思
 
 
 
