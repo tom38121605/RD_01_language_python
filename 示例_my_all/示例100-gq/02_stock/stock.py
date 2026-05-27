@@ -3147,8 +3147,8 @@ old_workbook = xlrd.open_workbook("1234.xls")
 position_dict = {}
 
 # 依次遍历下面的sheet
-# for sheet_name in ["01", "02", "03", "04"]:
-for sheet_name in ["01", "02"]:
+for sheet_name in ["01", "02", "03", "04"]:
+# for sheet_name in ["01", "02"]:
 
     sheet = old_workbook.sheet_by_name(sheet_name)  # 当前的sheet neme，如 “01”
 
@@ -3257,26 +3257,42 @@ for strategy, items in strategy_groups.items():
 
     strategy_total_amount[strategy] = total  # 持仓策略各占多少金额统计
 
+# print(strategy_total_amount)
+
 # 持仓策略各占多少仓位百分比计算
 strategy_total_percent = {
     k: round((v / total_capital) * 100, 1)
     for k, v in strategy_total_amount.items()
 }
 
+# print(strategy_total_percent)
+
 strategy_order = [
     "分红股", "业绩反转", "小盘猛牛",  "涨停回调","配债股",  "热点发展",
      "分红基","套利基", "超跌基", "海外基",
     "可转债", "空策略"
 ]
-order_dict = {strategy: idx for idx, strategy in enumerate(strategy_order)}
+order_dict = {strategy: idx for idx, strategy in enumerate(strategy_order)}  # 把strategy_order列表和序号123...合成一个字典
+
+# print(order_dict)  # {'分红股': 0, '业绩反转': 1, '小盘猛牛': 2, '涨停回调': 3, ...... , '空策略': 11}
+
+# 用第一个字典order_dict的编号，给第二个字典strategy_total_amount的名称/键值 排序， 生成一个新的列表  sorted_strategy_names
 sorted_strategy_names = sorted(
     strategy_total_amount.keys(),
-    key=lambda x: order_dict.get(x, len(strategy_order))
+    key=lambda x: order_dict.get(x, len(strategy_order))  # len(strategy_order)  -- 指默认最大值，就是排在最后面的意思
 )
+# print(sorted_strategy_names)   # ['分红股', '涨停回调']
 
-summary_data = {n: strategy_total_amount[n] for n in sorted_strategy_names}
-summary_percent = {n: strategy_total_percent[n] for n in sorted_strategy_names}
+# summary_data = {n: strategy_total_amount[n] for n in sorted_strategy_names}      # 持仓策略各占多少金额统计 (按顺序后)
+# 分解如下：
+summary_data = {}
+for n in sorted_strategy_names: # 把n（可理解为策略名）当作列表sorted_strategy_name的 key
+    summary_data[n] = strategy_total_amount[n]   # 从字典strategy_total_amount里取出对应的值，合成新的字典summary_data
 
+summary_percent = {n: strategy_total_percent[n] for n in sorted_strategy_names}  # 持仓策略各占多少仓位百分比计算  (按顺序后)
+
+# print(summary_data)      # {'分红股': 2469, '涨停回调': 924}   //排序后
+# print(summary_percent)   # {'分红股': 0.5, '涨停回调': 0.2}    //排序后
 
 # ---------------------- 19. 生成Excel ----------------------
 final_workbook = xlwt.Workbook(encoding="utf-8")
@@ -3292,15 +3308,16 @@ write_sheet_data(
     total_capital=total_capital
 )
 
-
 for strategy_name in sorted_strategy_names:
     group_data = strategy_groups[strategy_name]
     if not group_data:
         continue
 
-    safe_name = strategy_name.replace("/", "").replace("\\", "").replace(":", "").replace("*", "").replace("?",
-                                                                                                           "").replace(
-        "[", "").replace("]", "")[:31]
+    # safe_name = strategy_name.replace("/", "").replace("\\", "").replace(":", "").replace("*", "").replace("?",
+    #                                                                                                        "").replace(
+    #     "[", "").replace("]", "")[:31]
+    safe_name = strategy_name.replace("/", "").replace("\\", "").replace(":", "").replace("*", "").replace("?", "").replace( "[", "").replace("]", "")[:31]
+
     if not safe_name:
         safe_name = "空策略"
 

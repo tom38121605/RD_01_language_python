@@ -242,7 +242,7 @@
           order_dict
 
 
-10.  用第一个字典的编号，给第二个字典的名称/键值 排序
+10.  用第一个字典order_dict的编号，给第二个字典some_total_amount的名称/键值 排序， 生成一个新的列表  sorted_some_names
 
       举例说明：
       order_dict = {"张三":0, "李四":1, "王五":2}
@@ -256,29 +256,41 @@
 
 
       分析：
-
       1). some_total_amount.keys()     //easy 
           拿出所有要排序的名字列表。
-
       2). key=lambda x:  order_dict.get(x, len(order_dict))  
           排序的依据是：
           去 order_dict 里查这个名字对应的编号（0、1、2…）
           找不到的名字，统一排在最后面
-
       3).sorted(...)                           //easy 
          按照编号从小到大排序。
 
 
      答1： lambda的作用
-
          lambda x:  order_dict.get(x, len(order_dict))  
-
          相当于调用下面的函数：
 
          def lambda(x):
         # 重点： x -- 当前行的所有数据
             return  order_dict.get(x, len(order_dict))    # len(order_dict)  -- 指默认最大值，就是排在最后面的意思
 
+11. 把名字 n 当作列表sorted_strategy_name的 key， 从字典strategy_total_amount里取出对应的值，合成新的字典summary_data
 
+     # summary_data = {n: strategy_total_amount[n] for n in sorted_strategy_names}      # 持仓策略各占多少金额统计 (按顺序后)
+     # 分解如下：
+    summary_data = {}
+    for 策略名 in sorted_strategy_names:                                # 把 n（用策略名代替更合适） 当作列表sorted_strategy_name的 key，  
+        summary_data[策略名] = strategy_total_amount[策略名]    # 从字典strategy_total_amount里取出对应n(策略名)的值，合成新的字典summary_data
 
+   举例：
+
+   strategy_total_amount = {    # 混乱顺序
+       "策略B": 100,
+       "策略A": 200,
+       "策略C": 300
+   }
+   sorted_strategy_names = ["策略A", "策略B", "策略C"]
+   summary_data = {n: strategy_total_amount[n] for n in sorted_strategy_names} 
+
+   print(summary_data)      #  { "策略A": 200,  "策略B": 100,  "策略C": 300 }    # 好的顺序
 
