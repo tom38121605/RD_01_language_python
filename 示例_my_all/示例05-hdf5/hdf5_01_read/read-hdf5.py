@@ -79,9 +79,55 @@ def main4():
             print(f"数据集名：{os.path.basename(ds.name)}")
             print(f"{ds[:2]}")
 
+
+#遍历打印出所有的group及其里面的dataset, 直到遇到数集Data
+def main5():
+
+    file_path = r"data0.hdf5"
+    with h5py.File(file_path, 'r') as f:
+
+        last_dataset = None
+        data=[]
+
+        # 内部函数：遇到 Data 就停止
+        def get_dataset_name(name, obj):
+            nonlocal last_dataset
+            nonlocal data
+
+            if isinstance(obj, h5py.Group):
+                print(f"Group路径：----- {name} -----")
+
+            elif isinstance(obj, h5py.Dataset):
+                dataset_name = os.path.basename(name)
+                print(f"数据集名称：{dataset_name}")
+
+                last_dataset = dataset_name
+                data = obj[:2]  # 读取全部数据 （你要[:2]也可以）
+
+                # ====================== 关键 ======================
+                # 如果名字是 Data → 保存数据 + 直接停止遍历
+                if dataset_name == "Data":
+                # 停止遍历！！！
+                    raise StopIteration("找到 Data，停止遍历")
+
+        # ====================== 执行遍历 ======================
+        try:
+            f.visititems(get_dataset_name)
+        except StopIteration:
+            # 遇到 Data 正常停止
+            pass
+
+        # ====================== 输出结果 ======================
+        if last_dataset:
+            print("\n===== 找到目标数据集 =====")
+            print("数据集名称：", last_dataset)
+            print("数据集内容：", data)
+
+
 if __name__ == "__main__":
     # main()
     # main2()
     # main3()
-    main4()
+    # main4()
+    main5()
 
