@@ -213,7 +213,7 @@
 ----------------------------------- c语言功能 ----------------------------------------------
 
 
-1.    python中，定义全局变量
+1.    python中，定义全局变量    （也有外层函数的讲解）
 
       global_last = 0
 
@@ -223,7 +223,7 @@
 
           def inner():
               global global_last       # 声明改全局变量
-              nonlocal nonlocal_last  # 声明改外层嵌套变量
+              nonlocal nonlocal_last  # 声明改外层嵌套变量  //函数有效范围，最大只能到本函数的父函数
               global_last += 1
               nonlocal_last += 1
               print(global_last, nonlocal_last)  # 输出：1 1
