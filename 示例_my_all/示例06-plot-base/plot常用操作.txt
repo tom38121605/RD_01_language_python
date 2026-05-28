@@ -122,3 +122,28 @@ plot(y) → 只画折线
         调用 pdf_out.savefig() 就是往笔记本里 “贴图表”
         调用 pdf_out.close() 是 “合上笔记本并保存”
 
+
+12.  把图片sys贴到画布的右上角
+
+      # 在大图上，新建一个小的子图窗口，放在右上角位置，大小是 0.31 x 0.31，并且不要边框
+      new_ax = plt.axes([0.59, 0.63, 0.31, 0.31], frameon=False)
+
+      new_ax.imshow(sys, alpha=1.0, zorder=2)    # 在画布上叠一张图片sys，完全不透明，放在最上层显示
+
+      new_ax.axis('off')                                    # 把图表的 边框、坐标轴、刻度线、数字 全部隐藏掉
+
+
+13.  把x，y轴设置成对数坐标 
+
+    ax.set_xscale('log')
+
+    ax.set_yscale('log')
+
+
+
+
+
+
+
+
+
