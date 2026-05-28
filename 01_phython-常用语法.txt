@@ -210,9 +210,6 @@
 
 
 
- 
-
-
 ----------------------------------- c语言功能 ----------------------------------------------
 
 
@@ -236,7 +233,30 @@
       outer()
 
 
-2.  python中，定义预编译选项
+2. 为什么idatanum2要加global来说明全局变量，而x1points却不要加
+
+      x1points = []
+
+      idatanum2=0
+
+      def main():
+          global idatanum2
+
+          ...
+
+          for num_list in data:
+              ...
+
+              x1points.append(number0)
+              idatanum2 += 1
+
+
+  答： 一句话核心区别
+        x1points.append() →  只改列表内容，不换变量本身 → 不用 global
+        idatanum2 += 1    →  直接修改变量的值           → 必须用 global
+
+
+3.  python中，定义预编译选项
 
       DEFINES = \
       {
@@ -265,8 +285,7 @@
           print("默认模式执行")
 
 
-
-3. 定义预编译选择变量简化版
+4. 定义预编译选择变量简化版
 
 
       DEFINES = \
