@@ -232,6 +232,7 @@
 
       outer()
 
+     补充： nonlocal 的意思是，告诉子函数，别自己建新变量，去用父函数的变量
 
 2. 为什么idatanum2要加global来说明全局变量，而x1points却不要加
 
