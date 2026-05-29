@@ -282,3 +282,11 @@ t错 = (100) # 这只是数字100，不是元组
       unwrapped_timestamps = np.zeros_like(timestamp)
 
 
+25. 把列表中的数据，转换成float类型
+
+      y1points = np.array(y1points, dtype=np.float64)
+      y1points = (y1points ).astype(float)
+
+
+
+
