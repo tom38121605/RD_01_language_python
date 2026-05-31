@@ -9,22 +9,26 @@ import xlwt
 from collections import defaultdict
 import re
 
+FARUP_LOW = 50
+FARUP_HIGH = 70
+FARDOWN_LOW = 30
+FARDOWN_HIGH = 60
 
 
 # ============================== 一。每周维护字典  ===============================
 
 # ---------------------- 0.1：分红股， 远涨远跌字典 ----------------------
 stock_dividend_struct_dict = {
-    "600681": "0.293, -0.349",  # 百川能源
-    "601169": "0.625, -0.308",  # 北京银行
-    "601006": "0.056, -0.285",  # 大秦铁路
-    "603801": "0.004, -0.723",  # 志邦家居
-    "000001": "0.436, -0.220",  # 平安银行
-    "002807": "0.481, -0.153",  # 江阴银行
-    "601916": "0.416, -0.226",  # 浙商银行
-    "600755": "0.271, -0.319",  # 厦门国贸
-    "605368": "0.238, -0.512",  # 蓝天燃气
-    "600016": "0.381, -0.365",  # 民生银行
+    "600681": "0.303, -0.344",  # 百川能源
+    "601169": "0.651, -0.297",  # 北京银行
+    "601006": "0.068, -0.276",  # 大秦铁路
+    "000001": "0.472, -0.200",  # 平安银行
+    "603801": "0.005, -0.725",  # 志邦家居
+    "002807": "0.533, -0.139",  # 江阴银行
+    "601916": "0.435, -0.216",  # 浙商银行
+    "600755": "0.284, -0.312",  # 厦门国贸
+    "600016": "0.409, -0.352",  # 民生银行
+    "605368": "0.253, -0.506",  # 蓝天燃气
 
     # # 多策略
     # "600681": "45, 27 ",  # 百川能源
@@ -34,13 +38,13 @@ stock_dividend_struct_dict = {
 
 # ---------------------- 0.2：涨停回调, 远涨远跌字典 ----------------------
 limit_up_callback_struct_dict = {
-    "605368": "0.238, -0.512",  # 蓝天燃气
-    "600681": "0.293, -0.349",  # 百川能源
-    "605388": "0.447, -0.496",  # 均瑶健康
-    "600662": "0.329, -0.352",  # 外服控股
-    "600814": "0.461, -0.413",  # 杭州解百
-    "600755": "0.271, -0.319",  # 厦门国贸
-    "600858": "0.490, -0.372",  # 银座股份
+    "605368": "0.253, -0.506",  # 蓝天燃气
+    "600681": "0.303, -0.344",  # 百川能源
+    "605388": "0.452, -0.494",  # 均瑶健康
+    "600662": "0.335, -0.349",  # 外服控股
+    "600814": "0.514, -0.392",  # 杭州解百
+    "600755": "0.284, -0.312",  # 厦门国贸
+    "600858": "0.516, -0.361",  # 银座股份
 
     # # 多策略
     # "600681": "45, 27 ",  # 百川能源
@@ -109,34 +113,33 @@ swapbond_fund_struct_dict = {
 # ===================== 1.0：业绩反转，远涨远跌字典 =====================
 # 格式：key=股票代码, value="远涨数值,远跌数值"
 performance_reversal_far_dict = {
-    "003032": "0.480, -0.652",  # *ST传智
-    "300527": "0.456, -0.430",  # ST应急
-    "300366": "0.093, -0.731",  # ST创意
-    "002124": "0.317, -0.671",  # 天邦食品
-    "002122": "0.525, -0.543",  # ST汇洲
-    "000698": "0.375, -0.491",  # ST沈化
-    "002689": "0.526, -0.564",  # ST远智
-    "600624": "0.532, -0.553",  # ST复华
-    "600169": "0.277, -0.268",  # ST太重
-    "300460": "0.765, -0.458",  # ST惠伦
-    "000821": "0.018, -0.669",  # ST京机
-    "300173": "0.268, -0.624",  # ST福能
-    "600759": "0.340, -0.711",  # ST洲际
+    "003032": "0.417, -0.667",  # *ST传智
+    "300527": "0.454, -0.431",  # ST应急
+    "300366": "0.091, -0.732",  # ST创意
+    "002124": "0.307, -0.674",  # 天邦食品
+    "002122": "0.547, -0.536",  # ST汇洲
+    "000698": "0.367, -0.494",  # ST沈化
+    "002689": "0.554, -0.564",  # ST远智
+    "600624": "0.514, -0.558",  # ST复华
+    "600169": "0.317, -0.231",  # ST太重
+    "300460": "0.674, -0.486",  # ST惠伦
+    "000821": "0.005, -0.678",  # ST京机
+    "300173": "0.288, -0.628",  # ST福能
+    "000010": "0.511, -0.600",  # *ST美丽
+    "000488": "0.344, -0.587",  # ST晨鸣
     "000639": "0.108, -0.714",  # ST西王
-    "688201": "0.370, -0.737",  # ST信安
-    "000010": "0.439, -0.619",  # *ST美丽
-    "000903": "0.121, -0.712",  # ST云动
+    "000903": "0.178, -0.698",  # ST云动
+    "002055": "0.660, -0.482",  # ST得润
+    "002360": "0.516, -0.262",  # ST同德
+    "002512": "0.619, -0.463",  # ST达华
+    "002691": "0.359, -0.630",  # *ST冀凯
     "600053": "0.043, -0.652",  # *ST九鼎
-    "002360": "0.511, -0.264",  # ST同德
-    "002691": "0.346, -0.633",  # *ST冀凯
-    "000488": "0.379, -0.576",  # ST晨鸣
+    "600537": "0.421, -0.660",  # *ST亿晶
     "600734": "0.055, -0.708",  # *ST实达
-    "002055": "0.602, -0.500",  # ST得润
-    "002512": "0.705, -0.434",  # ST达华
-    "600537": "0.440, -0.656",  # *ST亿晶
-    "000826": "0.681, -0.574",  # *ST启环
-    "600735": "1.039, -0.312",  # ST新华锦
-    "301030": "0.443, -0.739",  # *ST仕净
+    "688201": "0.347, -0.741",  # ST信安
+    "000826": "0.637, -0.585",  # *ST启环
+    "600735": "1.091, -0.294",  # ST新华锦
+    "301030": "0.444, -0.739",  # *ST仕净
 }
 
 
@@ -527,15 +530,39 @@ multi_strategy_codes = {
 
 
 # ---------------------- 10. 日期解析工具函数 ----------------------
-def extract_date_from_str(date_str):
-    if not date_str or date_str == "待定" or date_str == "--":
+
+# def extract_date_from_str(date_str):
+#     if not date_str or date_str == "待定" or date_str == "--":
+#         return datetime(2099, 12, 31)
+#
+#     date_str = date_str.strip()
+#     date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
+#     if date_match:
+#         year, month, day = date_match.groups()
+#         return datetime(int(year), int(month), int(day))
+#
+#     date_match = re.search(r'(\d{4})/(\d{1,2})/(\d{1,2})', date_str)
+#     if date_match:
+#         year, month, day = date_match.groups()
+#         return datetime(int(year), int(month), int(day))
+#
+#     return datetime(2099, 12, 31)
+
+# 解析分红日期二
+def parse_date2(date_str):   # 内部子函数
+
+    if not date_str or "待定"  in date_str or "无效"  in date_str:   # 日期为"", 或含有"无效", "待定"，返回 2099/12/31
         return datetime(2099, 12, 31)
-    date_str = date_str.strip()
-    date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
+
+    # 匹配 "预案 25/03/21" 或 "预案 2025-04-23" 格式
+    # 先匹配两位数年份的格式
+    date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)  # 匹配日期格式： 25/03/21
     if date_match:
-        year, month, day = date_match.groups()
-        return datetime(int(year), int(month), int(day))
-    date_match = re.search(r'(\d{4})/(\d{1,2})/(\d{1,2})', date_str)
+        yy, month, day = date_match.groups()  # 这里顺序必须是：年、月、日
+        return datetime(2000 + int(yy), int(month), int(day))
+
+    # 再匹配四位数年份的格式
+    date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
     if date_match:
         year, month, day = date_match.groups()
         return datetime(int(year), int(month), int(day))
@@ -543,233 +570,242 @@ def extract_date_from_str(date_str):
 
 
 # ---------------------- 11. 摘帽申请日期解析函数 ----------------------
-def extract_delisting_apply_date(code):
+# def extract_delisting_apply_date(code):
+#     delisting_date_str = performance_reversal_delisting_application_dict.get(code, "")
+#     delisting_date_str = delisting_date_str.strip()
+#     return parse_date2(delisting_date_str)
+
+# ---------------------- 判断摘帽日期是否小于3个月 ----------------------
+def is_delisting_date_less_than_2months(code):
     delisting_date_str = performance_reversal_delisting_application_dict.get(code, "")
     delisting_date_str = delisting_date_str.strip()
-    return extract_date_from_str(delisting_date_str)
+    delisting_date= parse_date2(delisting_date_str)
 
-
-# ---------------------- 判断摘帽日期是否小于2个月 ----------------------
-def is_delisting_date_less_than_2months(code):
-    delisting_date = extract_delisting_apply_date(code)
     if delisting_date == datetime(2099, 12, 31):
         return False
     current_date = datetime.now()
     delta = delisting_date - current_date
-    return delta.days < 60 and delta.days >= 0
+    return delta.days < 90 and delta.days >= 0
 
+
+# dividend_stock_date_dict = {
+#     "605368": ["25年报 26/04/29", "大会 无效 26/05/13", "4+0"],    # 蓝天燃气
+#     "601916": ["25年报 26/03/31", "大会 26/06/18", "1.31"],           # 浙商银行
+# }
+#
+# limit_up_callback_dividend_date_dict = {
+#     "605368": ["25年报 26/04/29", "大会 无效 26/05/13", "4+0"],  # 蓝天燃气
+#     "600662": ["25年报 26/04/24", "预案 26/04/24", "1.5"],  # 外服控股
+# }
 
 # ---------------------- 12. 各策略排序函数 ----------------------
 
+# 分红股排序： 先按分红日期升序，再按年报日期升序
 def get_stock_dividend_sort_key(item):  # 分红股， ["25年报 26/03/21", "预案 25/03/21", "3.6"]
     code = item[0]    #item--所有股票的列，item[0]--股票代码
-    # 取分红日期字典中的预案日期（第二个元素）作为排序依据
-    dividend_info = dividend_stock_date_dict.get(code, ["", "", ""])  #根据股票代码，取得字典dividend_stock_date_dict里的数据
-    # 分红日期（预案日期）是第二个元素，优先用这个排序
-    dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""
 
-    # 解析分红日期
-    def parse_dividend_date(date_str):   # 内部子函数
-        # if not date_str or date_str.strip() == "待定" or "预案" not in date_str:
-        if not date_str or "待定"  in date_str or "无效"  in date_str:
-            return datetime(2099, 12, 31)
-        # 匹配 "预案 25/03/21" 或 "预案 2025-04-23" 格式
-        # 先匹配两位数年份的格式
-        date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
-        if date_match:
-            yy, month, day = date_match.groups()  # 这里顺序必须是：年、月、日
-            return datetime(2000 + int(yy), int(month), int(day))
-        # 再匹配四位数年份的格式
-        date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
-        if date_match:
-            year, month, day = date_match.groups()
-            return datetime(int(year), int(month), int(day))
-        return datetime(2099, 12, 31)
+    dividend_info = dividend_stock_date_dict.get(code, ["", "", ""])            # 根据股票代码，取得字典dividend_stock_date_dict里的数据
+    dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""     # 第2个元素为分红日期，优先用这个排序
 
-    dividend_date = parse_dividend_date(dividend_date_str)
-    # 次要排序：年报日期（第一个元素）
-    report_date_str = dividend_info[0] if len(dividend_info) >= 1 else ""
-    report_date = extract_date_from_str(report_date_str)
+    # # 解析分红日期
+    # def parse_dividend_date(date_str):   # 内部子函数
+    #
+    #     if not date_str or "待定"  in date_str or "无效"  in date_str:   # 日期为"", 或含有"无效", "待定"，返回 2099/12/31
+    #         return datetime(2099, 12, 31)
+    #
+    #     # 匹配 "预案 25/03/21" 或 "预案 2025-04-23" 格式
+    #     # 先匹配两位数年份的格式
+    #     date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)  # 匹配日期格式： 25/03/21
+    #     if date_match:
+    #         yy, month, day = date_match.groups()  # 这里顺序必须是：年、月、日
+    #         return datetime(2000 + int(yy), int(month), int(day))
+    #
+    #     # 再匹配四位数年份的格式
+    #     date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
+    #     if date_match:
+    #         year, month, day = date_match.groups()
+    #         return datetime(int(year), int(month), int(day))
+    #     return datetime(2099, 12, 31)
 
-    # 优先按分红日期升序，再按年报日期升序
+    # 提取分红日期
+    dividend_date = parse_date2(dividend_date_str)
+    # print(dividend_date)
+
+    # 提取年报日期
+    report_date_str = dividend_info[0] if len(dividend_info) >= 1 else ""  # 第1个元素为年报日期
+
+    report_date = parse_date2(report_date_str)
+
+    # 返回分红日期 ，年报日期
     return (dividend_date, report_date)
 
 # ==================== 涨停回调 - 按分红日期升序排序 ====================
+# 涨停回调排序： 先按分红日期升序，再按年报日期升序
 def get_limit_up_callback_sort_key(item):   # 涨停回调
     code = item[0]  # 股票代码
 
-    # 从 涨停回调的分红日期字典 中取数据
-    dividend_info = limit_up_callback_dividend_date_dict.get(code, ["", ""])
+    dividend_info = limit_up_callback_dividend_date_dict.get(code, ["", ""])    # 从 涨停回调的分红日期字典 中取数据
+    dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""     # 第2个元素为分红日期，这个是排序1
 
-    # 排序用：分红日期（第二个字段）
-    dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""
+    # # 日期解析函数（和你原来风格完全一致）
+    # def parse_date(date_str):
+    #     if not date_str or date_str.strip() == "待定":
+    #         return datetime(2099, 12, 31)
+    #
+    #     # 匹配 日/月/年 26/03/21
+    #     date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
+    #     if date_match:
+    #         day, month, yy = date_match.groups()
+    #         return datetime(2000 + int(yy), int(month), int(day))
+    #
+    #     # 匹配 年-月-日 2025-03-26
+    #     date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
+    #     if date_match:
+    #         return datetime(*map(int, date_match.groups()))
+    #
+    #     return datetime(2099, 12, 31)
 
-    # 日期解析函数（和你原来风格完全一致）
-    def parse_date(date_str):
-        if not date_str or date_str.strip() == "待定":
-            return datetime(2099, 12, 31)
-
-        # 匹配 日/月/年 26/03/21
-        date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
-        if date_match:
-            day, month, yy = date_match.groups()
-            return datetime(2000 + int(yy), int(month), int(day))
-
-        # 匹配 年-月-日 2025-03-26
-        date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
-        if date_match:
-            return datetime(*map(int, date_match.groups()))
-
-        return datetime(2099, 12, 31)
-
-    dividend_date = parse_date(dividend_date_str)
+    dividend_date = parse_date2(dividend_date_str)
 
     # 次要排序：年报日期（第一个字段）
-    report_date_str = dividend_info[0] if len(dividend_info) >= 1 else ""
-    report_date = parse_date(report_date_str)
+    report_date_str = dividend_info[0] if len(dividend_info) >= 1 else ""  # 第1个元素为年报日期，这个是排序2
+    report_date = parse_date2(report_date_str)
 
     # 先按分红日期升序，再按年报日期升序
     return (dividend_date, report_date)
 
 # ==================== 小盘猛牛 - 按分红日期升序排序 ====================
+# 小盘猛牛排序： 先按分红日期升序，再按年报日期升序
 def get_small_cap_sort_key(item):
     code = item[0]  # 股票代码
 
-    # 从小盘猛牛分红日期字典 中取数据
-    dividend_info = small_cap_dividend_date__dict.get(code, ["", "", ""])
+    dividend_info = small_cap_dividend_date__dict.get(code, ["", "", ""])      # 从小盘猛牛分红日期字典 中取数据
+    dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""     # 第2个元素为分红日期，这个是排序1
 
-    # 排序用：分红日期（第二个字段）
-    dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""
+    # # 日期解析函数
+    # def parse_date(date_str):
+    #     if not date_str or date_str.strip() == "待定":
+    #         return datetime(2099, 12, 31)
+    #
+    #     # 匹配 日/月/年 26/03/21
+    #     date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
+    #     if date_match:
+    #         day, month, yy = date_match.groups()
+    #         return datetime(2000 + int(yy), int(month), int(day))
+    #
+    #     # 匹配 年-月-日 2025-03-26
+    #     date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
+    #     if date_match:
+    #         return datetime(*map(int, date_match.groups()))
+    #
+    #     return datetime(2099, 12, 31)
 
-    # 日期解析函数
-    def parse_date(date_str):
-        if not date_str or date_str.strip() == "待定":
-            return datetime(2099, 12, 31)
+    dividend_date = parse_date2(dividend_date_str)
 
-        # 匹配 日/月/年 26/03/21
-        date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
-        if date_match:
-            day, month, yy = date_match.groups()
-            return datetime(2000 + int(yy), int(month), int(day))
-
-        # 匹配 年-月-日 2025-03-26
-        date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
-        if date_match:
-            return datetime(*map(int, date_match.groups()))
-
-        return datetime(2099, 12, 31)
-
-    dividend_date = parse_date(dividend_date_str)
-
-    # 次要排序：年报日期
-    report_date_str = dividend_info[0] if len(dividend_info) >= 1 else ""
-    report_date = parse_date(report_date_str)
+    report_date_str = dividend_info[0] if len(dividend_info) >= 1 else ""     # 第1个元素为年报日期，这个是排序2
+    report_date = parse_date2(report_date_str)
 
     # 先按分红日期升序，再按年报日期升序
     return (dividend_date, report_date)
 
+# 热点发展排序： 先按分红日期升序，再按年报日期升序
 def get_hot_development_sort_key(item):  # 热点发展
     code = item[0]  # 股票代码
 
-    # 从热点发展分红字典取数据
-    dividend_info = hot_development_dividend_data_dict.get(code, ["", "", ""])
+    dividend_info = hot_development_dividend_data_dict.get(code, ["", "", ""])     # 从热点发展分红字典取数据
+    dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""        # 第2个元素为分红日期，这个是排序1
 
-    # 排序用：分红日期（第二个字段）
-    dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""
+    # # 日期解析函数（和你项目完全统一）
+    # def parse_date(date_str):
+    #     if not date_str or date_str.strip() == "待定":
+    #         return datetime(2099, 12, 31)
+    #
+    #     # 匹配 日/月/年 26/03/21
+    #     date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
+    #     if date_match:
+    #         day, month, yy = date_match.groups()
+    #         return datetime(2000 + int(yy), int(month), int(day))
+    #
+    #     # 匹配 年-月-日 2025-03-26
+    #     date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
+    #     if date_match:
+    #         return datetime(*map(int, date_match.groups()))
+    #
+    #     return datetime(2099, 12, 31)
 
-    # 日期解析函数（和你项目完全统一）
-    def parse_date(date_str):
-        if not date_str or date_str.strip() == "待定":
-            return datetime(2099, 12, 31)
-
-        # 匹配 日/月/年 26/03/21
-        date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
-        if date_match:
-            day, month, yy = date_match.groups()
-            return datetime(2000 + int(yy), int(month), int(day))
-
-        # 匹配 年-月-日 2025-03-26
-        date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
-        if date_match:
-            return datetime(*map(int, date_match.groups()))
-
-        return datetime(2099, 12, 31)
-
-    dividend_date = parse_date(dividend_date_str)
+    dividend_date = parse_date2(dividend_date_str)
 
     # 次要排序：年报日期
-    report_date_str = dividend_info[0] if len(dividend_info) >= 1 else ""
-    report_date = parse_date(report_date_str)
+    report_date_str = dividend_info[0] if len(dividend_info) >= 1 else ""     # 第1个元素为年报日期，这个是排序2
+    report_date = parse_date2(report_date_str)
 
     # 先按分红日期升序，再按年报日期升序
     return (dividend_date, report_date)
 
+
 # ==================== 配债股 - 按分红日期升序排序 ====================
+# 配债股排序： 先按分红日期升序，再按年报日期升序
 def get_bond_allot_sort_key(item):
     code = item[0]  # 股票代码
 
-    # 从配债股分红字典取数据
-    dividend_info = bond_allot_dividend_data_dict.get(code, ["", "", ""])
+    dividend_info = bond_allot_dividend_data_dict.get(code, ["", "", ""])     # 从配债股分红字典取数据
+    dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""     # 第2个元素为分红日期，这个是排序1
 
-    # 排序用：分红日期（第二个字段）
-    dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""
+    # # 日期解析函数（和你项目完全统一）
+    # def parse_date(date_str):
+    #     if not date_str or date_str.strip() == "待定":
+    #         return datetime(2099, 12, 31)
+    #
+    #     # 匹配 日/月/年 26/03/21
+    #     date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
+    #     if date_match:
+    #         day, month, yy = date_match.groups()
+    #         return datetime(2000 + int(yy), int(month), int(day))
+    #
+    #     # 匹配 年-月-日 2025-03-26
+    #     date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
+    #     if date_match:
+    #         return datetime(*map(int, date_match.groups()))
+    #
+    #     return datetime(2099, 12, 31)
 
-    # 日期解析函数（和你项目完全统一）
-    def parse_date(date_str):
-        if not date_str or date_str.strip() == "待定":
-            return datetime(2099, 12, 31)
+    dividend_date = parse_date2(dividend_date_str)
 
-        # 匹配 日/月/年 26/03/21
-        date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
-        if date_match:
-            day, month, yy = date_match.groups()
-            return datetime(2000 + int(yy), int(month), int(day))
+    report_date_str = dividend_info[0] if len(dividend_info) >= 1 else ""      # 第1个元素为年报日期，这个是排序2
+    report_date = parse_date2(report_date_str)
 
-        # 匹配 年-月-日 2025-03-26
-        date_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
-        if date_match:
-            return datetime(*map(int, date_match.groups()))
-
-        return datetime(2099, 12, 31)
-
-    dividend_date = parse_date(dividend_date_str)
-
-    # 次要排序：年报日期
-    report_date_str = dividend_info[0] if len(dividend_info) >= 1 else ""
-    report_date = parse_date(report_date_str)
-
-    # 先按分红日期升序，再按年报日期升序
     return (dividend_date, report_date)
+
+
+# ==================== 分红基- 先按本次分红日期升序，再按上次分红日期升序 ====================
 
 def get_fund_dividend_sort_key(item):   # 分红基， ["登记 26/04/13", "预计 26/05/13", "0.03*12" ]
     code = item[0]
-    # 修正：fund_dividend_date_dict [登记日期, 预计日期, 分红金额]，共3个元素
-    # 按实际字段含义解包（根据业务逻辑选择“登记日期”作为next_date_str，“预计日期”作为last_date_str）
     fund_info = fund_dividend_date_dict.get(code, ["待定", "待定", "0"])
-    next_date_str, last_date_str, _ = fund_info  # 忽略第三个元素（分红金额）
+    last_date_str, next_date_str, _ = fund_info  # 忽略第三个元素（分红金额）  # 取得上次分红日期，下次分红日期
 
-    # 解析下期新分红日期（核心排序依据）
-    def parse_dividend_date(date_str): # 内部子函数
-        if not date_str or date_str.strip() == "待定":
-            # 待定映射为2099年（极晚日期，排在最后）
-            return datetime(2099, 12, 31)
-        # 匹配 "登记 26/01/20" 或 "预计 26/06/19" 格式
-        date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
-        if date_match:
-            # 提取 日/月/年（两位年），转换为完整日期
-            day, month, two_digit_year = date_match.groups()
-            year = 2000 + int(two_digit_year)  # 26 → 2026
-            return datetime(year, int(month), int(day))
-        # 其他无法解析的日期也排在最后
-        return datetime(2099, 12, 31)
+    # # 解析下期新分红日期（核心排序依据）
+    # def parse_dividend_date(date_str): # 内部子函数
+    #     if not date_str or date_str.strip() == "待定":
+    #         # 待定映射为2099年（极晚日期，排在最后）
+    #         return datetime(2099, 12, 31)
+    #     # 匹配 "登记 26/01/20" 或 "预计 26/06/19" 格式
+    #     date_match = re.search(r'(\d{2})/(\d{2})/(\d{2})', date_str)
+    #     if date_match:
+    #         # 提取 日/月/年（两位年），转换为完整日期
+    #         day, month, two_digit_year = date_match.groups()
+    #         year = 2000 + int(two_digit_year)  # 26 → 2026
+    #         return datetime(year, int(month), int(day))
+    #     # 其他无法解析的日期也排在最后
+    #     return datetime(2099, 12, 31)
 
-    next_date = parse_dividend_date(next_date_str)
-    # 次要排序依据：去年对应分红日期（可选，保持原逻辑）
-    last_date = parse_dividend_date(last_date_str)
+    next_date = parse_date2(next_date_str)   # 下次分红日期为排序1
+    last_date = parse_date2(last_date_str)   # 上次分红日期为排序2
 
-    # 排序键：先按下期新分红日期升序，再按去年日期升序
     return (next_date, last_date)
 
+
+# ==================== 业绩反转- 先摘帽日期升序， 再股票代码升序 ====================
 
 def get_performance_reversal_sort_key(item):  # 业绩反转，按摘帽申请日期升序
     code = item[0]
@@ -802,35 +838,36 @@ def get_performance_reversal_sort_key(item):  # 业绩反转，按摘帽申请�
     reversal_date = parse_reversal_date(reversal_date_str)
 
     # 按摘帽申请日期升序排序
-    return reversal_date
+    return (reversal_date, code)
 
-# ---------------------- 13. 合并股票策略排序函数 ----nouse------------------
-def get_combined_stock_sort_key(item):
-    code, info, strategy = item[0], item[1], item[2]
-    strategy_priority = {
-        "分红股": 1,
-        "业绩反转": 2,
-        "小盘猛牛": 3,
-        "热点发展": 4,
-        "涨停回调": 5,
-        "配债股": 6
-    }
-    priority = strategy_priority.get(strategy, 99)
-    if strategy == "分红股":
-        date_key = get_stock_dividend_sort_key(item)
-    elif strategy == "业绩反转":
-        date_key = get_performance_reversal_sort_key(item)
-    elif strategy == "小盘猛牛":
-        date_key = get_small_cap_sort_key(item)
-    elif strategy == "热点发展":
-        date_key = get_hot_development_sort_key(item)
-    elif strategy == "涨停回调":
-        date_key = get_limit_up_callback_sort_key(item)
-    elif strategy == "配债股":
-        date_key = get_bond_allot_sort_key(item)
-    else:
-        date_key = (datetime(2099, 12, 31), datetime(2099, 12, 31))
-    return (priority, date_key)
+
+# # ---------------------- 13. 合并股票策略排序函数 ----nouse------------------
+# def get_combined_stock_sort_key(item):
+#     code, info, strategy = item[0], item[1], item[2]
+#     strategy_priority = {
+#         "分红股": 1,
+#         "业绩反转": 2,
+#         "小盘猛牛": 3,
+#         "热点发展": 4,
+#         "涨停回调": 5,
+#         "配债股": 6
+#     }
+#     priority = strategy_priority.get(strategy, 99)
+#     if strategy == "分红股":
+#         date_key = get_stock_dividend_sort_key(item)
+#     elif strategy == "业绩反转":
+#         date_key = get_performance_reversal_sort_key(item)
+#     elif strategy == "小盘猛牛":
+#         date_key = get_small_cap_sort_key(item)
+#     elif strategy == "热点发展":
+#         date_key = get_hot_development_sort_key(item)
+#     elif strategy == "涨停回调":
+#         date_key = get_limit_up_callback_sort_key(item)
+#     elif strategy == "配债股":
+#         date_key = get_bond_allot_sort_key(item)
+#     else:
+#         date_key = (datetime(2099, 12, 31), datetime(2099, 12, 31))
+#     return (priority, date_key)
 
 
 # ---------------------- 14. 样式创建函数 ----------------------
@@ -1082,12 +1119,22 @@ def create_styles():
 
 
 # ---------------------- 15. Sheet写入函数（远涨远跌移到摘帽后、要点前） ----------------------
-def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_sheet=False,
-                     summary_data=None, summary_percent=None, total_capital=500000, is_stock_dividend_sheet=False,
-                     is_fund_dividend_sheet=False, is_small_cap_sheet=False, is_hot_development_sheet=False,
-                     is_performance_reversal_sheet=False, is_limit_up_callback_sheet=False,
-                     is_combined_stock_sheet=False, is_bond_allot_sheet=False,is_overdown_sheet=False,
-                     is_oversea_sheet=False,is_swapbond_sheet=False):
+def write_sheet_data(
+                     sheetin, data_list, styles,
+                     row_height=11 * 20,
+                     is_strategy_sheet=False,
+                     summary_data=None, summary_percent=None, total_capital=500000,
+                     is_stock_dividend_sheet=False,
+                     is_fund_dividend_sheet=False,
+                     is_small_cap_sheet=False,
+                     is_hot_development_sheet=False,
+                     is_performance_reversal_sheet=False,
+                     is_limit_up_callback_sheet=False,
+                     is_combined_stock_sheet=False,
+                     is_bond_allot_sheet=False,
+                     is_overdown_sheet=False,
+                     is_oversea_sheet=False,
+                     is_swapbond_sheet=False):
     col_widths = {
         0: 8, 1: 10, 2: 8, 3: 8, 4: 10, 5: 9, 6: 6, 7: 10,
         8: 10, 9: 8, 10: 13, 11: 12, 12: 12, 13: 8, 14: 25, 15: 25
@@ -1099,16 +1146,19 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
 
     # 应用列宽（5个特殊表用col_widths2，其他用col_widths）
     special_sheets = ["分红股", "分红基", "涨停回调", "配债股", "小盘猛牛", "热点发展"]
-    current_sheet_name = sheet.name.strip()
+    current_sheet_name = sheetin.name.strip()
 
+    # print(current_sheet_name)
+
+    # 两组 col_widths，分别对应的策略
     if current_sheet_name in special_sheets:
         # 重点表格：使用 col_widths2
         for col, width in col_widths2.items():
-            sheet.col(col).width = width * 256
+            sheetin.col(col).width = width * 256
     else:
         # 其他表格：保持默认 col_widths
         for col, width in col_widths.items():
-            sheet.col(col).width = width * 256
+            sheetin.col(col).width = width * 256
 
     # 表头
     if is_stock_dividend_sheet:  # 分红股
@@ -1132,7 +1182,6 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
     elif is_swapbond_sheet:  # 可转债
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "远涨", "远跌"]
-
     elif is_performance_reversal_sheet: #业绩反转
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "摘帽申请日期", "周线", "远涨", "远跌", "审计", "要点"]
@@ -1143,9 +1192,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "远涨", "远跌"]
 
-    sheet.row(0).height = row_height
+    sheetin.row(0).height = row_height
+
+    # 把表头（所有headers名称）按样式写入第一行
     for col_idx, header in enumerate(headers):
-        sheet.write(0, col_idx, header, styles["header"])
+        sheetin.write(0, col_idx, header, styles["header"])
 
     if is_strategy_sheet and data_list:
         if is_combined_stock_sheet:  # 股票策略合并
@@ -1167,8 +1218,12 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
         else:
             sorted_strategy_data = sorted(data_list, key=lambda x: x[1]["金额"], reverse=True)
 
+        # print(sorted_strategy_data)
+
         strategy_cumulative = 0
         strategy_rank = 1
+
+        # 重新计算一遍 累积总金额，总累积仓位%，排名
         processed_data = []
         for item in sorted_strategy_data:
             code, info, strategy, _, _, _ = item
@@ -1178,22 +1233,24 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             strategy_rank += 1
         data_list = processed_data
 
+    # print(data_list)
+
     row_idx = 1
     for item in data_list:
         code, info, strategy, rank, cumulative, total_cumulative_percent = item
-        sheet.row(row_idx).height = row_height
+        sheetin.row(row_idx).height = row_height
 
         if rank == 10:
-            sheet.write(row_idx, 0, code, styles["yellow"])
-            sheet.write(row_idx, 1, info["名称"], styles["yellow"])
-            sheet.write(row_idx, 2, info["总数量"], styles["yellow"])
-            sheet.write(row_idx, 3, info["当前价"], styles["yellow"])
-            sheet.write(row_idx, 4, info["金额"], styles["yellow"])
-            sheet.write(row_idx, 5, info["仓位百分比"], styles["yellow_percent"])
-            sheet.write(row_idx, 6, rank, styles["yellow"])
-            sheet.write(row_idx, 7, cumulative, styles["yellow"])
-            sheet.write(row_idx, 8, f"{total_cumulative_percent}%", styles["yellow_total_percent"])
-            sheet.write(row_idx, 9, strategy, styles["yellow_strategy"])
+            sheetin.write(row_idx, 0, code, styles["yellow"])
+            sheetin.write(row_idx, 1, info["名称"], styles["yellow"])
+            sheetin.write(row_idx, 2, info["总数量"], styles["yellow"])
+            sheetin.write(row_idx, 3, info["当前价"], styles["yellow"])
+            sheetin.write(row_idx, 4, info["金额"], styles["yellow"])
+            sheetin.write(row_idx, 5, info["仓位百分比"], styles["yellow_percent"])
+            sheetin.write(row_idx, 6, rank, styles["yellow"])
+            sheetin.write(row_idx, 7, cumulative, styles["yellow"])
+            sheetin.write(row_idx, 8, f"{total_cumulative_percent}%", styles["yellow_total_percent"])
+            sheetin.write(row_idx, 9, strategy, styles["yellow_strategy"])
 
             if is_stock_dividend_sheet:  # 分红股
                 item_list = dividend_stock_date_dict.get(code, ["", "", ""])
@@ -1201,9 +1258,9 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheet.write(row_idx, 10, next_report, styles["yellow"])
-                sheet.write(row_idx, 11, div_date, styles["yellow"])
-                sheet.write(row_idx, 12, per_div, styles["yellow_date_right"])
+                sheetin.write(row_idx, 10, next_report, styles["yellow"])
+                sheetin.write(row_idx, 11, div_date, styles["yellow"])
+                sheetin.write(row_idx, 12, per_div, styles["yellow_date_right"])
 
                 # 年化收益
                 annual_rate_text = ""
@@ -1218,7 +1275,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 except:
                     annual_rate_text = ""
 
-                # sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
+                # sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
 
                 # 年化收益颜色：≥4.5 粉红；≤1.5 红色
                 annual_val = 0.0
@@ -1228,11 +1285,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     annual_val = 0.0
 
                 if annual_val >= 4.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
                 elif annual_val <= 1.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
                 else:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
 
                 # ===================== 新增：远涨 远跌 =====================
                 structure_str = stock_dividend_struct_dict.get(code, "")
@@ -1258,57 +1315,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_yellow_pink"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_yellow_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_yellow_red"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_yellow_red"])
                     else:
-                        sheet.write(row_idx, 14, far_up, styles["yellow"])
+                        sheetin.write(row_idx, 14, far_up, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 14, far_up, styles["yellow"])
+                    sheetin.write(row_idx, 14, far_up, styles["yellow"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_yellow_pink"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_yellow_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_yellow_red"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_yellow_red"])
                     else:
-                        sheet.write(row_idx, 15, far_down, styles["yellow"])
+                        sheetin.write(row_idx, 15, far_down, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 15, far_down, styles["yellow"])
-
-                # # ==================== 分红股 - 远涨 列颜色 ====================
-                # far_up_val = 0
-                # try:
-                #     # 从字典取远涨数值
-                #     far_up_val = int(stock_dividend_struct_dict[code].split(',')[0].strip())
-                # except:
-                #     far_up_val = 999
-                #
-                # # 黄色背景行
-                # if far_up_val < 50:
-                #     sheet.write(row_idx, 14, far_up, styles["yellow_pink_delisting_apply"])
-                # elif far_up_val > 70:
-                #     sheet.write(row_idx, 14, far_up, styles["yellow_red_text"])
-                # else:
-                #     sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
-                #
-                # # sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])  # 远跌
-                #
-                # # 远跌 颜色：>60粉红，<30红色
-                # far_down_val = 0
-                # try:
-                #     far_down_val = int(stock_dividend_struct_dict[code].split(',')[1].strip())
-                # except:
-                #     far_down_val = 0
-                #
-                # if far_down_val > 60:
-                #     sheet.write(row_idx, 15, far_down, styles["yellow_pink_delisting_apply"])
-                # elif far_down_val < 30:
-                #     sheet.write(row_idx, 15, far_down, styles["yellow_red_text"])
-                # else:
-                #     sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
+                    sheetin.write(row_idx, 15, far_down, styles["yellow"])
 
             elif is_limit_up_callback_sheet:  # 涨停回调
                 # 取出字典 3 个值：年报日期、分红日期、每十股分红
@@ -1317,9 +1342,9 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheet.write(row_idx, 10, item_list[0], styles["yellow_date_right"])
-                sheet.write(row_idx, 11, item_list[1], styles["yellow_date_right"])
-                sheet.write(row_idx, 12, item_list[2], styles["yellow_date_right"])
+                sheetin.write(row_idx, 10, item_list[0], styles["yellow_date_right"])
+                sheetin.write(row_idx, 11, item_list[1], styles["yellow_date_right"])
+                sheetin.write(row_idx, 12, item_list[2], styles["yellow_date_right"])
 
                 # ===================== 年化收益 =====================
                 annual_rate_text = ""
@@ -1342,11 +1367,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     annual_val = 0.0
 
                 if annual_val >= 4.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
                 elif annual_val <= 1.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
                 else:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
 
                 # ===================== 远涨 / 远跌（黄色背景 + 完整 try except） =====================
                 struct_str = limit_up_callback_struct_dict.get(code, "")
@@ -1372,50 +1397,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_yellow_pink"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_yellow_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_yellow_red"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_yellow_red"])
                     else:
-                        sheet.write(row_idx, 14, far_up, styles["yellow"])
+                        sheetin.write(row_idx, 14, far_up, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 14, far_up, styles["yellow"])
+                    sheetin.write(row_idx, 14, far_up, styles["yellow"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_yellow_pink"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_yellow_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_yellow_red"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_yellow_red"])
                     else:
-                        sheet.write(row_idx, 15, far_down, styles["yellow"])
+                        sheetin.write(row_idx, 15, far_down, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 15, far_down, styles["yellow"])
-
-
-                # # -------------------- 远涨 颜色（完整 try/except） --------------------
-                # try:
-                #     val = float(far_up)
-                #     if val < 50:
-                #         sheet.write(row_idx, 14, far_up, styles["yellow_pink_delisting_apply"])
-                #     elif val > 70:
-                #         sheet.write(row_idx, 14, far_up, styles["yellow_red_text"])
-                #     else:
-                #         sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
-                # except:
-                #     sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
-                #
-                # # -------------------- 远跌 颜色（完整 try/except） --------------------
-                # try:
-                #     val = float(far_down)
-                #     if val > 60:
-                #         sheet.write(row_idx, 15, far_down, styles["yellow_pink_delisting_apply"])
-                #     elif val < 30:
-                #         sheet.write(row_idx, 15, far_down, styles["yellow_red_text"])
-                #     else:
-                #         sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
-                # except:
-                #     sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
+                    sheetin.write(row_idx, 15, far_down, styles["yellow"])
 
             elif is_small_cap_sheet:  # 小盘猛牛  黄色
                 # 取出字典 3 个值：年报日期、分红日期、每十股分红
@@ -1424,9 +1424,9 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheet.write(row_idx, 10, item_list[0], styles["yellow_date_right"])
-                sheet.write(row_idx, 11, item_list[1], styles["yellow_date_right"])
-                sheet.write(row_idx, 12, item_list[2], styles["yellow_date_right"])
+                sheetin.write(row_idx, 10, item_list[0], styles["yellow_date_right"])
+                sheetin.write(row_idx, 11, item_list[1], styles["yellow_date_right"])
+                sheetin.write(row_idx, 12, item_list[2], styles["yellow_date_right"])
 
                 # ===================== 年化收益 =====================
                 annual_rate_text = ""
@@ -1449,11 +1449,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     annual_val = 0.0
 
                 if annual_val >= 4.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
                 elif annual_val <= 1.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
                 else:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
 
                 # ===================== 远涨 / 远跌 =====================
                 struct_str = small_cap_callback_struct_dict.get(code, "")
@@ -1479,49 +1479,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_yellow_pink"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_yellow_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_yellow_red"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_yellow_red"])
                     else:
-                        sheet.write(row_idx, 14, far_up, styles["yellow"])
+                        sheetin.write(row_idx, 14, far_up, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 14, far_up, styles["yellow"])
+                    sheetin.write(row_idx, 14, far_up, styles["yellow"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_yellow_pink"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_yellow_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_yellow_red"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_yellow_red"])
                     else:
-                        sheet.write(row_idx, 15, far_down, styles["yellow"])
+                        sheetin.write(row_idx, 15, far_down, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 15, far_down, styles["yellow"])
-
-                # # -------------------- 远涨 颜色规则 --------------------
-                # try:
-                #     val = float(far_up)
-                #     if val < 50:
-                #         sheet.write(row_idx, 14, far_up, styles["yellow_pink_delisting_apply"])
-                #     elif val > 70:
-                #         sheet.write(row_idx, 14, far_up, styles["yellow_red_text"])
-                #     else:
-                #         sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
-                # except:
-                #     sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
-                #
-                # # -------------------- 远跌 颜色规则 --------------------
-                # try:
-                #     val = float(far_down)
-                #     if val > 60:
-                #         sheet.write(row_idx, 15, far_down, styles["yellow_pink_delisting_apply"])
-                #     elif val < 30:
-                #         sheet.write(row_idx, 15, far_down, styles["yellow_red_text"])
-                #     else:
-                #         sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
-                # except:
-                #     sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
+                    sheetin.write(row_idx, 15, far_down, styles["yellow"])
 
             elif is_hot_development_sheet:  # 热点发展
                 # 取出字典 3 个值：年报日期、分红日期、每十股分红
@@ -1530,9 +1506,9 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheet.write(row_idx, 10, item_list[0], styles["yellow_date_right"])
-                sheet.write(row_idx, 11, item_list[1], styles["yellow_date_right"])
-                sheet.write(row_idx, 12, item_list[2], styles["yellow_date_right"])
+                sheetin.write(row_idx, 10, item_list[0], styles["yellow_date_right"])
+                sheetin.write(row_idx, 11, item_list[1], styles["yellow_date_right"])
+                sheetin.write(row_idx, 12, item_list[2], styles["yellow_date_right"])
 
                 # ===================== 年化收益 =====================
                 annual_rate_text = ""
@@ -1555,11 +1531,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     annual_val = 0.0
 
                 if annual_val >= 4.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
                 elif annual_val <= 1.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
                 else:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
 
                 # ===================== 远涨 / 远跌 =====================
                 struct_str = hot_development_struct_dict.get(code, "")
@@ -1570,7 +1546,6 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     if len(parts) >= 2:
                         far_up = parts[0].strip()
                         far_down = parts[1].strip()
-
 
                 # 乘100 并 取整
                 try:
@@ -1586,49 +1561,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_yellow_pink"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_yellow_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_yellow_red"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_yellow_red"])
                     else:
-                        sheet.write(row_idx, 14, far_up, styles["yellow"])
+                        sheetin.write(row_idx, 14, far_up, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 14, far_up, styles["yellow"])
+                    sheetin.write(row_idx, 14, far_up, styles["yellow"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_yellow_pink"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_yellow_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_yellow_red"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_yellow_red"])
                     else:
-                        sheet.write(row_idx, 15, far_down, styles["yellow"])
+                        sheetin.write(row_idx, 15, far_down, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 15, far_down, styles["yellow"])
-
-                # # -------------------- 远涨 颜色规则 --------------------
-                # try:
-                #     val = float(far_up)
-                #     if val < 50:
-                #         sheet.write(row_idx, 14, far_up, styles["yellow_pink_delisting_apply"])
-                #     elif val > 70:
-                #         sheet.write(row_idx, 14, far_up, styles["yellow_red_text"])
-                #     else:
-                #         sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
-                # except:
-                #     sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
-                #
-                # # -------------------- 远跌 颜色规则 --------------------
-                # try:
-                #     val = float(far_down)
-                #     if val > 60:
-                #         sheet.write(row_idx, 15, far_down, styles["yellow_pink_delisting_apply"])
-                #     elif val < 30:
-                #         sheet.write(row_idx, 15, far_down, styles["yellow_red_text"])
-                #     else:
-                #         sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
-                # except:
-                #     sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
+                    sheetin.write(row_idx, 15, far_down, styles["yellow"])
 
             elif is_bond_allot_sheet:  # 配债股 黄色背景色
                 # 取出字典 3 个值：下期新年报日期、分红日期、每十股分红
@@ -1637,9 +1588,9 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheet.write(row_idx, 10, next_report, styles["yellow_date_right"])
-                sheet.write(row_idx, 11, div_date, styles["yellow_date_right"])
-                sheet.write(row_idx, 12, per_div, styles["yellow_date_right"])
+                sheetin.write(row_idx, 10, next_report, styles["yellow_date_right"])
+                sheetin.write(row_idx, 11, div_date, styles["yellow_date_right"])
+                sheetin.write(row_idx, 12, per_div, styles["yellow_date_right"])
 
                 # ===================== 年化收益 =====================
                 annual_rate_text = ""
@@ -1662,11 +1613,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     annual_val = 0.0
 
                 if annual_val >= 4.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
                 elif annual_val <= 1.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
                 else:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
 
                 # ===================== 远涨 / 远跌 =====================
                 struct_str = bond_allot_struct_dict.get(code, "")
@@ -1692,50 +1643,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_yellow_pink"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_yellow_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_yellow_red"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_yellow_red"])
                     else:
-                        sheet.write(row_idx, 14, far_up, styles["yellow"])
+                        sheetin.write(row_idx, 14, far_up, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 14, far_up, styles["yellow"])
+                    sheetin.write(row_idx, 14, far_up, styles["yellow"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_yellow_pink"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_yellow_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_yellow_red"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_yellow_red"])
                     else:
-                        sheet.write(row_idx, 15, far_down, styles["yellow"])
+                        sheetin.write(row_idx, 15, far_down, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 15, far_down, styles["yellow"])
-
-                # # -------------------- 远涨 颜色规则 --------------------
-                # try:
-                #     val = float(far_up)
-                #     if val < 50:
-                #         sheet.write(row_idx, 14, far_up, styles["yellow_pink_delisting_apply"])
-                #     elif val > 70:
-                #         sheet.write(row_idx, 14, far_up, styles["yellow_red_text"])
-                #     else:
-                #         sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
-                # except:
-                #     sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
-                #
-                # # -------------------- 远跌 颜色规则 --------------------
-                # try:
-                #     val = float(far_down)
-                #     if val > 60:
-                #         sheet.write(row_idx, 15, far_down, styles["yellow_pink_delisting_apply"])
-                #     elif val < 30:
-                #         sheet.write(row_idx, 15, far_down, styles["yellow_red_text"])
-                #     else:
-                #         sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
-                # except:
-                #     sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
-
+                    sheetin.write(row_idx, 15, far_down, styles["yellow"])
 
             elif is_fund_dividend_sheet:   # 分红基
                 item_list = fund_dividend_date_dict.get(code, ["", "", ""])
@@ -1743,9 +1669,9 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 next_date = item_list[1]
                 per_div = item_list[2]
 
-                sheet.write(row_idx, 10, last_date, styles["yellow"])
-                sheet.write(row_idx, 11, next_date, styles["yellow"])
-                sheet.write(row_idx, 12, per_div, styles["yellow_date_right"])
+                sheetin.write(row_idx, 10, last_date, styles["yellow"])
+                sheetin.write(row_idx, 11, next_date, styles["yellow"])
+                sheetin.write(row_idx, 12, per_div, styles["yellow_date_right"])
 
                 # 年化收益（和分红股一样）
                 annual_rate_text = ""
@@ -1760,7 +1686,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 except:
                     annual_rate_text = ""
 
-                # sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
+                # sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
 
                 # -------------- 分红基 年化收益颜色 --------------
                 annual_val = 0.0
@@ -1771,11 +1697,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
 
                 # 黄色行
                 if annual_val >= 4.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_pink_delisting_apply"])
                 elif annual_val <= 1.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_red_text"])
                 else:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["yellow_date_right"])
 
                 # ===================== 新增：远涨 远跌 =====================
                 struct_str = dividend_fund_struct_dict.get(code, "")
@@ -1801,55 +1727,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_yellow_pink"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_yellow_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_yellow_red"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_yellow_red"])
                     else:
-                        sheet.write(row_idx, 14, far_up, styles["yellow"])
+                        sheetin.write(row_idx, 14, far_up, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 14, far_up, styles["yellow"])
+                    sheetin.write(row_idx, 14, far_up, styles["yellow"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_yellow_pink"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_yellow_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_yellow_red"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_yellow_red"])
                     else:
-                        sheet.write(row_idx, 15, far_down, styles["yellow"])
+                        sheetin.write(row_idx, 15, far_down, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 15, far_down, styles["yellow"])
-
-                # # 分红基 远涨 颜色：<50粉红，>70红色
-                # far_up_val = 0
-                # try:
-                #     far_up_val = int(dividend_fund_struct_dict[code].split(',')[0].strip())
-                # except:
-                #     far_up_val = 0
-                #
-                # if far_up_val < 50:
-                #     sheet.write(row_idx, 14, far_up, styles["yellow_pink_delisting_apply"])
-                # elif far_up_val > 70:
-                #     sheet.write(row_idx, 14, far_up, styles["yellow_red_text"])
-                # else:
-                #     sheet.write(row_idx, 14, far_up, styles["yellow_date_right"])
-                #
-                # # sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])  # 远跌
-                #
-                # # 分红基 远跌 颜色：>60粉红，<30红色
-                # far_down_val = 0
-                # try:
-                #     far_down_val = int(dividend_fund_struct_dict[code].split(',')[1].strip())
-                # except:
-                #     far_down_val = 0
-                #
-                # if far_down_val > 60:
-                #     sheet.write(row_idx, 15, far_down, styles["yellow_pink_delisting_apply"])
-                # elif far_down_val < 30:
-                #     sheet.write(row_idx, 15, far_down, styles["yellow_red_text"])
-                # else:
-                #     sheet.write(row_idx, 15, far_down, styles["yellow_date_right"])
+                    sheetin.write(row_idx, 15, far_down, styles["yellow"])
 
             # ---------------------- 超跌基 黄色背景 ----------------------
             elif is_overdown_sheet:
@@ -1877,50 +1773,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 10, far_up, styles["far_up_yellow_pink"])
+                        sheetin.write(row_idx, 10, far_up, styles["far_up_yellow_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 10, far_up, styles["far_up_yellow_red"])
+                        sheetin.write(row_idx, 10, far_up, styles["far_up_yellow_red"])
                     else:
-                        sheet.write(row_idx, 10, far_up, styles["yellow"])
+                        sheetin.write(row_idx, 10, far_up, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 10, far_up, styles["yellow"])
+                    sheetin.write(row_idx, 10, far_up, styles["yellow"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 11, far_down, styles["far_down_yellow_pink"])
+                        sheetin.write(row_idx, 11, far_down, styles["far_down_yellow_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 11, far_down, styles["far_down_yellow_red"])
+                        sheetin.write(row_idx, 11, far_down, styles["far_down_yellow_red"])
                     else:
-                        sheet.write(row_idx, 11, far_down, styles["yellow"])
+                        sheetin.write(row_idx, 11, far_down, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 11, far_down, styles["yellow"])
-
-
-                # # -------------------- 远涨 --------------------
-                # try:
-                #     val = float(far_up)
-                #     if val < 50:
-                #         sheet.write(row_idx, 10, far_up, styles["yellow_pink_delisting_apply"])
-                #     elif val > 70:
-                #         sheet.write(row_idx, 10, far_up, styles["yellow_red_text"])
-                #     else:
-                #         sheet.write(row_idx, 10, far_up, styles["yellow_date_right"])
-                # except:
-                #     sheet.write(row_idx, 10, far_up, styles["yellow_date_right"])
-                #
-                # # -------------------- 远跌 --------------------
-                # try:
-                #     val = float(far_down)
-                #     if val > 60:
-                #         sheet.write(row_idx, 11, far_down, styles["yellow_pink_delisting_apply"])
-                #     elif val < 30:
-                #         sheet.write(row_idx, 11, far_down, styles["yellow_red_text"])
-                #     else:
-                #         sheet.write(row_idx, 11, far_down, styles["yellow_date_right"])
-                # except:
-                #     sheet.write(row_idx, 11, far_down, styles["yellow_date_right"])
+                    sheetin.write(row_idx, 11, far_down, styles["yellow"])
 
             # ---------------------- 海外基 黄色背景 ----------------------
             elif is_oversea_sheet:
@@ -1947,49 +1818,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 10, far_up, styles["far_up_yellow_pink"])
+                        sheetin.write(row_idx, 10, far_up, styles["far_up_yellow_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 10, far_up, styles["far_up_yellow_red"])
+                        sheetin.write(row_idx, 10, far_up, styles["far_up_yellow_red"])
                     else:
-                        sheet.write(row_idx, 10, far_up, styles["yellow"])
+                        sheetin.write(row_idx, 10, far_up, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 10, far_up, styles["yellow"])
+                    sheetin.write(row_idx, 10, far_up, styles["yellow"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 11, far_down, styles["far_down_yellow_pink"])
+                        sheetin.write(row_idx, 11, far_down, styles["far_down_yellow_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 11, far_down, styles["far_down_yellow_red"])
+                        sheetin.write(row_idx, 11, far_down, styles["far_down_yellow_red"])
                     else:
-                        sheet.write(row_idx, 11, far_down, styles["yellow"])
+                        sheetin.write(row_idx, 11, far_down, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 11, far_down, styles["yellow"])
-
-                # # 远涨
-                # try:
-                #     val = float(far_up)
-                #     if val < 50:
-                #         sheet.write(row_idx, 10, far_up, styles["yellow_pink_delisting_apply"])
-                #     elif val > 70:
-                #         sheet.write(row_idx, 10, far_up, styles["yellow_red_text"])
-                #     else:
-                #         sheet.write(row_idx, 10, far_up, styles["yellow_date_right"])
-                # except:
-                #     sheet.write(row_idx, 10, far_up, styles["yellow_date_right"])
-                #
-                # # 远跌
-                # try:
-                #     val = float(far_down)
-                #     if val > 60:
-                #         sheet.write(row_idx, 11, far_down, styles["yellow_pink_delisting_apply"])
-                #     elif val < 30:
-                #         sheet.write(row_idx, 11, far_down, styles["yellow_red_text"])
-                #     else:
-                #         sheet.write(row_idx, 11, far_down, styles["yellow_date_right"])
-                # except:
-                #     sheet.write(row_idx, 11, far_down, styles["yellow_date_right"])
+                    sheetin.write(row_idx, 11, far_down, styles["yellow"])
 
             # ---------------------- 可转债 黄色背景 ----------------------
             elif is_swapbond_sheet:
@@ -2016,66 +1863,41 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 10, far_up, styles["far_up_yellow_pink"])
+                        sheetin.write(row_idx, 10, far_up, styles["far_up_yellow_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 10, far_up, styles["far_up_yellow_red"])
+                        sheetin.write(row_idx, 10, far_up, styles["far_up_yellow_red"])
                     else:
-                        sheet.write(row_idx, 10, far_up, styles["yellow"])
+                        sheetin.write(row_idx, 10, far_up, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 10, far_up, styles["yellow"])
+                    sheetin.write(row_idx, 10, far_up, styles["yellow"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 11, far_down, styles["far_down_yellow_pink"])
+                        sheetin.write(row_idx, 11, far_down, styles["far_down_yellow_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 11, far_down, styles["far_down_yellow_red"])
+                        sheetin.write(row_idx, 11, far_down, styles["far_down_yellow_red"])
                     else:
-                        sheet.write(row_idx, 11, far_down, styles["yellow"])
+                        sheetin.write(row_idx, 11, far_down, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 11, far_down, styles["yellow"])
-
-                # # 远涨
-                # try:
-                #     val = float(far_up)
-                #     if val < 50:
-                #         sheet.write(row_idx, 10, far_up, styles["yellow_pink_delisting_apply"])
-                #     elif val > 70:
-                #         sheet.write(row_idx, 10, far_up, styles["yellow_red_text"])
-                #     else:
-                #         sheet.write(row_idx, 10, far_up, styles["yellow_date_right"])
-                # except:
-                #     sheet.write(row_idx, 10, far_up, styles["yellow_date_right"])
-                #
-                # # 远跌
-                # try:
-                #     val = float(far_down)
-                #     if val > 60:
-                #         sheet.write(row_idx, 11, far_down, styles["yellow_pink_delisting_apply"])
-                #     elif val < 30:
-                #         sheet.write(row_idx, 11, far_down, styles["yellow_red_text"])
-                #     else:
-                #         sheet.write(row_idx, 11, far_down, styles["yellow_date_right"])
-                # except:
-                #     sheet.write(row_idx, 11, far_down, styles["yellow_date_right"])
-
+                    sheetin.write(row_idx, 11, far_down, styles["yellow"])
 
             elif is_performance_reversal_sheet:  # 业绩反转
                 # 摘帽申请日期
                 delisting_date = performance_reversal_delisting_application_dict.get(code, "")
                 if is_delisting_date_less_than_2months(code):
-                    sheet.write(row_idx, 10, delisting_date, styles["yellow_pink_delisting_apply"])
+                    sheetin.write(row_idx, 10, delisting_date, styles["yellow_pink_delisting_apply"])
                 else:
-                    sheet.write(row_idx, 10, delisting_date, styles["yellow_delisting_apply_right"])
+                    sheetin.write(row_idx, 10, delisting_date, styles["yellow_delisting_apply_right"])
 
                 # 周线
                 week_line = performance_reversal_week_line_dict.get(code, "")
                 week_line_stripped = week_line.strip()
                 if week_line_stripped in ("半周线", "周线涨"):
-                    sheet.write(row_idx, 11, week_line, styles["week_yellow_pink"])
+                    sheetin.write(row_idx, 11, week_line, styles["week_yellow_pink"])
                 else:
-                    sheet.write(row_idx, 11, week_line, styles["yellow"])
+                    sheetin.write(row_idx, 11, week_line, styles["yellow"])
 
                 # 远涨 + 远跌
                 far_data = performance_reversal_far_dict.get(code, ",").split(",")
@@ -2100,39 +1922,39 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 12, far_up, styles["far_up_yellow_pink"])
+                        sheetin.write(row_idx, 12, far_up, styles["far_up_yellow_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 12, far_up, styles["far_up_yellow_red"])
+                        sheetin.write(row_idx, 12, far_up, styles["far_up_yellow_red"])
                     else:
-                        sheet.write(row_idx, 12, far_up, styles["yellow"])
+                        sheetin.write(row_idx, 12, far_up, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 12, far_up, styles["yellow"])
+                    sheetin.write(row_idx, 12, far_up, styles["yellow"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 13, far_down, styles["far_down_yellow_pink"])
+                        sheetin.write(row_idx, 13, far_down, styles["far_down_yellow_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 13, far_down, styles["far_down_yellow_red"])
+                        sheetin.write(row_idx, 13, far_down, styles["far_down_yellow_red"])
                     else:
-                        sheet.write(row_idx, 13, far_down, styles["yellow"])
+                        sheetin.write(row_idx, 13, far_down, styles["yellow"])
                 except:
-                    sheet.write(row_idx, 13, far_down, styles["yellow"])
+                    sheetin.write(row_idx, 13, far_down, styles["yellow"])
 
                 # 审计：已ok → 粉红，雷 → 红色
                 audit_text = performance_reversal_audit_dict.get(code, "")
                 audit_stripped = audit_text.strip()
                 if audit_stripped.endswith("已ok"):
-                    sheet.write(row_idx, 14, audit_text, styles["audit_yellow_pink"])
+                    sheetin.write(row_idx, 14, audit_text, styles["audit_yellow_pink"])
                 elif audit_stripped.endswith("雷"):
-                    sheet.write(row_idx, 14, audit_text, styles["audit_yellow_red"])
+                    sheetin.write(row_idx, 14, audit_text, styles["audit_yellow_red"])
                 else:
-                    sheet.write(row_idx, 14, audit_text, styles["yellow"])
+                    sheetin.write(row_idx, 14, audit_text, styles["yellow"])
 
                 # 要点
                 memo = performance_reversal_memo_dict.get(code, "")
-                sheet.write(row_idx, 15, memo, styles["yellow_memo_left"])
+                sheetin.write(row_idx, 15, memo, styles["yellow_memo_left"])
 
             # elif is_combined_stock_sheet:  # 股票策略合并
             #     if strategy == "分红股":
@@ -2147,19 +1969,20 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             #         dates = limit_up_callback_dividend_date_dict.get(code, ["", ""])
             #     else:
             #         dates = ["", ""]
-            #     sheet.write(row_idx, 10, dates[0], styles["yellow_date_right"])
-            #     sheet.write(row_idx, 11, dates[1], styles["yellow_date_right"])
+            #     sheetin.write(row_idx, 10, dates[0], styles["yellow_date_right"])
+            #     sheetin.write(row_idx, 11, dates[1], styles["yellow_date_right"])
+
         else:
-            sheet.write(row_idx, 0, code, styles["base"])
-            sheet.write(row_idx, 1, info["名称"], styles["base"])
-            sheet.write(row_idx, 2, info["总数量"], styles["base"])
-            sheet.write(row_idx, 3, info["当前价"], styles["base"])
-            sheet.write(row_idx, 4, info["金额"], styles["base"])
-            sheet.write(row_idx, 5, info["仓位百分比"], styles["percent"])
-            sheet.write(row_idx, 6, rank, styles["base"])
-            sheet.write(row_idx, 7, cumulative, styles["base"])
-            sheet.write(row_idx, 8, f"{total_cumulative_percent}%", styles["total_percent"])
-            sheet.write(row_idx, 9, strategy, styles["strategy"])
+            sheetin.write(row_idx, 0, code, styles["base"])
+            sheetin.write(row_idx, 1, info["名称"], styles["base"])
+            sheetin.write(row_idx, 2, info["总数量"], styles["base"])
+            sheetin.write(row_idx, 3, info["当前价"], styles["base"])
+            sheetin.write(row_idx, 4, info["金额"], styles["base"])
+            sheetin.write(row_idx, 5, info["仓位百分比"], styles["percent"])
+            sheetin.write(row_idx, 6, rank, styles["base"])
+            sheetin.write(row_idx, 7, cumulative, styles["base"])
+            sheetin.write(row_idx, 8, f"{total_cumulative_percent}%", styles["total_percent"])
+            sheetin.write(row_idx, 9, strategy, styles["strategy"])
 
             if is_stock_dividend_sheet:  # 分红股
                 item_list = dividend_stock_date_dict.get(code, ["", "", ""])
@@ -2167,9 +1990,9 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheet.write(row_idx, 10, next_report, styles["base"])
-                sheet.write(row_idx, 11, div_date, styles["base"])
-                sheet.write(row_idx, 12, per_div, styles["date_right"])
+                sheetin.write(row_idx, 10, next_report, styles["base"])
+                sheetin.write(row_idx, 11, div_date, styles["base"])
+                sheetin.write(row_idx, 12, per_div, styles["date_right"])
 
                 # 年化收益
                 annual_rate_text = ""
@@ -2185,7 +2008,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 except:
                     annual_rate_text = ""
 
-                # sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
+                # sheetin.write(row_idx, 13, annual_rate_text, styles["date_right"])
 
                 annual_val = 0.0
                 try:
@@ -2195,11 +2018,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
 
                 # 普通行
                 if annual_val >= 4.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
                 elif annual_val <= 1.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["red_text"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["red_text"])
                 else:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["date_right"])
 
                 # ===================== 新增：远涨 远跌 =====================
                 structure_str = stock_dividend_struct_dict.get(code, "")
@@ -2226,57 +2049,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_pink"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_red"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_red"])
                     else:
-                        sheet.write(row_idx, 14, far_up, styles["base"])
+                        sheetin.write(row_idx, 14, far_up, styles["base"])
                 except:
-                    sheet.write(row_idx, 14, far_up, styles["base"])
+                    sheetin.write(row_idx, 14, far_up, styles["base"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_pink"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_red"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_red"])
                     else:
-                        sheet.write(row_idx, 15, far_down, styles["base"])
+                        sheetin.write(row_idx, 15, far_down, styles["base"])
                 except:
-                    sheet.write(row_idx, 15, far_down, styles["base"])
-
-                # # sheet.write(row_idx, 14, far_up, styles["date_right"])  # 远涨
-                # far_up_val = 0
-                # try:
-                #     far_up_val = int(stock_dividend_struct_dict[code].split(',')[0].strip())
-                # except:
-                #     far_up_val = 0
-                #
-                # if far_up_val < 50:
-                #     sheet.write(row_idx, 14, far_up, styles["pink_delisting_apply"])
-                # elif far_up_val > 70:
-                #     sheet.write(row_idx, 14, far_up, styles["red_text"])
-                # else:
-                #     sheet.write(row_idx, 14, far_up, styles["date_right"])
-                #
-                # # sheet.write(row_idx, 15, far_down, styles["date_right"])  # 远跌
-                #
-                # # 远跌 颜色：>60粉红，<30红色
-                # far_down_val = 0
-                # try:
-                #     far_down_val = int(stock_dividend_struct_dict[code].split(',')[1].strip())
-                # except:
-                #     far_down_val = 0
-                #
-                # if far_down_val > 60:
-                #     sheet.write(row_idx, 15, far_down, styles["pink_delisting_apply"])
-                # elif far_down_val < 30:
-                #     sheet.write(row_idx, 15, far_down, styles["red_text"])
-                # else:
-                #     sheet.write(row_idx, 15, far_down, styles["date_right"])
-
-
+                    sheetin.write(row_idx, 15, far_down, styles["base"])
 
             elif is_limit_up_callback_sheet:  # 涨停回调  普通背景色
                 # 取出字典 3 个值：年报日期、分红日期、每十股分红
@@ -2285,9 +2076,9 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheet.write(row_idx, 10, item_list[0], styles["date_right"])
-                sheet.write(row_idx, 11, item_list[1], styles["date_right"])
-                sheet.write(row_idx, 12, item_list[2], styles["date_right"])
+                sheetin.write(row_idx, 10, item_list[0], styles["date_right"])
+                sheetin.write(row_idx, 11, item_list[1], styles["date_right"])
+                sheetin.write(row_idx, 12, item_list[2], styles["date_right"])
 
                 # ===================== 年化收益 =====================
                 annual_rate_text = ""
@@ -2310,11 +2101,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     annual_val = 0.0
 
                 if annual_val >= 4.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
                 elif annual_val <= 1.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["red_text"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["red_text"])
                 else:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["date_right"])
 
                 # ===================== 远涨 / 远跌 =====================
                 struct_str = limit_up_callback_struct_dict.get(code, "")
@@ -2339,49 +2130,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_pink"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_red"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_red"])
                     else:
-                        sheet.write(row_idx, 14, far_up, styles["base"])
+                        sheetin.write(row_idx, 14, far_up, styles["base"])
                 except:
-                    sheet.write(row_idx, 14, far_up, styles["base"])
+                    sheetin.write(row_idx, 14, far_up, styles["base"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_pink"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_red"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_red"])
                     else:
-                        sheet.write(row_idx, 15, far_down, styles["base"])
+                        sheetin.write(row_idx, 15, far_down, styles["base"])
                 except:
-                    sheet.write(row_idx, 15, far_down, styles["base"])
-
-                # # -------------------- 远涨 普通背景 + 完整 try/except --------------------
-                # try:
-                #     val = float(far_up)
-                #     if val < 50:
-                #         sheet.write(row_idx, 14, far_up, styles["pink_delisting_apply"])
-                #     elif val > 70:
-                #         sheet.write(row_idx, 14, far_up, styles["red_text"])
-                #     else:
-                #         sheet.write(row_idx, 14, far_up, styles["date_right"])
-                # except:
-                #     sheet.write(row_idx, 14, far_up, styles["date_right"])
-                #
-                # # -------------------- 远跌 普通背景 + 完整 try/except --------------------
-                # try:
-                #     val = float(far_down)
-                #     if val > 60:
-                #         sheet.write(row_idx, 15, far_down, styles["pink_delisting_apply"])
-                #     elif val < 30:
-                #         sheet.write(row_idx, 15, far_down, styles["red_text"])
-                #     else:
-                #         sheet.write(row_idx, 15, far_down, styles["date_right"])
-                # except:
-                #     sheet.write(row_idx, 15, far_down, styles["date_right"])
+                    sheetin.write(row_idx, 15, far_down, styles["base"])
 
             elif is_small_cap_sheet:  # 小盘猛牛 普通背景色
                 # 取出字典 3 个值：年报日期、分红日期、每十股分红
@@ -2390,9 +2157,9 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheet.write(row_idx, 10, item_list[0], styles["date_right"])
-                sheet.write(row_idx, 11, item_list[1], styles["date_right"])
-                sheet.write(row_idx, 12, item_list[2], styles["date_right"])
+                sheetin.write(row_idx, 10, item_list[0], styles["date_right"])
+                sheetin.write(row_idx, 11, item_list[1], styles["date_right"])
+                sheetin.write(row_idx, 12, item_list[2], styles["date_right"])
 
                 # ===================== 年化收益 =====================
                 annual_rate_text = ""
@@ -2415,11 +2182,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     annual_val = 0.0
 
                 if annual_val >= 4.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
                 elif annual_val <= 1.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["red_text"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["red_text"])
                 else:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["date_right"])
 
                 # ===================== 远涨 / 远跌 =====================
                 struct_str = small_cap_callback_struct_dict.get(code, "")
@@ -2443,49 +2210,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_pink"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_red"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_red"])
                     else:
-                        sheet.write(row_idx, 14, far_up, styles["base"])
+                        sheetin.write(row_idx, 14, far_up, styles["base"])
                 except:
-                    sheet.write(row_idx, 14, far_up, styles["base"])
+                    sheetin.write(row_idx, 14, far_up, styles["base"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_pink"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_red"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_red"])
                     else:
-                        sheet.write(row_idx, 15, far_down, styles["base"])
+                        sheetin.write(row_idx, 15, far_down, styles["base"])
                 except:
-                    sheet.write(row_idx, 15, far_down, styles["base"])
-
-                # # -------------------- 远涨 颜色规则 --------------------
-                # try:
-                #     val = float(far_up)
-                #     if val < 50:
-                #         sheet.write(row_idx, 14, far_up, styles["pink_delisting_apply"])
-                #     elif val > 70:
-                #         sheet.write(row_idx, 14, far_up, styles["red_text"])
-                #     else:
-                #         sheet.write(row_idx, 14, far_up, styles["date_right"])
-                # except:
-                #     sheet.write(row_idx, 14, far_up, styles["date_right"])
-                #
-                # # -------------------- 远跌 颜色规则 --------------------
-                # try:
-                #     val = float(far_down)
-                #     if val > 60:
-                #         sheet.write(row_idx, 15, far_down, styles["pink_delisting_apply"])
-                #     elif val < 30:
-                #         sheet.write(row_idx, 15, far_down, styles["red_text"])
-                #     else:
-                #         sheet.write(row_idx, 15, far_down, styles["date_right"])
-                # except:
-                #     sheet.write(row_idx, 15, far_down, styles["date_right"])
+                    sheetin.write(row_idx, 15, far_down, styles["base"])
 
             elif is_hot_development_sheet:  # 热点发展
                 # 取出字典 3 个值：年报日期、分红日期、每十股分红
@@ -2494,9 +2237,9 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheet.write(row_idx, 10, item_list[0], styles["date_right"])
-                sheet.write(row_idx, 11, item_list[1], styles["date_right"])
-                sheet.write(row_idx, 12, item_list[2], styles["date_right"])
+                sheetin.write(row_idx, 10, item_list[0], styles["date_right"])
+                sheetin.write(row_idx, 11, item_list[1], styles["date_right"])
+                sheetin.write(row_idx, 12, item_list[2], styles["date_right"])
 
                 # ===================== 年化收益 =====================
                 annual_rate_text = ""
@@ -2519,11 +2262,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     annual_val = 0.0
 
                 if annual_val >= 4.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
                 elif annual_val <= 1.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["red_text"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["red_text"])
                 else:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["date_right"])
 
                 # ===================== 远涨 / 远跌 =====================
                 struct_str = hot_development_struct_dict.get(code, "")
@@ -2548,50 +2291,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_pink"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_red"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_red"])
                     else:
-                        sheet.write(row_idx, 14, far_up, styles["base"])
+                        sheetin.write(row_idx, 14, far_up, styles["base"])
                 except:
-                    sheet.write(row_idx, 14, far_up, styles["base"])
+                    sheetin.write(row_idx, 14, far_up, styles["base"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_pink"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_red"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_red"])
                     else:
-                        sheet.write(row_idx, 15, far_down, styles["base"])
+                        sheetin.write(row_idx, 15, far_down, styles["base"])
                 except:
-                    sheet.write(row_idx, 15, far_down, styles["base"])
-
-                # # -------------------- 远涨 颜色规则 --------------------
-                # try:
-                #     val = float(far_up)
-                #     if val < 50:
-                #         sheet.write(row_idx, 14, far_up, styles["pink_delisting_apply"])
-                #     elif val > 70:
-                #         sheet.write(row_idx, 14, far_up, styles["red_text"])
-                #     else:
-                #         sheet.write(row_idx, 14, far_up, styles["date_right"])
-                # except:
-                #     sheet.write(row_idx, 14, far_up, styles["date_right"])
-                #
-                # # -------------------- 远跌 颜色规则 --------------------
-                # try:
-                #     val = float(far_down)
-                #     if val > 60:
-                #         sheet.write(row_idx, 15, far_down, styles["pink_delisting_apply"])
-                #     elif val < 30:
-                #         sheet.write(row_idx, 15, far_down, styles["red_text"])
-                #     else:
-                #         sheet.write(row_idx, 15, far_down, styles["date_right"])
-                # except:
-                #     sheet.write(row_idx, 15, far_down, styles["date_right"])
-
+                    sheetin.write(row_idx, 15, far_down, styles["base"])
 
             elif is_bond_allot_sheet:  # 配债股 普通背景色
                 # 取出字典 3 个值：下期新年报日期、分红日期、每十股分红
@@ -2600,9 +2318,9 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheet.write(row_idx, 10, next_report, styles["date_right"])
-                sheet.write(row_idx, 11, div_date, styles["date_right"])
-                sheet.write(row_idx, 12, per_div, styles["date_right"])
+                sheetin.write(row_idx, 10, next_report, styles["date_right"])
+                sheetin.write(row_idx, 11, div_date, styles["date_right"])
+                sheetin.write(row_idx, 12, per_div, styles["date_right"])
 
                 # ===================== 年化收益 =====================
                 annual_rate_text = ""
@@ -2625,11 +2343,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                     annual_val = 0.0
 
                 if annual_val >= 4.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
                 elif annual_val <= 1.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["red_text"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["red_text"])
                 else:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["date_right"])
 
                 # ===================== 远涨 / 远跌 =====================
                 struct_str = bond_allot_struct_dict.get(code, "")
@@ -2654,49 +2372,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_pink"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_red"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_red"])
                     else:
-                        sheet.write(row_idx, 14, far_up, styles["base"])
+                        sheetin.write(row_idx, 14, far_up, styles["base"])
                 except:
-                    sheet.write(row_idx, 14, far_up, styles["base"])
+                    sheetin.write(row_idx, 14, far_up, styles["base"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_pink"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_red"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_red"])
                     else:
-                        sheet.write(row_idx, 15, far_down, styles["base"])
+                        sheetin.write(row_idx, 15, far_down, styles["base"])
                 except:
-                    sheet.write(row_idx, 15, far_down, styles["base"])
-
-                # # -------------------- 远涨 颜色规则 --------------------
-                # try:
-                #     val = float(far_up)
-                #     if val < 50:
-                #         sheet.write(row_idx, 14, far_up, styles["pink_delisting_apply"])
-                #     elif val > 70:
-                #         sheet.write(row_idx, 14, far_up, styles["red_text"])
-                #     else:
-                #         sheet.write(row_idx, 14, far_up, styles["date_right"])
-                # except:
-                #     sheet.write(row_idx, 14, far_up, styles["date_right"])
-                #
-                # # -------------------- 远跌 颜色规则 --------------------
-                # try:
-                #     val = float(far_down)
-                #     if val > 60:
-                #         sheet.write(row_idx, 15, far_down, styles["pink_delisting_apply"])
-                #     elif val < 30:
-                #         sheet.write(row_idx, 15, far_down, styles["red_text"])
-                #     else:
-                #         sheet.write(row_idx, 15, far_down, styles["date_right"])
-                # except:
-                #     sheet.write(row_idx, 15, far_down, styles["date_right"])
+                    sheetin.write(row_idx, 15, far_down, styles["base"])
 
             elif is_fund_dividend_sheet:  # 分红基
                 item_list = fund_dividend_date_dict.get(code, ["", "", ""])
@@ -2704,9 +2398,9 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 next_date = item_list[1]
                 per_div = item_list[2]
 
-                sheet.write(row_idx, 10, last_date, styles["base"])
-                sheet.write(row_idx, 11, next_date, styles["base"])
-                sheet.write(row_idx, 12, per_div, styles["date_right"])
+                sheetin.write(row_idx, 10, last_date, styles["base"])
+                sheetin.write(row_idx, 11, next_date, styles["base"])
+                sheetin.write(row_idx, 12, per_div, styles["date_right"])
 
                 # 年化收益（和分红股一样）
                 annual_rate_text = ""
@@ -2722,7 +2416,7 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 except:
                     annual_rate_text = ""
 
-                # sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
+                # sheetin.write(row_idx, 13, annual_rate_text, styles["date_right"])
 
                 # -------------- 分红基 年化收益颜色 --------------
                 annual_val = 0.0
@@ -2733,11 +2427,11 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
 
                 # 普通行
                 if annual_val >= 4.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["pink_delisting_apply"])
                 elif annual_val <= 1.5:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["red_text"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["red_text"])
                 else:
-                    sheet.write(row_idx, 13, annual_rate_text, styles["date_right"])
+                    sheetin.write(row_idx, 13, annual_rate_text, styles["date_right"])
 
 
                 # ===================== 新增：远涨 远跌 =====================
@@ -2765,56 +2459,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_pink"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 14, far_up, styles["far_up_red"])
+                        sheetin.write(row_idx, 14, far_up, styles["far_up_red"])
                     else:
-                        sheet.write(row_idx, 14, far_up, styles["base"])
+                        sheetin.write(row_idx, 14, far_up, styles["base"])
                 except:
-                    sheet.write(row_idx, 14, far_up, styles["base"])
+                    sheetin.write(row_idx, 14, far_up, styles["base"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_pink"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 15, far_down, styles["far_down_red"])
+                        sheetin.write(row_idx, 15, far_down, styles["far_down_red"])
                     else:
-                        sheet.write(row_idx, 15, far_down, styles["base"])
+                        sheetin.write(row_idx, 15, far_down, styles["base"])
                 except:
-                    sheet.write(row_idx, 15, far_down, styles["base"])
-
-
-                # # 分红基 远涨 颜色：<50粉红，>70红色
-                # far_up_val = 0
-                # try:
-                #     far_up_val = int(dividend_fund_struct_dict[code].split(',')[0].strip())
-                # except:
-                #     far_up_val = 0
-                #
-                # if far_up_val < 50:
-                #     sheet.write(row_idx, 14, far_up, styles["pink_delisting_apply"])
-                # elif far_up_val > 70:
-                #     sheet.write(row_idx, 14, far_up, styles["red_text"])
-                # else:
-                #     sheet.write(row_idx, 14, far_up, styles["date_right"])
-                #
-                # # sheet.write(row_idx, 15, far_down, styles["date_right"])  # 远跌
-                #
-                # # 分红基 远跌 颜色：>60粉红，<30红色
-                # far_down_val = 0
-                # try:
-                #     far_down_val = int(dividend_fund_struct_dict[code].split(',')[1].strip())
-                # except:
-                #     far_down_val = 0
-                #
-                # if far_down_val > 60:
-                #     sheet.write(row_idx, 15, far_down, styles["pink_delisting_apply"])
-                # elif far_down_val < 30:
-                #     sheet.write(row_idx, 15, far_down, styles["red_text"])
-                # else:
-                #     sheet.write(row_idx, 15, far_down, styles["date_right"])
+                    sheetin.write(row_idx, 15, far_down, styles["base"])
 
             # ---------------------- 超跌基 ----------------------
             elif is_overdown_sheet:
@@ -2843,49 +2506,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 10, far_up, styles["far_up_pink"])
+                        sheetin.write(row_idx, 10, far_up, styles["far_up_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 10, far_up, styles["far_up_red"])
+                        sheetin.write(row_idx, 10, far_up, styles["far_up_red"])
                     else:
-                        sheet.write(row_idx, 10, far_up, styles["base"])
+                        sheetin.write(row_idx, 10, far_up, styles["base"])
                 except:
-                    sheet.write(row_idx, 10, far_up, styles["base"])
+                    sheetin.write(row_idx, 10, far_up, styles["base"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 11, far_down, styles["far_down_pink"])
+                        sheetin.write(row_idx, 11, far_down, styles["far_down_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 11, far_down, styles["far_down_red"])
+                        sheetin.write(row_idx, 11, far_down, styles["far_down_red"])
                     else:
-                        sheet.write(row_idx, 11, far_down, styles["base"])
+                        sheetin.write(row_idx, 11, far_down, styles["base"])
                 except:
-                    sheet.write(row_idx, 11, far_down, styles["base"])
-
-                # # -------------------- 远涨 --------------------
-                # try:
-                #     val = float(far_up)
-                #     if val < 50:
-                #         sheet.write(row_idx, 10, far_up, styles["pink_delisting_apply"])
-                #     elif val > 70:
-                #         sheet.write(row_idx, 10, far_up, styles["red_text"])
-                #     else:
-                #         sheet.write(row_idx, 10, far_up, styles["date_right"])
-                # except:
-                #     sheet.write(row_idx, 10, far_up, styles["date_right"])
-                #
-                # # -------------------- 远跌 --------------------
-                # try:
-                #     val = float(far_down)
-                #     if val > 60:
-                #         sheet.write(row_idx, 11, far_down, styles["pink_delisting_apply"])
-                #     elif val < 30:
-                #         sheet.write(row_idx, 11, far_down, styles["red_text"])
-                #     else:
-                #         sheet.write(row_idx, 11, far_down, styles["date_right"])
-                # except:
-                #     sheet.write(row_idx, 11, far_down, styles["date_right"])
+                    sheetin.write(row_idx, 11, far_down, styles["base"])
 
             # ---------------------- 海外基 ----------------------
             elif is_oversea_sheet:
@@ -2913,49 +2552,25 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 10, far_up, styles["far_up_pink"])
+                        sheetin.write(row_idx, 10, far_up, styles["far_up_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 10, far_up, styles["far_up_red"])
+                        sheetin.write(row_idx, 10, far_up, styles["far_up_red"])
                     else:
-                        sheet.write(row_idx, 10, far_up, styles["base"])
+                        sheetin.write(row_idx, 10, far_up, styles["base"])
                 except:
-                    sheet.write(row_idx, 10, far_up, styles["base"])
+                    sheetin.write(row_idx, 10, far_up, styles["base"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 11, far_down, styles["far_down_pink"])
+                        sheetin.write(row_idx, 11, far_down, styles["far_down_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 11, far_down, styles["far_down_red"])
+                        sheetin.write(row_idx, 11, far_down, styles["far_down_red"])
                     else:
-                        sheet.write(row_idx, 11, far_down, styles["base"])
+                        sheetin.write(row_idx, 11, far_down, styles["base"])
                 except:
-                    sheet.write(row_idx, 11, far_down, styles["base"])
-
-                # # 远涨
-                # try:
-                #     val = float(far_up)
-                #     if val < 50:
-                #         sheet.write(row_idx, 10, far_up, styles["pink_delisting_apply"])
-                #     elif val > 70:
-                #         sheet.write(row_idx, 10, far_up, styles["red_text"])
-                #     else:
-                #         sheet.write(row_idx, 10, far_up, styles["date_right"])
-                # except:
-                #     sheet.write(row_idx, 10, far_up, styles["date_right"])
-                #
-                # # 远跌
-                # try:
-                #     val = float(far_down)
-                #     if val > 60:
-                #         sheet.write(row_idx, 11, far_down, styles["pink_delisting_apply"])
-                #     elif val < 30:
-                #         sheet.write(row_idx, 11, far_down, styles["red_text"])
-                #     else:
-                #         sheet.write(row_idx, 11, far_down, styles["date_right"])
-                # except:
-                #     sheet.write(row_idx, 11, far_down, styles["date_right"])date_right
+                    sheetin.write(row_idx, 11, far_down, styles["base"])
 
             # ---------------------- 可转债 ----------------------
             elif is_swapbond_sheet:
@@ -2983,65 +2598,41 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 10, far_up, styles["far_up_pink"])
+                        sheetin.write(row_idx, 10, far_up, styles["far_up_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 10, far_up, styles["far_up_red"])
+                        sheetin.write(row_idx, 10, far_up, styles["far_up_red"])
                     else:
-                        sheet.write(row_idx, 10, far_up, styles["base"])
+                        sheetin.write(row_idx, 10, far_up, styles["base"])
                 except:
-                    sheet.write(row_idx, 10, far_up, styles["base"])
+                    sheetin.write(row_idx, 10, far_up, styles["base"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 11, far_down, styles["far_down_pink"])
+                        sheetin.write(row_idx, 11, far_down, styles["far_down_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 11, far_down, styles["far_down_red"])
+                        sheetin.write(row_idx, 11, far_down, styles["far_down_red"])
                     else:
-                        sheet.write(row_idx, 11, far_down, styles["base"])
+                        sheetin.write(row_idx, 11, far_down, styles["base"])
                 except:
-                    sheet.write(row_idx, 11, far_down, styles["base"])
-
-                # # 远涨
-                # try:
-                #     val = float(far_up)
-                #     if val < 50:
-                #         sheet.write(row_idx, 10, far_up, styles["pink_delisting_apply"])
-                #     elif val > 70:
-                #         sheet.write(row_idx, 10, far_up, styles["red_text"])
-                #     else:
-                #         sheet.write(row_idx, 10, far_up, styles["date_right"])
-                # except:
-                #     sheet.write(row_idx, 10, far_up, styles["date_right"])
-                #
-                # # 远跌
-                # try:
-                #     val = float(far_down)
-                #     if val > 60:
-                #         sheet.write(row_idx, 11, far_down, styles["pink_delisting_apply"])
-                #     elif val < 30:
-                #         sheet.write(row_idx, 11, far_down, styles["red_text"])
-                #     else:
-                #         sheet.write(row_idx, 11, far_down, styles["date_right"])
-                # except:
-                #     sheet.write(row_idx, 11, far_down, styles["date_right"])
+                    sheetin.write(row_idx, 11, far_down, styles["base"])
 
             elif is_performance_reversal_sheet:  # 业绩反转
                 # 摘帽申请日期
                 delisting_date = performance_reversal_delisting_application_dict.get(code, "")
                 if is_delisting_date_less_than_2months(code):
-                    sheet.write(row_idx, 10, delisting_date, styles["pink_delisting_apply"])
+                    sheetin.write(row_idx, 10, delisting_date, styles["pink_delisting_apply"])
                 else:
-                    sheet.write(row_idx, 10, delisting_date, styles["delisting_apply_right"])
+                    sheetin.write(row_idx, 10, delisting_date, styles["delisting_apply_right"])
 
                 # 周线
                 week_line = performance_reversal_week_line_dict.get(code, "")
                 week_line_stripped = week_line.strip()
                 if week_line_stripped in ("半周线", "周线涨"):
-                    sheet.write(row_idx, 11, week_line, styles["week_pink"])
+                    sheetin.write(row_idx, 11, week_line, styles["week_pink"])
                 else:
-                    sheet.write(row_idx, 11, week_line, styles["base"])
+                    sheetin.write(row_idx, 11, week_line, styles["base"])
 
                 # 远涨 + 远跌
                 far_data = performance_reversal_far_dict.get(code, ",").split(",")
@@ -3062,39 +2653,39 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
                 try:
                     val = int(far_up)
                     if val <= 50:
-                        sheet.write(row_idx, 12, far_up, styles["far_up_pink"])
+                        sheetin.write(row_idx, 12, far_up, styles["far_up_pink"])
                     elif val >= 70:
-                        sheet.write(row_idx, 12, far_up, styles["far_up_red"])
+                        sheetin.write(row_idx, 12, far_up, styles["far_up_red"])
                     else:
-                        sheet.write(row_idx, 12, far_up, styles["base"])
+                        sheetin.write(row_idx, 12, far_up, styles["base"])
                 except:
-                    sheet.write(row_idx, 12, far_up, styles["base"])
+                    sheetin.write(row_idx, 12, far_up, styles["base"])
 
                 # 远跌
                 try:
                     val = int(far_down.strip())
                     if val >= 60:
-                        sheet.write(row_idx, 13, far_down, styles["far_down_pink"])
+                        sheetin.write(row_idx, 13, far_down, styles["far_down_pink"])
                     elif val <= 30:
-                        sheet.write(row_idx, 13, far_down, styles["far_down_red"])
+                        sheetin.write(row_idx, 13, far_down, styles["far_down_red"])
                     else:
-                        sheet.write(row_idx, 13, far_down, styles["base"])
+                        sheetin.write(row_idx, 13, far_down, styles["base"])
                 except:
-                    sheet.write(row_idx, 13, far_down, styles["base"])
+                    sheetin.write(row_idx, 13, far_down, styles["base"])
 
                 # 审计：已ok → 粉红，雷 → 红色
                 audit_text = performance_reversal_audit_dict.get(code, "")
                 audit_stripped = audit_text.strip()
                 if audit_stripped.endswith("已ok"):
-                    sheet.write(row_idx, 14, audit_text, styles["audit_pink"])
+                    sheetin.write(row_idx, 14, audit_text, styles["audit_pink"])
                 elif audit_stripped.endswith("雷"):
-                    sheet.write(row_idx, 14, audit_text, styles["audit_red"])
+                    sheetin.write(row_idx, 14, audit_text, styles["audit_red"])
                 else:
-                    sheet.write(row_idx, 14, audit_text, styles["base"])
+                    sheetin.write(row_idx, 14, audit_text, styles["base"])
 
                 # 要点
                 memo = performance_reversal_memo_dict.get(code, "")
-                sheet.write(row_idx, 15, memo, styles["memo_left"])
+                sheetin.write(row_idx, 15, memo, styles["memo_left"])
 
 
             # elif is_combined_stock_sheet:  # 股票策略合并   //nouse
@@ -3110,31 +2701,30 @@ def write_sheet_data(sheet, data_list, styles, row_height=11 * 20, is_strategy_s
             #         dates = limit_up_callback_dividend_date_dict.get(code, ["", ""])
             #     else:
             #         dates = ["", ""]
-            #     sheet.write(row_idx, 10, dates[0], styles["date_right"])
-            #     sheet.write(row_idx, 11, dates[1], styles["date_right"])
+            #     sheetin.write(row_idx, 10, dates[0], styles["date_right"])
+            #     sheetin.write(row_idx, 11, dates[1], styles["date_right"])
         row_idx += 1
 
     if not is_strategy_sheet and summary_data and summary_percent:
         row_idx += 1
         name_row = row_idx + 1
-        sheet.row(name_row).height = row_height
+        sheetin.row(name_row).height = row_height
         col_idx = 0
         for name in summary_data.keys():
-            sheet.write(name_row, col_idx, name, styles["summary"])
+            sheetin.write(name_row, col_idx, name, styles["summary"])
             col_idx += 1
         amount_row = name_row + 1
-        sheet.row(amount_row).height = row_height
+        sheetin.row(amount_row).height = row_height
         col_idx = 0
         for amt in summary_data.values():
-            sheet.write(amount_row, col_idx, amt, styles["summary"])
+            sheetin.write(amount_row, col_idx, amt, styles["summary"])
             col_idx += 1
         percent_row = amount_row + 1
-        sheet.row(percent_row).height = row_height
+        sheetin.row(percent_row).height = row_height
         col_idx = 0
         for pct in summary_percent.values():
-            sheet.write(percent_row, col_idx, f"{pct}%", styles["summary"])
+            sheetin.write(percent_row, col_idx, f"{pct}%", styles["summary"])
             col_idx += 1
-
 
 
 
@@ -3306,14 +2896,16 @@ write_sheet_data(
 )
 
 for strategy_name in sorted_strategy_names:
+
     group_data = strategy_groups[strategy_name]
-    if not group_data:
+
+    if not group_data:    # 如果该策略没有股票，则跳过
         continue
 
-    # safe_name = strategy_name.replace("/", "").replace("\\", "").replace(":", "").replace("*", "").replace("?",
-    #                                                                                                        "").replace(
-    #     "[", "").replace("]", "")[:31]
+    # 把 Excel 不允许的非法字符全部删掉，并且名字不能长过31  （忽略，跳过）
     safe_name = strategy_name.replace("/", "").replace("\\", "").replace(":", "").replace("*", "").replace("?", "").replace( "[", "").replace("]", "")[:31]
+
+    # print(safe_name)
 
     if not safe_name:
         safe_name = "空策略"
