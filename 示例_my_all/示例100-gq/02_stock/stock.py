@@ -1145,7 +1145,7 @@ def write_sheet_data(
     }  # K是10
 
     # 应用列宽（5个特殊表用col_widths2，其他用col_widths）
-    special_sheets = ["分红股", "分红基", "涨停回调", "配债股", "小盘猛牛", "热点发展"]
+    special_sheets = ["分红股", "分红基", "涨停回调", "配债股", "小盘猛牛", "热点发展"]  # col_widths2
     current_sheet_name = sheetin.name.strip()
 
     # print(current_sheet_name)
@@ -1197,6 +1197,7 @@ def write_sheet_data(
     # 把表头（所有headers名称）按样式写入第一行
     for col_idx, header in enumerate(headers):
         sheetin.write(0, col_idx, header, styles["header"])
+
 
     if is_strategy_sheet and data_list:
         if is_combined_stock_sheet:  # 股票策略合并
@@ -2705,14 +2706,17 @@ def write_sheet_data(
             #     sheetin.write(row_idx, 11, dates[1], styles["date_right"])
         row_idx += 1
 
-    if not is_strategy_sheet and summary_data and summary_percent:
+    # 写入总仓位sheet
+    if not is_strategy_sheet and summary_data and summary_percent:   # 判断是总仓位，并且有数据
         row_idx += 1
         name_row = row_idx + 1
         sheetin.row(name_row).height = row_height
+
         col_idx = 0
         for name in summary_data.keys():
             sheetin.write(name_row, col_idx, name, styles["summary"])
             col_idx += 1
+
         amount_row = name_row + 1
         sheetin.row(amount_row).height = row_height
         col_idx = 0
@@ -2728,14 +2732,13 @@ def write_sheet_data(
 
 
 
-
 # ---------------------- 16. 数据读取与处理 -------应是程序运行start---------------
 old_workbook = xlrd.open_workbook("1234.xls")
 position_dict = {}
 
 # 依次遍历下面的sheet
-for sheet_name in ["01", "02", "03", "04"]:
-# for sheet_name in ["01", "02"]:
+# for sheet_name in ["01", "02", "03", "04"]:
+for sheet_name in ["01", "02"]:
 
     sheet = old_workbook.sheet_by_name(sheet_name)  # 当前的sheet neme，如 “01”
 

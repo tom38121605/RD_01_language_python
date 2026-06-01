@@ -2,124 +2,158 @@
 
 sorted_positions
 [
-('605368', {'名称': '蓝天燃气', '总数量': 300.0, '当前J': 7.24, 'JE': 2172, 'C位百分比': 0.4}), 
+('605368', {'名称': '蓝天RQ', '总数量': 300.0, '当前J': 7.24, 'JE': 2172, 'C位百分比': 0.4}), 
 ('600662', {'名称': '外服控G', '总数量': 200.0, '当前J': 4.62, 'JE': 924, 'C位百分比': 0.2}), 
-('601916', {'名称': '浙商银行', '总数量': 100.0, '当前J': 2.97, 'JE': 297, 'C位百分比': 0.1})
+('601916', {'名称': '浙商YH', '总数量': 100.0, '当前J': 2.97, 'JE': 297, 'C位百分比': 0.1})
 ]
 
 full_data
 [
-('605368', {'名称': '蓝天燃气', '总数量': 300.0, '当前J': 7.24, 'JE': 2172, 'C位百分比': 0.4}, '分HG', 1, 2172, 0.4), 
+('605368', {'名称': '蓝天RQ', '总数量': 300.0, '当前J': 7.24, 'JE': 2172, 'C位百分比': 0.4}, '分HG', 1, 2172, 0.4), 
 ('600662', {'名称': '外服控G', '总数量': 200.0, '当前J': 4.62, 'JE': 924, 'C位百分比': 0.2}, 'ZT回调', 2, 3096, 0.6), 
-('601916', {'名称': '浙商银行', '总数量': 100.0, '当前J': 2.97, 'JE': 297, 'C位百分比': 0.1}, '分HG', 3, 3393, 0.7)
+('601916', {'名称': '浙商YH', '总数量': 100.0, '当前J': 2.97, 'JE': 297, 'C位百分比': 0.1}, '分HG', 3, 3393, 0.7)
 ]
 
 strategy_groups
 {
 '分HG': [
-    ('605368', {'名称': '蓝天燃气', '总数量': 300.0, '当前J': 7.24, 'JE': 2172, 'C位百分比': 0.4}, '分HG', 1, 2172, 0.4),   / /分红股， 金额排序 （以后会改）
-    ('601916', {'名称': '浙商银行', '总数量': 100.0, '当前J': 2.97, 'JE': 297, 'C位百分比': 0.1}, '分HG', 3, 3393, 0.7)
+    ('605368', {'名称': '蓝天RQ', '总数量': 300.0, '当前J': 7.24, 'JE': 2172, 'C位百分比': 0.4}, '分HG', 1, 2172, 0.4),   / /分HG， 金额排序 （以后会改）
+    ('601916', {'名称': '浙商YH', '总数量': 100.0, '当前J': 2.97, 'JE': 297, 'C位百分比': 0.1}, '分HG', 3, 3393, 0.7)
        ], 
 
 'ZT回调': [
-    ('605368', {'名称': '蓝天燃气', '总数量': 300.0, '当前J': 7.24, 'JE': 2172, 'C位百分比': 0.4}, 'ZT回调', 1, 2172, 0.4),    / /涨停回调， 金额排序 （以后会改）
+    ('605368', {'名称': '蓝天RQ', '总数量': 300.0, '当前J': 7.24, 'JE': 2172, 'C位百分比': 0.4}, 'ZT回调', 1, 2172, 0.4),    / /ZT回调， 金额排序 （以后会改）
     ('600662', {'名称': '外服控G', '总数量': 200.0, '当前J': 4.62, 'JE': 924, 'C位百分比': 0.2}, 'ZT回调', 2, 3096, 0.6)
     ]
 
 }
  
 strategy_total_amount
-{'分红股': 2469, '涨停回调': 924}
+{'分HG': 2469, 'ZT回调': 924}
 
 strategy_total_percent
-{'分红股': 0.5, '涨停回调': 0.2}
+{'分HG': 0.5, 'ZT回调': 0.2}
 
 
 order_dict
-{'分红股': 0, '业绩反转': 1, '小盘猛牛': 2, '涨停回调': 3, '配债股': 4, '热点发展': 5, '分红基': 6, '套利基': 7, '超跌基': 8, '海外基': 9, '可转债': 10, '空策略': 11}
+{'分HG': 0, '业绩反转': 1, '小盘猛牛': 2, 'ZT回调': 3, '配债G': 4, '热点发展': 5, '分H基': 6, '套利基': 7, '超跌基': 8, '海外基': 9, '可转债': 10, '空策略': 11}
 
 sorted_strategy_names     //对实际用到的策略排序， from  字典strategy_total_amount
-['分红股', '涨停回调']
+['分HG', 'ZT回调']
 
 summary_data
-{'分红股': 2469, '涨停回调': 924}
+{'分HG': 2469, 'ZT回调': 924}
 
 summary_percent
-{'分红股': 0.5, '涨停回调': 0.2}
+{'分HG': 0.5, 'ZT回调': 0.2}
 
 
 current_sheet_name
 总仓位2
-分红股
-涨停回调
+分HG
+ZT回调
 
 
+
+
+定义       //注释，以“调用一”的分红股策略为例来讲解
+def write_sheet_data(
+                     sheetin,                          // 按顺序，传入参数 total_capital
+                     data_list,                        // 按顺序，传入参数 group_data
+                     styles,                           // 按顺序，传入参数 styles
+ 
+                     row_height=11 * 20,                // 按顺序，(有默认值，没传）
+
+                     is_strategy_sheet=False,          // 按名字 ，传入参数值 True
+
+                     summary_data=None,                // 按顺序，(有默认值，没传）
+                     summary_percent=None,             // 按顺序，(有默认值，没传）
+
+                     total_capital=500000,             // 按顺序，传入参数 total_capital  （500000）
+
+                     is_stock_dividend_sheet=False,                  // 按名字，传入参数 (strategy_name == "分HG")  //True
+                     is_fund_dividend_sheet=False,                   // 按名字，传入参数值 False
+                     is_small_cap_sheet=False,                       // 按名字，传入参数值 False
+                     is_hot_deve9lopment_sheet=False,                // 按名字，传入参数值 False
+                     is_performance_reversal_sheet=False,            // 按名字，传入参数值 False
+                     is_limit_up_callback_sheet=False,               // 按名字，传入参数值 False
+                     is_combined_stock_sheet=False,                  // 按名字，传入参数值 False
+                     is_bond_allot_sheet=False,                      // 按名字，传入参数值 False
+                     is_overdown_sheet=False,                        // 按名字，传入参数值 False
+                     is_oversea_sheet=False,                         // 按名字，传入参数值 False
+                     is_swapbond_sheet=False):                       // 按名字，传入参数值 False
+
+
+调用一
+
+    strategy_sheet = final_workbook.add_sheet(safe_name)    //分HG
 
     write_sheet_data(
-        strategy_sheet, group_data, styles,           // 按顺序
-        is_strategy_sheet=True,                              // 按顺序
-        total_capital=total_capital,                        // 按顺序
+        strategy_sheet,                                     // 按顺序，传入参数 total_capital
+        group_data,                                         // 按顺序，传入参数 group_data
+        styles,                                             // 按顺序，传入参数 styles
 
-        is_stock_dividend_sheet=is_stock_dividend_sheet,                             // 按名字
-        is_fund_dividend_sheet=is_fund_dividend_sheet,                               // 按名字
-        is_small_cap_sheet=is_small_cap_sheet,                                               // 按名字
-        is_hot_development_sheet=is_hot_development_sheet,                   // 按名字
-        is_performance_reversal_sheet=is_performance_reversal_sheet,     // 按名字
-        is_limit_up_callback_sheet=is_limit_up_callback_sheet,                    // 按名字
-        is_bond_allot_sheet=is_bond_allot_sheet,                                          // 按名字
-        is_overdown_sheet=is_overdown_sheet,                                            // 按名字
-        is_oversea_sheet=is_oversea_sheet,                                                    // 按名字
-        is_swapbond_sheet=is_swapbond_sheet                                           // 按名字
+        is_strategy_sheet=True,                             // 按名字，传入参数值 True
+
+        total_capital=total_capital,                         // 按名字，传入参数 total_capital  （500000）
+
+        is_stock_dividend_sheet=is_stock_dividend_sheet,     // 按名字，传入参数 (strategy_name == "分HG")  //True
+        is_fund_dividend_sheet=is_fund_dividend_sheet,                               // 按名字，传入参数值 False
+        is_small_cap_sheet=is_small_cap_sheet,                                               // 按名字，传入参数值 False
+        is_hot_development_sheet=is_hot_development_sheet,                   // 按名字，传入参数值 False
+        is_performance_reversal_sheet=is_performance_reversal_sheet,     // 按名字，传入参数值 False
+        is_limit_up_callback_sheet=is_limit_up_callback_sheet,                    // 按名字，传入参数值 False
+        is_bond_allot_sheet=is_bond_allot_sheet,                                          // 按名字，传入参数值 False
+        is_overdown_sheet=is_overdown_sheet,                                            // 按名字，传入参数值 False
+        is_oversea_sheet=is_oversea_sheet,                                                    // 按名字，传入参数值 False
+        is_swapbond_sheet=is_swapbond_sheet                                           // 按名字，传入参数值 False
 
     )
 
 
-def write_sheet_data(
-                     sheetin,                                     // 按顺序
-                     data_list, styles,                       // 按顺序
-                     row_height=11 * 20,                // 按顺序
 
-                     is_strategy_sheet=False,          // 按顺序 （但又默认值，可不传）
-                     summary_data=None,            // 按顺序 （但又默认值，可不传）
-                     summary_percent=None,       // 按顺序 （但又默认值，可不传）
-                     total_capital=500000,             // 按顺序 （但又默认值，可不传）
+调用二
 
-                     is_stock_dividend_sheet=False,                  // 按名字
-                     is_fund_dividend_sheet=False,                   // 按名字
-                     is_small_cap_sheet=False,                          // 按名字
-                     is_hot_deve9lopment_sheet=False,            // 按名字
-                     is_performance_reversal_sheet=False,     // 按名字
-                     is_limit_up_callback_sheet=False,             // 按名字
-                     is_combined_stock_sheet=False,              // 按名字
-                     is_bond_allot_sheet=False,                       // 按名字
-                     is_overdown_sheet=False,                        // 按名字
-                     is_oversea_sheet=False,                            // 按名字
-                     is_swapbond_sheet=False):                      // 按名字
+main_sheet = final_workbook.add_sheet(main_sheet_name) 
+
+write_sheet_data(
+    main_sheet,                // 按顺序，传入参数 main_sheet
+    full_data,                 // 按顺序，传入参数 full_data
+    styles,                    // 按顺序，传入参数 styles
+
+    is_strategy_sheet=False,    // 按名字，传入参数值 False
+
+    summary_data=summary_data,        // 按顺序，传入参数 summary_data
+    summary_percent=summary_percent,   // 按顺序，传入参数 summary_percent
+    total_capital=total_capital        // 按顺序，传入参数 total_capital  （500000）
+
+
+ 
 
 
 sorted_strategy_data
 [
-    ('601916', {'名称': '浙商银行', '总数量': 100.0, '当前价': 2.97, '金额': 297, '仓位百分比': 0.1}, '分红股', 3, 3393, 0.7),          //分红股， 分红日期排序
-    ('605368', {'名称': '蓝天燃气', '总数量': 300.0, '当前价': 7.24, '金额': 2172, '仓位百分比': 0.4}, '分红股', 1, 2172, 0.4)
+    ('601916', {'名称': '浙商YH', '总数量': 100.0, '当前价': 2.97, '金额': 297, '仓位百分比': 0.1}, '分HG', 3, 3393, 0.7),          //分HG， 分H日期排序
+    ('605368', {'名称': '蓝天RQ', '总数量': 300.0, '当前价': 7.24, '金额': 2172, '仓位百分比': 0.4}, '分HG', 1, 2172, 0.4)
 ]
 [
-    ('605368', {'名称': '蓝天燃气', '总数量': 300.0, '当前价': 7.24, '金额': 2172, '仓位百分比': 0.4}, '涨停回调', 1, 2172, 0.4),   // 涨停回调， 分红日期排序
-    ('600662', {'名称': '外服控股', '总数量': 200.0, '当前价': 4.62, '金额': 924, '仓位百分比': 0.2}, '涨停回调', 2, 3096, 0.6)
+    ('605368', {'名称': '蓝天RQ', '总数量': 300.0, '当前价': 7.24, '金额': 2172, '仓位百分比': 0.4}, 'ZT回调', 1, 2172, 0.4),   // ZT回调， 分H日期排序
+    ('600662', {'名称': '外服控G', '总数量': 200.0, '当前价': 4.62, '金额': 924, '仓位百分比': 0.2}, 'ZT回调', 2, 3096, 0.6)
 ]
 
 data_list
 [
-    ('605368', {'名称': '蓝天燃气', '总数量': 300.0, '当前价': 7.24, '金额': 2172, '仓位百分比': 0.4}, '分红股', 1, 2172, 0.4),      // 总仓位， 金额排序
-    ('600662', {'名称': '外服控股', '总数量': 200.0, '当前价': 4.62, '金额': 924, '仓位百分比': 0.2}, '涨停回调', 2, 3096, 0.6), 
-    ('601916', {'名称': '浙商银行', '总数量': 100.0, '当前价': 2.97, '金额': 297, '仓位百分比': 0.1}, '分红股', 3, 3393, 0.7)
+    ('605368', {'名称': '蓝天RQ', '总数量': 300.0, '当前价': 7.24, '金额': 2172, '仓位百分比': 0.4}, '分HG', 1, 2172, 0.4),      // 总仓位， 金额排序
+    ('600662', {'名称': '外服控G', '总数量': 200.0, '当前价': 4.62, '金额': 924, '仓位百分比': 0.2}, 'ZT回调', 2, 3096, 0.6), 
+    ('601916', {'名称': '浙商YH', '总数量': 100.0, '当前价': 2.97, '金额': 297, '仓位百分比': 0.1}, '分HG', 3, 3393, 0.7)
 ]
 [
-    ('601916', {'名称': '浙商银行', '总数量': 100.0, '当前价': 2.97, '金额': 297, '仓位百分比': 0.1}, '分红股', 1, 297, 0.1),         //分红股， 分红日期排序
-    ('605368', {'名称': '蓝天燃气', '总数量': 300.0, '当前价': 7.24, '金额': 2172, '仓位百分比': 0.4}, '分红股', 2, 2469, 0.5)
+    ('601916', {'名称': '浙商YH', '总数量': 100.0, '当前价': 2.97, '金额': 297, '仓位百分比': 0.1}, '分HG', 1, 297, 0.1),         //分HG， 分H日期排序
+    ('605368', {'名称': '蓝天RQ', '总数量': 300.0, '当前价': 7.24, '金额': 2172, '仓位百分比': 0.4}, '分HG', 2, 2469, 0.5)
 ]
 [
-    ('605368', {'名称': '蓝天燃气', '总数量': 300.0, '当前价': 7.24, '金额': 2172, '仓位百分比': 0.4}, '涨停回调', 1, 2172, 0.4),    // 涨停回调， 分红日期排序
-    ('600662', {'名称': '外服控股', '总数量': 200.0, '当前价': 4.62, '金额': 924, '仓位百分比': 0.2}, '涨停回调', 2, 3096, 0.6)
+    ('605368', {'名称': '蓝天RQ', '总数量': 300.0, '当前价': 7.24, '金额': 2172, '仓位百分比': 0.4}, 'ZT回调', 1, 2172, 0.4),    // ZT回调， 分H日期排序
+    ('600662', {'名称': '外服控G', '总数量': 200.0, '当前价': 4.62, '金额': 924, '仓位百分比': 0.2}, 'ZT回调', 2, 3096, 0.6)
 ]
 
 
@@ -128,23 +162,23 @@ dividend_date
 2026-06-18 00:00:00
 
 dividend_stock_date_dict = {
-    "605368": ["25年报 26/04/29", "大会 无效 26/05/13", "4+0"],    # 蓝天燃气
-    "601916": ["25年报 26/03/31", "大会 26/06/18", "1.31"],           # 浙商银行
+    "605368": ["25年报 26/04/29", "大会 无效 26/05/13", "4+0"],    # 蓝天RQ
+    "601916": ["25年报 26/03/31", "大会 26/06/18", "1.31"],           # 浙商YH
 }
 
 limit_up_callback_dividend_date_dict = {
-    "605368": ["25年报 26/04/29", "大会 无效 26/05/13", "4+0"],  # 蓝天燃气
-    "600662": ["25年报 26/04/24", "预案 26/04/24", "1.5"],  # 外服控股
+    "605368": ["25年报 26/04/29", "大会 无效 26/05/13", "4+0"],  # 蓝天RQ
+    "600662": ["25年报 26/04/24", "预案 26/04/24", "1.5"],  # 外服控G
 }
 
 fund_dividend_date_dict = {
     "510720": ["登记 26/04/13", "预计 26/05/13", "0.03*12" ],  # 红利国企，模仿上次填
-    "513820": ["登记 26/04/24", "预计 26/05/24", "0.01*12" ],  # 港股通红利，模仿上次填
+    "513820": ["登记 26/04/24", "预计 26/05/24", "0.01*12" ],  # 港G通红利，模仿上次填
 }
 
 
 
- # 解析分红日期二
+ # 解析分H日期二
 def parse_date2(date_str):   # 内部子函数
 
     if not date_str or "待定"  in date_str or "无效"  in date_str:   # 日期为"", 或含有"无效", "待定"，返回 2099/12/31
@@ -171,15 +205,15 @@ def parse_date2(date_str):   # 内部子函数
 
 
 
-0. 分红股 排序测试
+0. 分HG 排序测试
     。日期函数使用统一的解释函数 parse_dividend_date
     。 parse_dividend_date 放在外面，做全局函数
 
 
 
-任务1： 业绩反转策略，第二排序，按股票代码
+任务1： 业绩反转策略，第二排序，按G票代码
 
-任务9： 去掉股票合并   //等所有修改完成后
+任务9： 去掉G票合并   //等所有修改完成后
 
 
 
