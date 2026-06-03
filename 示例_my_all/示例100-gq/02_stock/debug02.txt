@@ -53,21 +53,22 @@ current_sheet_name
 分HG
 ZT回调
 
+ROW_HEIGHT = 11 * 20
+TOTAL_CAPITAL = 500000
+
+total_capital=500000
 
 
 
-定义       //注释，以“调用一”的分红股策略为例来讲解
-def write_sheet_data(
+//================各策略个股============================
+
+
+定义一       //注释，以“调用二”的分红股策略为例来讲解
+
+def write_sheet_data1(
                      sheetin,                          // 按顺序，传入参数 total_capital
                      data_list,                        // 按顺序，传入参数 group_data
                      styles,                           // 按顺序，传入参数 styles
- 
-                     row_height=11 * 20,                // 按顺序，(有默认值，没传）
-
-                     is_strategy_sheet=False,          // 按名字 ，传入参数值 True
-
-                     summary_data=None,                // 按顺序，(有默认值，没传）
-                     summary_percent=None,             // 按顺序，(有默认值，没传）
 
                      total_capital=500000,             // 按顺序，传入参数 total_capital  （500000）
 
@@ -84,16 +85,13 @@ def write_sheet_data(
                      is_swapbond_sheet=False):                       // 按名字，传入参数值 False
 
 
-调用一
 
-    strategy_sheet = final_workbook.add_sheet(safe_name)    //分HG
+调用一： 各股策略
 
-    write_sheet_data(
-        strategy_sheet,                                     // 按顺序，传入参数 total_capital
+write_sheet_data1(
+        strategy_sheet,                               // 按顺序，传入参数 strategy_sheet
         group_data,                                         // 按顺序，传入参数 group_data
         styles,                                             // 按顺序，传入参数 styles
-
-        is_strategy_sheet=True,                             // 按名字，传入参数值 True
 
         total_capital=total_capital,                         // 按名字，传入参数 total_capital  （500000）
 
@@ -107,28 +105,41 @@ def write_sheet_data(
         is_overdown_sheet=is_overdown_sheet,                                            // 按名字，传入参数值 False
         is_oversea_sheet=is_oversea_sheet,                                                    // 按名字，传入参数值 False
         is_swapbond_sheet=is_swapbond_sheet                                           // 按名字，传入参数值 False
-
     )
 
 
-
-调用二
-
-main_sheet = final_workbook.add_sheet(main_sheet_name) 
-
-write_sheet_data(
-    main_sheet,                // 按顺序，传入参数 main_sheet
-    full_data,                 // 按顺序，传入参数 full_data
-    styles,                    // 按顺序，传入参数 styles
-
-    is_strategy_sheet=False,    // 按名字，传入参数值 False
-
-    summary_data=summary_data,        // 按顺序，传入参数 summary_data
-    summary_percent=summary_percent,   // 按顺序，传入参数 summary_percent
-    total_capital=total_capital        // 按顺序，传入参数 total_capital  （500000）
-
+//================各策略个股=======end=====================
 
  
+
+//================总仓位============================
+
+
+定义二：
+def write_sheet_data2(
+        sheetin,                                           // 按顺序，传入参数 main_sheet
+        data_list,                                        // 按顺序，传入参数 full_data
+        styles,                                            // 按顺序，传入参数 styles
+
+        summary_data=None,             // 按顺序，传入参数 summary_data
+        summary_percent=None,       // 按顺序，传入参数 summary_percent
+        total_capital=500000):            // 按顺序，传入参数 total_capital  （500000）
+
+
+调用二： 总仓位
+
+write_sheet_data2(
+    main_sheet,           // 按顺序，传入参数 main_sheet
+    full_data,              // 按顺序，传入参数 full_data
+    styles,                   // 按顺序，传入参数 styles
+
+    summary_data=summary_data,              // 按顺序，传入参数 summary_data
+    summary_percent=summary_percent,   // 按顺序，传入参数 summary_percent
+    total_capital=total_capital                       // 按顺序，传入参数 total_capital  （500000）
+)
+
+
+//================总仓位======end======================
 
 
 sorted_strategy_data
