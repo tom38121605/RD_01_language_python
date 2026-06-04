@@ -1,4 +1,16 @@
 ﻿
+ROW_HEIGHT = 11 * 20
+
+//TOTAL_CAPITAL = 500000
+total_capital=500000
+
+
+
+
+疑问1:  group_data中，并没有分H日期，它是怎么按分H日期排序的
+答： 是因为在  write_sheet_data2 中的开始部分，把group_data 和日期字典函数合并在一起，组成了新的字典
+
+
 
 sorted_positions
 [
@@ -53,10 +65,7 @@ current_sheet_name
 分HG
 ZT回调
 
-ROW_HEIGHT = 11 * 20
-TOTAL_CAPITAL = 500000
 
-total_capital=500000
 
 
 
