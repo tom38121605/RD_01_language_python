@@ -142,75 +142,75 @@ print("num =", idatanum2)
 
 # ================================== print pic start=======================================
 
-# #----------------------- x channel ----10R------------------
-#
-# print(x1points)
-#
-# #---show x data
-# plt.plot(x1points, color='blue')
-# plt.ylabel('datax -- xchannel 10R', fontsize=12)
-# plt.axis([0, idatanum2, 5000000 , 5350000])  # 1KHz 10S SHORT
-# plt.show()
-#
-#
-# # #---show x I (mA)
-# x1points = np.array(x1points, dtype=np.float64)
-# KKK = VREF /8388608 / 47 /10
-# x1points = (x1points * KKK).astype(float)
-#
-# t = [i / SAMPLERATE for i in range(len(x1points))]
-# plt.plot(t, x1points, color='blue')
-# plt.xlabel('time (s)', fontsize=12)
-# plt.ylabel('I -- xchannel 10R(mA)', fontsize=12)
-# plt.axis([0, idatanum2/SAMPLERATE, 5000000 * KKK , 5350000 * KKK ])  # 1KHz 10S SHORT
-#
-# plt.savefig(pic_dir  + "10R_I.png")
-# plt.show()
-#
-#
-#
-# #----------------------- y channel -----Bridge-----------------
-#
-# print(y1points)
-#
-# # ---show y data
-# plt.ylabel('datay -- ychannel  bridge', fontsize=12)
-# plt.plot(y1points, color='red')
-# plt.axis([0, idatanum2, 6250000, 6850000])  # 1KHz 10S SHORT
-# plt.show()
-#
-#
-# #---show y vol (mv)
-# y1points = np.array(y1points, dtype=np.float64)
-# KKK = VREF/1000 /8388608/ 0.82
-# y1points = (y1points * KKK).astype(float)
-#
-# t = [i / SAMPLERATE for i in range(len(y1points))]
-# plt.plot(t, y1points, color='red')
-# plt.xlabel('time (s)', fontsize=12)
-# plt.ylabel('V -- ychannel  bridge(v)', fontsize=12)
-# plt.axis([0, len(y1points)/SAMPLERATE, 6250000 * KKK, 6850000 * KKK])
-#
-# plt.savefig(pic_dir  + "bridge_v.png")
-# plt.show()
-#
-#
-# #---show y Res (R)
-# y1points = y1points/x1points *1000
-# print(y1points)
-#
-# t = [i / SAMPLERATE for i in range(len(y1points))]
-#
-# plt.plot(t, y1points, color='red')
-# plt.xlabel('time (s)', fontsize=12)
-# plt.ylabel('R -- ychannel bridge (Ω)', fontsize=12)
-# plt.axis([0, len(y1points)/SAMPLERATE, 700,760 ])
-#
-# plt.savefig(pic_dir  + "bridge_R.png")
-# plt.show()
-#
-#
-#
+#----------------------- x channel ----10R------------------
+
+print(x1points)
+
+#---show x data
+plt.plot(x1points, color='blue')
+plt.ylabel('datax -- xchannel 10R', fontsize=12)
+plt.axis([0, idatanum2, -1000000 , 6000000])  # 1KHz 10S SHORT
+plt.show()
+
+
+# #---show x I (mA)
+x1points = np.array(x1points, dtype=np.float64)
+KKK = VREF /8388608 / 47 /10
+x1points2 = (x1points * KKK).astype(float)
+
+t = [i / SAMPLERATE for i in range(len(x1points))]
+plt.plot(t, x1points2, color='blue')
+plt.xlabel('time (s)', fontsize=12)
+plt.ylabel('I -- xchannel 10R(mA)', fontsize=12)
+plt.axis([0, idatanum2/SAMPLERATE, -1000000 * KKK , 6000000 * KKK ])  # 1KHz 10S SHORT
+
+plt.savefig(pic_dir  + "10R_I.png")
+plt.show()
+
+
+
+#----------------------- y channel -----Bridge-----------------
+
+print(y1points)
+
+# ---show y data
+plt.ylabel('datay -- ychannel  bridge', fontsize=12)
+plt.plot(y1points, color='red')
+plt.axis([0, idatanum2, -1000000, 7000000])  # 1KHz 10S SHORT
+plt.show()
+
+
+#---show y vol (mv)
+y1points = np.array(y1points, dtype=np.float64)
+KKK = VREF/1000 /8388608/ 0.82
+y1points2 = (y1points * KKK).astype(float)
+
+t = [i / SAMPLERATE for i in range(len(y1points))]
+plt.plot(t, y1points2, color='red')
+plt.xlabel('time (s)', fontsize=12)
+plt.ylabel('V -- ychannel  bridge(v)', fontsize=12)
+plt.axis([0, len(y1points2)/SAMPLERATE, -1000000 * KKK, 7000000 * KKK])
+
+plt.savefig(pic_dir  + "bridge_v.png")
+plt.show()
+
+
+#---show y Res (R)
+y1points3 = y1points2/x1points2 *1000
+print(y1points)
+
+t = [i / SAMPLERATE for i in range(len(y1points))]
+
+plt.plot(t, y1points3, color='red')
+plt.xlabel('time (s)', fontsize=12)
+plt.ylabel('R -- ychannel bridge (Ω)', fontsize=12)
+plt.axis([0, len(y1points3)/SAMPLERATE, -10000,10000 ])
+
+plt.savefig(pic_dir  + "bridge_R.png")
+plt.show()
+
+
+
 #
 # # =======================参考================================================
 #
