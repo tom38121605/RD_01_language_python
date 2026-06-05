@@ -274,6 +274,7 @@
         # 重点： x -- 当前行的所有数据
             return  order_dict.get(x, len(order_dict))    # len(order_dict)  -- 指默认最大值，就是排在最后面的意思
 
+
 11. 把名字 n 当作列表sorted_strategy_name的 key， 从字典strategy_total_amount里取出对应的值，合成新的字典summary_data
 
      # summary_data = {n: strategy_total_amount[n] for n in sorted_strategy_names}      # 持仓策略各占多少金额统计 (按顺序后)
@@ -293,4 +294,38 @@
    summary_data = {n: strategy_total_amount[n] for n in sorted_strategy_names} 
 
    print(summary_data)      #  { "策略A": 200,  "策略B": 100,  "策略C": 300 }    # 好的顺序
+
+
+12. 用另一个字典的学生学号的年龄，给本字典的学生排序
+    分析:   get_sort_key的作用是把age_list的age拼接在data_list尾部，然后按age排序，排完序后，再把尾部的age去掉
+
+    举例： 
+
+      data_list = [
+          {"code": 23, "name": "A"},  # A
+          {"code": 32, "name": "B"},  # B
+          {"code": 12, "name": "C"},  # C
+      ]
+
+      age_list = [
+          {"code": 23, "age": 20},   # A 20岁
+          {"code": 32, "age": 18},   # B 18岁
+          {"code": 12, "age": 25},   # C 25岁
+      ]
+
+
+      def get_sort_key(item):
+          code = item["code"]  # 拿到这个人的code
+
+          # 去 age_list 找同code 的年龄
+          for age_item in age_list:
+              if age_item["code"] == code:
+                  return age_item["age"]  # 返回年龄！
+
+
+      sorted_data = sorted(data_list, key=get_sort_key)
+
+      print(sorted_data)    # [ {'code': 32, 'name': 'B'},   {'code': 23, 'name': 'A'},   {'code': 12, 'name': 'C'} ]
+
+
 
