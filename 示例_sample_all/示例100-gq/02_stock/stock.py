@@ -277,7 +277,7 @@ performance_reversal_delisting_application_dict = {
     "600892": "25年报 26/04/30",  # *ST大晟
 
     "002124": "预重整日期 26/11/09",  # 天邦食品  ok
-    "300311": "26/07/18",  # ST任子行
+    "300311": "摘帽申请 26/07/18",  # ST任子行
     "000903": "摘帽申请 无效 26/08/08",  # ST云动
     "300527": "摘帽申请 26/09/16",  # ST应急
     "300366": "摘帽申请 26/10/24",  # ST创意
@@ -525,10 +525,123 @@ multi_strategy_codes = {
 }
 
 
+# ---------------------- 11. 辅助函数 ----------------------
 
-# ---------------------- 10. 日期解析工具函数 ----------------------
+def _calc_annual_rate(per_div, current_price):
+    """计算年化收益"""
+    try:
+        div_str = str(per_div).strip()
+        clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
+        div_val = float(eval(clean_expr))
+        price = float(current_price)
+        if price > 0 and div_val >= 0:
+            return f"{(div_val / 10) / price * 100:.2f}"
+    except:
+        pass
+    return ""
 
-# 解析分红日期二
+
+def _write_annual_rate(sheetin, row_idx, col_idx, annual_rate_text, styles, is_yellow=False):
+    """写入年化收益并应用颜色"""
+    annual_val = 0.0
+    try:
+        annual_val = float(annual_rate_text)
+    except:
+        annual_val = 0.0
+
+    if is_yellow:
+        if annual_val >= 4.5:
+            sheetin.write(row_idx, col_idx, annual_rate_text, styles["yellow_pink_delisting_apply"])
+        elif annual_val <= 1.5:
+            sheetin.write(row_idx, col_idx, annual_rate_text, styles["yellow_red_text"])
+        else:
+            sheetin.write(row_idx, col_idx, annual_rate_text, styles["yellow_date_right"])
+    else:
+        if annual_val >= 4.5:
+            sheetin.write(row_idx, col_idx, annual_rate_text, styles["pink_delisting_apply"])
+        elif annual_val <= 1.5:
+            sheetin.write(row_idx, col_idx, annual_rate_text, styles["red_text"])
+        else:
+            sheetin.write(row_idx, col_idx, annual_rate_text, styles["date_right"])
+
+
+def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, styles, is_yellow=False):
+    """写入远涨和远跌数据并应用颜色"""
+    far_up = ""
+    far_down = ""
+    if struct_str:
+        parts = struct_str.split(",")
+        if len(parts) >= 2:
+            far_up = parts[0].strip()
+            far_down = parts[1].strip()
+
+    # 乘100并取整
+    try:
+        far_up = str(int(float(far_up) * 100))
+    except:
+        far_up = ""
+    try:
+        far_down = str(int(abs(float(far_down)) * 100))
+    except:
+        far_down = ""
+
+    # 选择样式
+    if is_yellow:
+        # 远涨
+        try:
+            val = int(far_up)
+            if val <= 50:
+                far_up_style = styles["far_up_yellow_pink"]
+            elif val >= 70:
+                far_up_style = styles["far_up_yellow_red"]
+            else:
+                far_up_style = styles["yellow"]
+        except:
+            far_up_style = styles["yellow"]
+        sheetin.write(row_idx, far_up_col, far_up, far_up_style)
+
+        # 远跌
+        try:
+            val = int(far_down.strip())
+            if val >= 60:
+                far_down_style = styles["far_down_yellow_pink"]
+            elif val <= 30:
+                far_down_style = styles["far_down_yellow_red"]
+            else:
+                far_down_style = styles["yellow"]
+        except:
+            far_down_style = styles["yellow"]
+        sheetin.write(row_idx, far_down_col, far_down, far_down_style)
+    else:
+        # 远涨
+        try:
+            val = int(far_up)
+            if val <= 50:
+                far_up_style = styles["far_up_pink"]
+            elif val >= 70:
+                far_up_style = styles["far_up_red"]
+            else:
+                far_up_style = styles["base"]
+        except:
+            far_up_style = styles["base"]
+        sheetin.write(row_idx, far_up_col, far_up, far_up_style)
+
+        # 远跌
+        try:
+            val = int(far_down.strip())
+            if val >= 60:
+                far_down_style = styles["far_down_pink"]
+            elif val <= 30:
+                far_down_style = styles["far_down_red"]
+            else:
+                far_down_style = styles["base"]
+        except:
+            far_down_style = styles["base"]
+        sheetin.write(row_idx, far_down_col, far_down, far_down_style)
+
+
+#---日期解析工具函数
+
 def parse_date(date_str):   # 内部子函数
 
     if not date_str or "待定"  in date_str or "无效"  in date_str:   # 日期为"", 或含有"无效", "待定"，返回 2099/12/31
@@ -549,9 +662,9 @@ def parse_date(date_str):   # 内部子函数
     return datetime(2099, 12, 31)
 
 
-# ---------------------- 11. 摘帽申请日期解析函数 ----------------------
 
-# ---------------------- 判断摘帽日期是否小于3个月 ----------------------
+# ---判断摘帽日期是否小于3个月
+
 def is_delisting_date_less_than_2months(code):
     delisting_date_str = performance_reversal_delisting_application_dict.get(code, "")
     delisting_date_str = delisting_date_str.strip()
@@ -867,13 +980,13 @@ def create_styles():
     far_up_yellow_pink = xlwt.XFStyle()
     far_up_yellow_pink.font = far_up_pink_font
     far_up_yellow_pink.pattern = pattern
-    far_up_yellow_pink.alignment = align_date
+    # far_up_yellow_pink.alignment = align_date
     styles["far_up_yellow_pink"] = far_up_yellow_pink
 
     far_up_yellow_red = xlwt.XFStyle()
     far_up_yellow_red.font = far_up_red_font
     far_up_yellow_red.pattern = pattern
-    far_up_yellow_red.alignment = align_date
+    # far_up_yellow_red.alignment = align_date
     styles["far_up_yellow_red"] = far_up_yellow_red
 
     # 远跌专用颜色
@@ -898,13 +1011,13 @@ def create_styles():
     far_down_yellow_pink = xlwt.XFStyle()
     far_down_yellow_pink.font = far_down_pink_font
     far_down_yellow_pink.pattern = pattern
-    far_down_yellow_pink.alignment = align_date
+    # far_down_yellow_pink.alignment = align_date
     styles["far_down_yellow_pink"] = far_down_yellow_pink
 
     far_down_yellow_red = xlwt.XFStyle()
     far_down_yellow_red.font = far_down_red_font
     far_down_yellow_red.pattern = pattern
-    far_down_yellow_red.alignment = align_date
+    # far_down_yellow_red.alignment = align_date
     styles["far_down_yellow_red"] = far_down_yellow_red
 
     # ===================== 审计列 颜色样式 =====================
@@ -968,8 +1081,7 @@ def write_sheet_data2(
         summary_data=None,
         summary_percent=None,
         total_capital=500000):
-
-    # 设置列宽
+    # 设置列宽（增加两列，列索引需要调整）
     col_widths = {
         0: 8, 1: 10, 2: 8, 3: 8, 4: 10, 5: 9, 6: 6, 7: 10,
         8: 10, 9: 8, 10: 13, 11: 12, 12: 12, 13: 8, 14: 25, 15: 25
@@ -977,19 +1089,62 @@ def write_sheet_data2(
     for col, width in col_widths.items():
         sheetin.col(col).width = width * 256
 
-    # 表头
+    # 表头（增加 "远涨" 和 "远跌" 两列）
     headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
-               "总累积仓位%", "策略"]
+               "总累积仓位%", "策略", "远涨", "远跌"]
     sheetin.row(0).height = ROW_HEIGHT
 
+    # 写入每个sheet的第row0行表头
     for col_idx, header in enumerate(headers):
         sheetin.write(0, col_idx, header, styles["header"])
 
-    # 写入数据
+    # 写入数据，从row1行开始写入
     row_idx = 1
     for item in data_list:
         code, info, strategy, rank, cumulative, total_cumulative_percent = item
         sheetin.row(row_idx).height = ROW_HEIGHT
+
+        # 获取远涨远跌数据（需要从各策略字典中查找）
+        far_up = ""
+        far_down = ""
+
+        # 先从各个字典中查找
+        far_data = None
+        if code in stock_dividend_struct_dict:
+            far_data = stock_dividend_struct_dict.get(code, "")
+        elif code in limit_up_callback_struct_dict:
+            far_data = limit_up_callback_struct_dict.get(code, "")
+        elif code in small_cap_callback_struct_dict:
+            far_data = small_cap_callback_struct_dict.get(code, "")
+        elif code in hot_development_struct_dict:
+            far_data = hot_development_struct_dict.get(code, "")
+        elif code in bond_allot_struct_dict:
+            far_data = bond_allot_struct_dict.get(code, "")
+        elif code in dividend_fund_struct_dict:
+            far_data = dividend_fund_struct_dict.get(code, "")
+        elif code in overdown_fund_struct_dict:
+            far_data = overdown_fund_struct_dict.get(code, "")
+        elif code in oversea_fund_struct_dict:
+            far_data = oversea_fund_struct_dict.get(code, "")
+        elif code in swapbond_fund_struct_dict:
+            far_data = swapbond_fund_struct_dict.get(code, "")
+        elif code in performance_reversal_far_dict:
+            far_data = performance_reversal_far_dict.get(code, "")
+
+        if far_data:
+            parts = far_data.split(",")
+            if len(parts) >= 2:
+                far_up_raw = parts[0].strip()
+                far_down_raw = parts[1].strip()
+                # 乘100并取整
+                try:
+                    far_up = str(int(float(far_up_raw) * 100))
+                except:
+                    far_up = far_up_raw if far_up_raw else ""
+                try:
+                    far_down = str(int(abs(float(far_down_raw)) * 100))
+                except:
+                    far_down = far_down_raw if far_down_raw else ""
 
         # 高亮第10名
         if rank == 10:
@@ -1003,6 +1158,8 @@ def write_sheet_data2(
             sheetin.write(row_idx, 7, cumulative, styles["yellow"])
             sheetin.write(row_idx, 8, f"{total_cumulative_percent}%", styles["yellow_total_percent"])
             sheetin.write(row_idx, 9, strategy, styles["yellow_strategy"])
+            # 写入远涨远跌（黄色背景）
+            _write_far_up_down_simple(sheetin, row_idx, 10, 11, far_up, far_down, styles, is_yellow=True)
         else:
             sheetin.write(row_idx, 0, code, styles["base"])
             sheetin.write(row_idx, 1, info["名称"], styles["base"])
@@ -1014,32 +1171,95 @@ def write_sheet_data2(
             sheetin.write(row_idx, 7, cumulative, styles["base"])
             sheetin.write(row_idx, 8, f"{total_cumulative_percent}%", styles["total_percent"])
             sheetin.write(row_idx, 9, strategy, styles["strategy"])
+            # 写入远涨远跌（普通背景）
+            _write_far_up_down_simple(sheetin, row_idx, 10, 11, far_up, far_down, styles, is_yellow=False)
         row_idx += 1
 
-    # 写入总仓位汇总
+    # 写入总仓位汇总（各策略金额汇总和排序）
     if summary_data and summary_percent:
         row_idx += 1
-        name_row = row_idx + 1
+        name_row = row_idx + 1  # 跳过两行
         sheetin.row(name_row).height = ROW_HEIGHT
 
+        # 写入各策略名称
         col_idx = 0
         for name in summary_data.keys():
             sheetin.write(name_row, col_idx, name, styles["summary"])
             col_idx += 1
 
-        amount_row = name_row + 1
+        amount_row = name_row + 1  # 跳过3行
         sheetin.row(amount_row).height = ROW_HEIGHT
         col_idx = 0
+
+        # 写入各策略金额
         for amt in summary_data.values():
             sheetin.write(amount_row, col_idx, amt, styles["summary"])
             col_idx += 1
 
-        percent_row = amount_row + 1
+        # 写入各策略仓位百分比
+        percent_row = amount_row + 1  # 跳过4行
         sheetin.row(percent_row).height = ROW_HEIGHT
         col_idx = 0
         for pct in summary_percent.values():
             sheetin.write(percent_row, col_idx, f"{pct}%", styles["summary"])
             col_idx += 1
+
+
+def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up, far_down, styles, is_yellow=False):
+    """写入远涨和远跌数据并应用颜色（简化版，直接使用已处理好的数值）"""
+    if is_yellow:
+        # 远涨
+        try:
+            val = int(far_up) if far_up else 0
+            if val <= 50 and val != 0:
+                far_up_style = styles["far_up_yellow_pink"]
+            elif val >= 70:
+                far_up_style = styles["far_up_yellow_red"]
+            else:
+                far_up_style = styles["yellow"]
+        except:
+            far_up_style = styles["yellow"]
+        sheetin.write(row_idx, far_up_col, far_up, far_up_style)
+
+        # 远跌
+        try:
+            val = int(far_down) if far_down else 0
+            if val >= 60:
+                far_down_style = styles["far_down_yellow_pink"]
+            elif val <= 30 and val != 0:
+                far_down_style = styles["far_down_yellow_red"]
+            else:
+                far_down_style = styles["yellow"]
+        except:
+            far_down_style = styles["yellow"]
+        sheetin.write(row_idx, far_down_col, far_down, far_down_style)
+    else:
+        # 远涨
+        try:
+            val = int(far_up) if far_up else 0
+            if val <= 50 and val != 0:
+                far_up_style = styles["far_up_pink"]
+            elif val >= 70:
+                far_up_style = styles["far_up_red"]
+            else:
+                far_up_style = styles["base"]
+        except:
+            far_up_style = styles["base"]
+        sheetin.write(row_idx, far_up_col, far_up, far_up_style)
+
+        # 远跌
+        try:
+            val = int(far_down) if far_down else 0
+            if val >= 60:
+                far_down_style = styles["far_down_pink"]
+            elif val <= 30 and val != 0:
+                far_down_style = styles["far_down_red"]
+            else:
+                far_down_style = styles["base"]
+        except:
+            far_down_style = styles["base"]
+        sheetin.write(row_idx, far_down_col, far_down, far_down_style)
+
 
 
 # ==================== 个股策略写入到excel函数====================
@@ -1110,16 +1330,17 @@ def write_sheet_data1(
 
     sheetin.row(0).height = ROW_HEIGHT
 
-    # 写入每个sheet的第一行表头  //easy
+    # 写入每个sheet的第row0行表头  //easy
     for col_idx, header in enumerate(headers):
         sheetin.write(0, col_idx, header, styles["header"])
 
-
     # 取得排序后的数据
-    if is_fund_dividend_sheet:
-        sorted_strategy_data = sorted(data_list, key=get_fund_dividend_sort_key)
-    elif is_stock_dividend_sheet:
+    if is_stock_dividend_sheet:
+        # print(data_list)
         sorted_strategy_data = sorted(data_list, key=get_stock_dividend_sort_key)
+        # print(sorted_strategy_data)
+    elif is_fund_dividend_sheet:
+        sorted_strategy_data = sorted(data_list, key=get_fund_dividend_sort_key)
     elif is_small_cap_sheet:
         sorted_strategy_data = sorted(data_list, key=get_small_cap_sort_key)
     elif is_hot_development_sheet:
@@ -1133,7 +1354,7 @@ def write_sheet_data1(
     else:
         sorted_strategy_data = sorted(data_list, key=lambda x: x[1]["金额"], reverse=True)
 
-    # 重新计算累积总金额，总累积仓位%，排名  //为何要重新计算 ？
+    # 重新计算累积总金额，总累积仓位%，排名  //为何要重新计算   -- 因为之前本来就不是本策略的累计金额和累计仓位
     strategy_cumulative = 0
     strategy_rank = 1
     processed_data = []
@@ -1146,14 +1367,18 @@ def write_sheet_data1(
 
     data_list = processed_data
 
-    # 写入数据行
+    # if is_stock_dividend_sheet:
+    #    print(data_list)
+
+    # 写入数据行， 从row1开始写入
     row_idx = 1
     for item in data_list:
         code, info, strategy, rank, cumulative, total_cumulative_percent = item
         sheetin.row(row_idx).height = ROW_HEIGHT
 
         # 高亮第10名（黄色背景）
-        if rank == 10:
+        # if rank == 10:
+        if rank in (10, 20):
             sheetin.write(row_idx, 0, code, styles["yellow"])
             sheetin.write(row_idx, 1, info["名称"], styles["yellow"])
             sheetin.write(row_idx, 2, info["总数量"], styles["yellow"])
@@ -1456,119 +1681,6 @@ def write_sheet_data1(
         row_idx += 1
 
 
-# ==================== 辅助函数 ====================
-def _calc_annual_rate(per_div, current_price):
-    """计算年化收益"""
-    try:
-        div_str = str(per_div).strip()
-        clean_expr = ''.join([c for c in div_str if c in '0123456789.+-*/'])
-        div_val = float(eval(clean_expr))
-        price = float(current_price)
-        if price > 0 and div_val >= 0:
-            return f"{(div_val / 10) / price * 100:.2f}"
-    except:
-        pass
-    return ""
-
-
-def _write_annual_rate(sheetin, row_idx, col_idx, annual_rate_text, styles, is_yellow=False):
-    """写入年化收益并应用颜色"""
-    annual_val = 0.0
-    try:
-        annual_val = float(annual_rate_text)
-    except:
-        annual_val = 0.0
-
-    if is_yellow:
-        if annual_val >= 4.5:
-            sheetin.write(row_idx, col_idx, annual_rate_text, styles["yellow_pink_delisting_apply"])
-        elif annual_val <= 1.5:
-            sheetin.write(row_idx, col_idx, annual_rate_text, styles["yellow_red_text"])
-        else:
-            sheetin.write(row_idx, col_idx, annual_rate_text, styles["yellow_date_right"])
-    else:
-        if annual_val >= 4.5:
-            sheetin.write(row_idx, col_idx, annual_rate_text, styles["pink_delisting_apply"])
-        elif annual_val <= 1.5:
-            sheetin.write(row_idx, col_idx, annual_rate_text, styles["red_text"])
-        else:
-            sheetin.write(row_idx, col_idx, annual_rate_text, styles["date_right"])
-
-
-def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, styles, is_yellow=False):
-    """写入远涨和远跌数据并应用颜色"""
-    far_up = ""
-    far_down = ""
-    if struct_str:
-        parts = struct_str.split(",")
-        if len(parts) >= 2:
-            far_up = parts[0].strip()
-            far_down = parts[1].strip()
-
-    # 乘100并取整
-    try:
-        far_up = str(int(float(far_up) * 100))
-    except:
-        far_up = ""
-    try:
-        far_down = str(int(abs(float(far_down)) * 100))
-    except:
-        far_down = ""
-
-    # 选择样式
-    if is_yellow:
-        # 远涨
-        try:
-            val = int(far_up)
-            if val <= 50:
-                far_up_style = styles["far_up_yellow_pink"]
-            elif val >= 70:
-                far_up_style = styles["far_up_yellow_red"]
-            else:
-                far_up_style = styles["yellow"]
-        except:
-            far_up_style = styles["yellow"]
-        sheetin.write(row_idx, far_up_col, far_up, far_up_style)
-
-        # 远跌
-        try:
-            val = int(far_down.strip())
-            if val >= 60:
-                far_down_style = styles["far_down_yellow_pink"]
-            elif val <= 30:
-                far_down_style = styles["far_down_yellow_red"]
-            else:
-                far_down_style = styles["yellow"]
-        except:
-            far_down_style = styles["yellow"]
-        sheetin.write(row_idx, far_down_col, far_down, far_down_style)
-    else:
-        # 远涨
-        try:
-            val = int(far_up)
-            if val <= 50:
-                far_up_style = styles["far_up_pink"]
-            elif val >= 70:
-                far_up_style = styles["far_up_red"]
-            else:
-                far_up_style = styles["base"]
-        except:
-            far_up_style = styles["base"]
-        sheetin.write(row_idx, far_up_col, far_up, far_up_style)
-
-        # 远跌
-        try:
-            val = int(far_down.strip())
-            if val >= 60:
-                far_down_style = styles["far_down_pink"]
-            elif val <= 30:
-                far_down_style = styles["far_down_red"]
-            else:
-                far_down_style = styles["base"]
-        except:
-            far_down_style = styles["base"]
-        sheetin.write(row_idx, far_down_col, far_down, far_down_style)
-
 
 # ============================== 原有主程序代码 ===============================
 
@@ -1578,99 +1690,139 @@ position_dict = {}
 
 # 依次遍历下面的sheet
 for sheet_name in ["01", "02", "03", "04"]:
-    sheet = old_workbook.sheet_by_name(sheet_name)
+# for sheet_name in ["01", "02"]:
+    sheet = old_workbook.sheet_by_name(sheet_name)   # 当前的sheet neme，如 “01”
+    # print(sheet)   # <01>
 
     for row_idx in range(1, sheet.nrows):
-        code = sheet.cell_value(row_idx, 0)
-        name = sheet.cell_value(row_idx, 1)
-        count_val = sheet.cell_value(row_idx, 2)
-        price_val = sheet.cell_value(row_idx, 3)
+        code = sheet.cell_value(row_idx, 0)          # “代码” 列
+        name = sheet.cell_value(row_idx, 1)          # “名称” 列
+        count_val = sheet.cell_value(row_idx, 2)     # “数量” 列
+        price_val = sheet.cell_value(row_idx, 3)     # “价格” 列
 
         if code in ("511880", "404002", "600636"):
             continue
 
-        count = float(count_val) if count_val else 0.0
-        price = float(price_val) if price_val else 0.0
+        count = float(count_val) if count_val else 0.0    # 字符串转数字
+        price = float(price_val) if price_val else 0.0    # 字符串转数字
 
+        #下面是把代码前面补0，补足6位数字
         try:
             code_str = str(int(float(code))).strip()
             code = code_str.zfill(6)
         except:
             code = str(code).strip()
 
+        # 把当前行加入到字典position_dict，如果是相同的股票则只增大数量
         if code in position_dict:
-            position_dict[code]["总数量"] += count
+            position_dict[code]["总数量"] += count     # 相同股票，增加数量
         else:
-            position_dict[code] = {"名称": name, "总数量": count, "当前价": price}
+            position_dict[code] = {"名称": name, "总数量": count, "当前价": price}   # 新股票，另起新行
+
+# print(position_dict)
 
 total_capital = 500000
 for code, info in position_dict.items():
     info["金额"] = int(info["总数量"] * info["当前价"])
     info["仓位百分比"] = round((info["金额"] / total_capital) * 100, 1)
 
+# print(position_dict)
+
 # ---------------------- 17. 数据分组 ----------------------
-strategy_groups = defaultdict(list)
+strategy_groups = defaultdict(list)  # 新定义一个列表strategy_groups，可直接用append添加键和键值
 full_data = []
 
-sorted_positions = sorted(position_dict.items(), key=lambda x: x[1]["金额"], reverse=True)
+# 下面的x是position_dict的每一行数据，x[1]是每一行除键值code之外的数据 (相当于嵌套里的子字典)
+sorted_positions = sorted(position_dict.items(), key=lambda x: x[1]["金额"], reverse=True)    # 按金额从大到小排序
 
-cumulative_amount = 0
+# print(sorted_positions)
+
+cumulative_amount = 0  # 累积金额
 rank = 1
 
+# 遍历排序后的股票字典 sorted_positions，把所有股票的数据分别保存到 full_data（总仓位） 和 strategy_groups（个股策略） 中
 for code, info in sorted_positions:
-    cumulative_amount += info["金额"]
-    total_cumulative_pct = round((cumulative_amount / total_capital) * 100, 1)
+    cumulative_amount += info["金额"]                                            # 每一行相加的累积金额
+    total_cumulative_pct = round((cumulative_amount / total_capital) * 100, 1)   # 每一行相加后的累积百分比
 
+    # 先判断是多策略，还是单策略。如何把该股票存在的所有策略保存到strategies
     if code in multi_strategy_codes:
-        strategies = multi_strategy_codes[code]
+        strategies = multi_strategy_codes[code]         # 多策略  //肯定存在，所以不用.get
     else:
         base_strategy = strategy_dict.get(code, "空策略") or "空策略"
         strategies = [base_strategy]
 
-    main_strategy = strategies[0]
+    main_strategy = strategies[0]     # 该股票的主策略
 
+    # 把这一行的基本数据和汇总数据，添加到full_data列表中(总仓位sheet用)  //总仓位没有"策略"键值，列表即可以
     if info["当前价"] != 0:
         full_data.append((code, info, main_strategy, rank, cumulative_amount, total_cumulative_pct))
 
-    for strategy in strategies:
+    # 把这一行的基本数据和汇总数据，添加到对应的策略字典中 (个策略sheet用)
+    for strategy in strategies:   # strategies 包含该股票存在的所有策略
         strategy_groups[strategy].append((code, info, strategy, rank, cumulative_amount, total_cumulative_pct))
 
-    rank += 1
+    rank += 1   #该股票金额最大排第一名，后面的股票依次名次+1
+
+# print(full_data)          #--test
+# print(strategy_groups)    #--test
 
 # ---------------------- 18. 策略汇总 ----------------------
-unique_codes = set()
+unique_codes = set()    # 集合
 strategy_total_amount = {}
 
+
+# 遍历个股策略字典 strategy_groups
 for strategy, items in strategy_groups.items():
     total = 0
-    for item in items:
-        code = item[0]
-        if code not in unique_codes:
-            total += item[1]["金额"]
-            unique_codes.add(code)
-    strategy_total_amount[strategy] = total
 
+    for item in items:
+        code = item[0]     # 股票代码
+
+        # 对于多策略的股票， 总金额只在排在前面第一个的策略里计算   //应是总仓位里面的各策略数据
+        if code not in unique_codes:
+            total += item[1]["金额"]    # 各策略汇总的累计金额
+            unique_codes.add(code)
+
+    strategy_total_amount[strategy] = total   # 持仓策略各占多少金额统计
+
+# print(strategy_total_amount)   #  {'分红股': 2469, '涨停回调': 924}
+
+# 持仓策略各占多少仓位百分比计算
 strategy_total_percent = {
     k: round((v / total_capital) * 100, 1)
     for k, v in strategy_total_amount.items()
 }
 
+# print(strategy_total_percent)   #  {'分红股': 0.5, '涨停回调': 0.2}
+
 strategy_order = [
     "分红股", "业绩反转", "小盘猛牛", "涨停回调", "配债股", "热点发展",
     "分红基", "套利基", "超跌基", "海外基", "可转债", "空策略"
 ]
-order_dict = {strategy: idx for idx, strategy in enumerate(strategy_order)}
+order_dict = {strategy: idx for idx, strategy in enumerate(strategy_order)}   # 把strategy_order列表和序号123...合成一个字典
 
+# print(order_dict)  # {'分红股': 0, '业绩反转': 1, '小盘猛牛': 2, '涨停回调': 3, ...... , '空策略': 11}
+
+# 用第一个字典order_dict的编号，给第二个字典strategy_total_amount的名称/键值 排序， 生成一个新的列表  sorted_strategy_names
 sorted_strategy_names = sorted(
     strategy_total_amount.keys(),
-    key=lambda x: order_dict.get(x, len(strategy_order))
+    key=lambda x: order_dict.get(x, len(strategy_order))   # len(strategy_order)  -- 指默认最大值，就是排在最后面的意思
 )
 
-summary_data = {}
-for n in sorted_strategy_names:
-    summary_data[n] = strategy_total_amount[n]
+# print(strategy_total_amount)  # {'分红股': 2469, '涨停回调': 924}
 
-summary_percent = {n: strategy_total_percent[n] for n in sorted_strategy_names}
+# summary_data = {n: strategy_total_amount[n] for n in sorted_strategy_names}      # 持仓策略各占多少金额统计 (按顺序后)
+# 分解如下
+summary_data = {}  # 总仓位汇总用
+for n in sorted_strategy_names:    # 把n（可理解为策略名）当作列表sorted_strategy_name的 key
+    summary_data[n] = strategy_total_amount[n]     # 从字典strategy_total_amount里取出对应的值，合成新的字典summary_data
+
+# 总仓位汇总用
+summary_percent = {n: strategy_total_percent[n] for n in sorted_strategy_names}    # 持仓策略各占多少仓位百分比计算  (按顺序后)
+
+# print(summary_data)      # {'分红股': 2469, '涨停回调': 924}   //排序后
+# print(summary_percent)   # {'分红股': 0.5, '涨停回调': 0.2}    //排序后
 
 # ---------------------- 19. 生成Excel ----------------------
 final_workbook = xlwt.Workbook(encoding="utf-8")
@@ -1680,6 +1832,7 @@ styles = create_styles()
 main_sheet_name = f"总仓位{len(sorted_strategy_names)}"
 main_sheet = final_workbook.add_sheet(main_sheet_name)
 
+# 写入总仓位sheet
 write_sheet_data2(
     main_sheet,
     full_data,
@@ -1716,6 +1869,10 @@ for strategy_name in sorted_strategy_names:
     is_oversea_sheet = (strategy_name == "海外基")
     is_swapbond_sheet = (strategy_name == "可转债")
 
+    # if(is_stock_dividend_sheet):
+    #    print(group_data)
+
+    # 写入各策略sheet
     write_sheet_data1(
         strategy_sheet,
         group_data,
