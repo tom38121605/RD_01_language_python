@@ -34,7 +34,8 @@ DATAFILE3=".\\data3.txt"
 
 DATAFILE9=".\\xxC.txt"
 
-pic_dir = "pic/"
+PIC_DIR = "pic/"
+DATASETNAME = "Data"
 
 
 f0 = h5py.File(expanduser(DATAFILE0), 'r')
@@ -81,9 +82,11 @@ def getpath():
 
                 # ====================== 关键 ======================
                 # 如果名字是 Data → 保存数据 + 直接停止遍历
-                if dataset_name == "Data":
+                # if dataset_name == "Data":
+                if dataset_name == DATASETNAME:
+
                 # 停止遍历！！！
-                    raise StopIteration("找到 Data，停止遍历")
+                    raise StopIteration(f"找到 dataset，停止遍历")
 
 
         # ====================== 执行遍历 ======================
@@ -108,8 +111,10 @@ def getpath():
 path_dataset = getpath()
 print("path=", path_dataset)
 
+# sys.exit()
+
 # dataset = f0['/Logging_Test_COM3_11763_ADC_Sampler_3ch/DeviceGroup_0/Device_0/IC_0/Sensor_0/Data']
-dataset = f0[f'/{path_dataset}/Data']
+dataset = f0[f'/{path_dataset}/{DATASETNAME}']
 
 data = dataset[:]
 # print( data)
@@ -170,7 +175,7 @@ plt.xlabel('time (s)', fontsize=12)
 plt.ylabel('I -- xchannel 10R(mA)', fontsize=12)
 plt.axis([0, idatanum2/SAMPLERATE, -1000000 * KKK , 6000000 * KKK ])  # 1KHz 10S SHORT
 
-plt.savefig(pic_dir  + "10R_I.png")
+plt.savefig(PIC_DIR  + "10R_I.png")
 plt.show()
 
 
@@ -197,7 +202,7 @@ plt.xlabel('time (s)', fontsize=12)
 plt.ylabel('V -- ychannel  bridge(v)', fontsize=12)
 plt.axis([0, len(y1points2)/SAMPLERATE, -1000000 * KKK, 7000000 * KKK])
 
-plt.savefig(pic_dir  + "bridge_v.png")
+plt.savefig(PIC_DIR  + "bridge_v.png")
 plt.show()
 
 
@@ -212,7 +217,7 @@ plt.xlabel('time (s)', fontsize=12)
 plt.ylabel('R -- ychannel bridge (Ω)', fontsize=12)
 plt.axis([0, len(y1points3)/SAMPLERATE, -10000,10000 ])
 
-plt.savefig(pic_dir  + "bridge_R.png")
+plt.savefig(PIC_DIR  + "bridge_R.png")
 plt.show()
 
 
