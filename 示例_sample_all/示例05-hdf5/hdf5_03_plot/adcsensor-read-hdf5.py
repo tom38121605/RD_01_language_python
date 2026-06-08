@@ -52,58 +52,64 @@ z1points = []
 idatanum2=0
 
 # ----------------------get path ------------------------------------------
-# def getpath():
-#
-#     file_path = DATAFILE0
-#     with h5py.File(file_path, 'r') as f:
-#
-#         last_dataset = None
-#         data=[]
-#
-#         # 内部函数：遇到 Data 就停止
-#         def get_dataset_name(name, obj):
-#             nonlocal last_dataset
-#             nonlocal data
-#
-#             if isinstance(obj, h5py.Group):
-#                 print(f"Group路径：----- {name} -----")
-#
-#             elif isinstance(obj, h5py.Dataset):
-#                 dataset_name = os.path.basename(name)
-#                 print(f"数据集名称：{dataset_name}")
-#
-#                 last_dataset = dataset_name
-#                 data = obj[:2]  # 读取全部数据 （你要[:2]也可以）
-#
-#                 # ====================== 关键 ======================
-#                 # 如果名字是 Data → 保存数据 + 直接停止遍历
-#                 if dataset_name == "Data":
-#                 # 停止遍历！！！
-#                     raise StopIteration("找到 Data，停止遍历")
-#
-#         # ====================== 执行遍历 ======================
-#         try:
-#             f.visititems(get_dataset_name)
-#         except StopIteration:
-#             # 遇到 Data 正常停止
-#             pass
-#
-#         # ====================== 输出结果 ======================
-#         if last_dataset:
-#             print("\n===== 找到目标数据集 =====")
-#             print("数据集名称：", last_dataset)
-#             print("数据集内容：", data)
-#
-# getpath()
+def getpath():
+    path1=""
+
+    file_path = DATAFILE0
+    with h5py.File(file_path, 'r') as f:
+
+        last_dataset = None
+        data=[]
+
+        # 内部函数：遇到 Data 就停止
+        def get_dataset_name(name, obj):
+            nonlocal last_dataset
+            nonlocal data
+            nonlocal path1
+
+            if isinstance(obj, h5py.Group):
+                path1 = name
+                # print(f"Group路径：----- {name} -----")
+                print(f"Group路径：----- {path1} -----")
+
+            elif isinstance(obj, h5py.Dataset):
+                dataset_name = os.path.basename(name)
+                print(f"数据集名称：{dataset_name}")
+
+                last_dataset = dataset_name
+                data = obj[:2]  # 读取全部数据 （你要[:2]也可以）
+
+                # ====================== 关键 ======================
+                # 如果名字是 Data → 保存数据 + 直接停止遍历
+                if dataset_name == "Data":
+                # 停止遍历！！！
+                    raise StopIteration("找到 Data，停止遍历")
+
+
+        # ====================== 执行遍历 ======================
+        try:
+            f.visititems(get_dataset_name)
+        except StopIteration:
+            # 遇到 Data 正常停止
+            pass
+
+        # ====================== 输出结果 ======================
+        if last_dataset:
+            print("\n===== 找到目标数据集 =====")
+            print("数据集名称：", last_dataset)
+            print("数据集内容：", data)
+
+    return path1
+
+
 # sys.exit()
-# ----------------------get path -----end----------------------------------
+# ----------------------get path "-----end----------------------------------"
 
+path_dataset = getpath()
+print("path=", path_dataset)
 
-# def main():
-# global idatanum2
-
-
-dataset = f0['/Logging_Test_COM3_11763_ADC_Sampler_3ch/DeviceGroup_0/Device_0/IC_0/Sensor_0/Data']
+# dataset = f0['/Logging_Test_COM3_11763_ADC_Sampler_3ch/DeviceGroup_0/Device_0/IC_0/Sensor_0/Data']
+dataset = f0[f'/{path_dataset}/Data']
 
 data = dataset[:]
 # print( data)
@@ -210,48 +216,3 @@ plt.savefig(pic_dir  + "bridge_R.png")
 plt.show()
 
 
-
-#
-# # =======================参考================================================
-#
-# # def getpath():
-# #
-# #     file_path = r"data0.hdf5"
-# #     with h5py.File(file_path, 'r') as f:
-# #
-# #         last_dataset = None
-# #         data=[]
-# #
-# #         # 内部函数：遇到 Data 就停止
-# #         def get_dataset_name(name, obj):
-# #             nonlocal last_dataset
-# #             nonlocal data
-# #
-# #             if isinstance(obj, h5py.Group):
-# #                 print(f"Group路径：----- {name} -----")
-# #
-# #             elif isinstance(obj, h5py.Dataset):
-# #                 dataset_name = os.path.basename(name)
-# #                 print(f"数据集名称：{dataset_name}")
-# #
-# #                 last_dataset = dataset_name
-# #                 data = obj[:2]  # 读取全部数据 （你要[:2]也可以）
-# #
-# #                 # ====================== 关键 ======================
-# #                 # 如果名字是 Data → 保存数据 + 直接停止遍历
-# #                 if dataset_name == "Data":
-# #                 # 停止遍历！！！
-# #                     raise StopIteration("找到 Data，停止遍历")
-# #
-# #         # ====================== 执行遍历 ======================
-# #         try:
-# #             f.visititems(get_dataset_name)
-# #         except StopIteration:
-# #             # 遇到 Data 正常停止
-# #             pass
-# #
-# #         # ====================== 输出结果 ======================
-# #         if last_dataset:
-# #             print("\n===== 找到目标数据集 =====")
-# #             print("数据集名称：", last_dataset)
-# #             print("数据集内容：", data)
