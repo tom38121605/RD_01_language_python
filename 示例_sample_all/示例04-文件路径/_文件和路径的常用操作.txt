@@ -4,7 +4,20 @@ sdir = os.path.dirname(file_name)
 
 
 2. 把路径和文件名组合起来
-logfile = os.path.join(sdir, "log.txt")
+
+   方法1：
+   logfile = os.path.join(sdir, "log.txt")
+
+   方法2： 
+   logfile =sdir + "\log.txt" 
+
+
+3. 检查目录是否存在，并创建该目录
+
+      plots =  "plots/"
+      if not os.path.exists(plots):
+          os.makedirs(plots)
+          print(f"folder  created.")
 
 
 
