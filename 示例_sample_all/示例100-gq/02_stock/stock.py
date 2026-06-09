@@ -22,17 +22,17 @@ FARDOWN_HIGH = 60
 
 # ---------------------- 0.1：分红股， 远涨远跌字典 ----------------------
 stock_dividend_struct_dict = {
-    "600681": "0.306, -0.349",  # 百川能源
+    "000001": "0.499, -0.185",  # 平安银行
+    "600016": "0.405, -0.354",  # 民生银行
+    "601916": "0.469, -0.198",  # 浙商银行
+    "600755": "0.214, -0.349",  # 厦门国贸
     "601169": "0.667, -0.290",  # 北京银行
-    "601006": "0.044, -0.279",  # 大秦铁路
-    "000001": "0.479, -0.196",  # 平安银行
-    "603801": "0.020, -0.741",  # 志邦家居
-    "002807": "0.525, -0.143",  # 江阴银行
-    "601916": "0.478, -0.193",  # 浙商银行
-    "600755": "0.240, -0.335",  # 厦门国贸
-    "600016": "0.417, -0.349",  # 民生银行
-    "605368": "0.278, -0.496",  # 蓝天燃气
-    "600300": "0.564, -0.258",  # 维维股份
+    "605368": "0.251, -0.507",  # 蓝天燃气
+    "600681": "0.263, -0.371",  # 百川能源
+    "002807": "0.529, -0.141",  # 江阴银行
+    "603801": "0.007, -0.751",  # 志邦家居
+    "601006": "0.030, -0.289",  # 大秦铁路
+    "600300": "0.520, -0.279",  # 维维股份
 
     # # 多策略
     # "600681": "45, 27 ",  # 百川能源
@@ -42,13 +42,13 @@ stock_dividend_struct_dict = {
 
 # ---------------------- 0.2：涨停回调, 远涨远跌字典 ----------------------
 limit_up_callback_struct_dict = {
-    "600662": "0.305, -0.363",  # 外服控股
-    "600681": "0.306, -0.349",  # 百川能源
-    "600814": "0.459, -0.414",  # 杭州解百
-    "600755": "0.240, -0.335",  # 厦门国贸
-    "600858": "0.470, -0.381",  # 银座股份
-    "605368": "0.278, -0.496",  # 蓝天燃气
-    "605388": "0.330, -0.537",  # 均瑶健康
+    "600662": "0.266, -0.382",  # 外服控股
+    "600681": "0.263, -0.371",  # 百川能源
+    "600814": "0.437, -0.423",  # 杭州解百
+    "600755": "0.214, -0.349",  # 厦门国贸
+    "600858": "0.417, -0.403",  # 银座股份
+    "605368": "0.251, -0.507",  # 蓝天燃气
+    "605388": "0.279, -0.555",  # 均瑶健康
 
     # # 多策略
     # "600681": "45, 27 ",  # 百川能源
@@ -64,12 +64,6 @@ limit_up_callback_struct_dict = {
 small_cap_callback_struct_dict = {
     "300891": "0.38, 0.39 ",    # 惠云钛业
 }
-
-# # ---------------------- 0.4：热点发展, 远涨远跌字典 ----------------------
-#
-# hot_development_struct_dict = {
-#     "000582": "1.26, 0 ",  # 北部湾港
-# }
 
 # ---------------------- 0.5：配债股, 远涨远跌字典 ----------------------
 
@@ -106,6 +100,7 @@ oversea_fund_struct_dict = {
     "161126": "0.16, 0.17 ",  # 标普医药
     "164824": "0.16, 0.25 ",  #	印度基金
     "159329": "0.03, 0.31 ",  # 沙特ETF南方
+    "159100": "0.111, 0.258 ",  # 巴西ETF华夏
 }
 
 # ---------------------- 0.9：可转债, 远涨远跌字典 ----------------------
@@ -117,34 +112,34 @@ swapbond_fund_struct_dict = {
 # ===================== 1.0：业绩反转，远涨远跌字典 =====================
 # 格式：key=股票代码, value="远涨数值,远跌数值"
 performance_reversal_far_dict = {
-    "003032": "0.337, -0.686",  # *ST传智
-    "300527": "0.491, -0.417",  # ST应急
-    "300366": "0.076, -0.735",  # ST创意
-    "002124": "0.214, -0.698",  # 天邦食品
-    "002122": "0.437, -0.569",  # ST汇洲
-    "000698": "0.375, -0.491",  # ST沈化
-    "002689": "0.510, -0.576",  # ST远智
-    "600624": "0.450, -0.577",  # ST复华
-    "600169": "0.311, -0.234",  # ST太重
-    "300460": "0.649, -0.494",  # ST惠伦
-    "000821": "0.125, -0.648",  # ST京机
-    "300173": "0.333, -0.605",  # ST福能
-    "000010": "0.626, -0.570",  # *ST美丽
-    "000488": "0.267, -0.611",  # ST晨鸣
-    "000639": "0.074, -0.723",  # ST西王
-    "000826": "0.704, -0.568",  # *ST启环
-    "000903": "0.166, -0.701",  # ST云动
-    "002055": "0.443, -0.550",  # ST得润
-    "002360": "0.476, -0.281",  # ST同德
-    "002512": "0.543, -0.488",  # ST达华
-    "002691": "0.336, -0.636",  # *ST冀凯
-    "002719": "0.413, -0.572",  # ST麦趣
-    "301030": "0.457, -0.736",  # *ST仕净
-    "600053": "0.019, -0.667",  # *ST九鼎
-    "600537": "0.264, -0.702",  # *ST亿晶
-    "600734": "0.060, -0.706",  # *ST实达
-    "600735": "0.859, -0.373",  # ST新华锦
-    "688201": "0.317, -0.747",  # ST信安
+    "003032": "0.295, -0.696",  # *ST传智
+    "300527": "0.472, -0.424",  # ST应急
+    "300366": "0.066, -0.738",  # ST创意
+    "002124": "0.173, -0.708",  # 天邦食品
+    "002122": "0.470, -0.559",  # ST汇洲
+    "000698": "0.323, -0.510",  # ST沈化
+    "002689": "0.431, -0.598",  # ST远智
+    "600624": "0.406, -0.589",  # ST复华
+    "600169": "0.295, -0.258",  # ST太重
+    "300460": "0.618, -0.503",  # ST惠伦
+    "000821": "0.141, -0.643",  # ST京机
+    "300173": "0.288, -0.618",  # ST福能
+    "000010": "0.748, -0.537",  # *ST美丽
+    "000488": "0.261, -0.623",  # ST晨鸣
+    "000639": "0.007, -0.740",  # ST西王
+    "000826": "0.659, -0.580",  # *ST启环
+    "000903": "0.197, -0.693",  # ST云动
+    "002055": "0.409, -0.561",  # ST得润
+    "002360": "0.459, -0.290",  # ST同德
+    "002512": "0.604, -0.468",  # ST达华
+    "002691": "0.269, -0.654",  # *ST冀凯
+    "002719": "0.404, -0.575",  # ST麦趣
+    "301030": "0.392, -0.748",  # *ST仕净
+    "600053": "0.002, -0.680",  # *ST九鼎
+    "600537": "0.151, -0.729",  # *ST亿晶
+    "600734": "0.040, -0.712",  # *ST实达
+    "600735": "0.850, -0.375",  # ST新华锦
+    "688201": "0.264, -0.760",  # ST信安
 }
 
 
@@ -215,14 +210,6 @@ limit_up_callback_dividend_date_dict = {
 small_cap_dividend_date__dict = {
     "300891": ["25年报 26/04/21", "预案 26/04/21", "0.0"], # 惠云钛业
 }
-
-
-# # ---------------------- 4： 热点发展，字典合集 ----------------------
-#
-# # ---------------------- 4.1. 热点发展年报日期字典 ----------------------
-# hot_development_dividend_data_dict = {
-#     "002570": ["25年报 26/04/28", "预案 26/04/28", "0.0"],  # 贝因美
-# }
 
 
 # ---------------------- 5： 配债股，字典合集 ----------------------
@@ -729,16 +716,6 @@ def is_delisting_date_less_than_2months(code):
     return delta.days < 90 and delta.days >= 0
 
 
-# dividend_stock_date_dict = {
-#     "605368": ["25年报 26/04/29", "大会 无效 26/05/13", "4+0"],    # 蓝天燃气
-#     "601916": ["25年报 26/03/31", "大会 26/06/18", "1.31"],           # 浙商银行
-# }
-#
-# limit_up_callback_dividend_date_dict = {
-#     "605368": ["25年报 26/04/29", "大会 无效 26/05/13", "4+0"],  # 蓝天燃气
-#     "600662": ["25年报 26/04/24", "预案 26/04/24", "1.5"],  # 外服控股
-# }
-
 # ---------------------- 12. 各策略排序函数 ----------------------
 
 # 分红股排序： 先按分红日期升序，再按年报日期升序
@@ -792,22 +769,6 @@ def get_small_cap_sort_key(item):
 
     # 先按分红日期升序，再按年报日期升序
     return (dividend_date, report_date)
-
-# # 热点发展排序： 先按分红日期升序，再按年报日期升序
-# def get_hot_development_sort_key(item):  # 热点发展
-#     code = item[0]  # 股票代码
-#
-#     dividend_info = hot_development_dividend_data_dict.get(code, ["", "", ""])     # 从热点发展分红字典取数据
-#     dividend_date_str = dividend_info[1] if len(dividend_info) >= 2 else ""        # 第2个元素为分红日期，这个是排序1
-#
-#     dividend_date = parse_date(dividend_date_str)
-#
-#     # 次要排序：年报日期
-#     report_date_str = dividend_info[0] if len(dividend_info) >= 1 else ""     # 第1个元素为年报日期，这个是排序2
-#     report_date = parse_date(report_date_str)
-#
-#     # 先按分红日期升序，再按年报日期升序
-#     return (dividend_date, report_date)
 
 
 # ==================== 配债股 - 按分红日期升序排序 ====================
@@ -1168,8 +1129,6 @@ def write_sheet_data2(
             far_data = limit_up_callback_struct_dict.get(code, "")
         elif code in small_cap_callback_struct_dict:
             far_data = small_cap_callback_struct_dict.get(code, "")
-        # elif code in hot_development_struct_dict:
-        #     far_data = hot_development_struct_dict.get(code, "")
         elif code in bond_allot_struct_dict:
             far_data = bond_allot_struct_dict.get(code, "")
         elif code in dividend_fund_struct_dict:
@@ -1323,7 +1282,6 @@ def write_sheet_data1(
         is_stock_dividend_sheet=False,
         is_fund_dividend_sheet=False,
         is_small_cap_sheet=False,
-        # is_hot_development_sheet=False,
         is_performance_reversal_sheet=False,
         is_limit_up_callback_sheet=False,
         is_bond_allot_sheet=False,
@@ -1341,7 +1299,7 @@ def write_sheet_data1(
     }
 
     # 应用列宽
-    # special_sheets = ["分红股", "分红基", "涨停回调", "配债股", "小盘猛牛", "热点发展"]   # col_widths2
+    # special_sheets = ["分红股", "分红基", "涨停回调", "配债股", "小盘猛牛"]   # col_widths2
     special_sheets = ["分红股", "分红基", "涨停回调", "配债股", "小盘猛牛"]   # col_widths2
     current_sheet_name = sheetin.name.strip()
 
@@ -1357,10 +1315,10 @@ def write_sheet_data1(
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "下期新年报日期", "分红日期", "每十股分红", "年化收益",
                    "远涨", "远跌"]
-    # elif is_small_cap_sheet or is_hot_development_sheet or is_limit_up_callback_sheet or is_bond_allot_sheet:
-    #     headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
-    #                "总累积仓位%", "策略", "下期新年报日期", "分红日期", "每十股分红", "年化收益",
-    #                "远涨", "远跌"]
+    elif is_small_cap_sheet or is_limit_up_callback_sheet or is_bond_allot_sheet:
+        headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
+                   "总累积仓位%", "策略", "下期新年报日期", "分红日期", "每十股分红", "年化收益",
+                   "远涨", "远跌"]
     elif is_fund_dividend_sheet:
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位百分比", "排名", "累积总金额",
                    "总累积仓位%", "策略", "去年对应分红日期", "下期新分红日期", "每十股分红", "年化收益",
@@ -1396,8 +1354,7 @@ def write_sheet_data1(
         sorted_strategy_data = sorted(data_list, key=get_fund_dividend_sort_key)
     elif is_small_cap_sheet:
         sorted_strategy_data = sorted(data_list, key=get_small_cap_sort_key)
-    # elif is_hot_development_sheet:
-    #     sorted_strategy_data = sorted(data_list, key=get_hot_development_sort_key)
+
     elif is_performance_reversal_sheet:
         sorted_strategy_data = sorted(data_list, key=get_performance_reversal_sort_key)
     elif is_limit_up_callback_sheet:
@@ -1491,22 +1448,6 @@ def write_sheet_data1(
 
                 _write_far_up_down(sheetin, row_idx, 14, 15, small_cap_callback_struct_dict.get(code, ""),
                                    styles, is_yellow=True)
-
-            # elif is_hot_development_sheet:  # 热点发展
-            #     item_list = hot_development_dividend_data_dict.get(code, ["", "", ""])
-            #     next_report = item_list[0]
-            #     div_date = item_list[1]
-            #     per_div = item_list[2]
-            #
-            #     sheetin.write(row_idx, 10, next_report, styles["yellow_date_right"])
-            #     sheetin.write(row_idx, 11, div_date, styles["yellow_date_right"])
-            #     sheetin.write(row_idx, 12, per_div, styles["yellow_date_right"])
-            #
-            #     annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
-            #     _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
-            #
-            #     _write_far_up_down(sheetin, row_idx, 14, 15, hot_development_struct_dict.get(code, ""),
-            #                        styles, is_yellow=True)
 
             elif is_bond_allot_sheet:  # 配债股
                 item_list = bond_allot_dividend_data_dict.get(code, ["", "", ""])
@@ -1641,22 +1582,6 @@ def write_sheet_data1(
 
                 _write_far_up_down(sheetin, row_idx, 14, 15, small_cap_callback_struct_dict.get(code, ""),
                                    styles, is_yellow=False)
-
-            # elif is_hot_development_sheet:  # 热点发展
-            #     item_list = hot_development_dividend_data_dict.get(code, ["", "", ""])
-            #     next_report = item_list[0]
-            #     div_date = item_list[1]
-            #     per_div = item_list[2]
-            #
-            #     sheetin.write(row_idx, 10, next_report, styles["date_right"])
-            #     sheetin.write(row_idx, 11, div_date, styles["date_right"])
-            #     sheetin.write(row_idx, 12, per_div, styles["date_right"])
-            #
-            #     annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
-            #     _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
-            #
-            #     _write_far_up_down(sheetin, row_idx, 14, 15, hot_development_struct_dict.get(code, ""),
-            #                        styles, is_yellow=False)
 
             elif is_bond_allot_sheet:  # 配债股
                 item_list = bond_allot_dividend_data_dict.get(code, ["", "", ""])
@@ -1851,10 +1776,7 @@ strategy_total_percent = {
 
 # print(strategy_total_percent)   #  {'分红股': 0.5, '涨停回调': 0.2}
 
-# strategy_order = [
-#     "分红股", "业绩反转", "小盘猛牛", "涨停回调", "配债股", "热点发展",
-#     "分红基", "套利基", "超跌基", "海外基", "可转债", "空策略"
-# ]
+
 strategy_order = [
     "分红股", "业绩反转", "涨停回调", "小盘猛牛", "配债股",
     "分红基", "套利基", "超跌基", "海外基", "可转债", "空策略"
@@ -1920,7 +1842,6 @@ for strategy_name in sorted_strategy_names:
     is_fund_dividend_sheet = (strategy_name == "分红基")
     is_stock_dividend_sheet = (strategy_name == "分红股")
     is_small_cap_sheet = (strategy_name == "小盘猛牛")
-    # is_hot_development_sheet = (strategy_name == "热点发展")
     is_performance_reversal_sheet = (strategy_name == "业绩反转")
     is_limit_up_callback_sheet = (strategy_name == "涨停回调")
     is_bond_allot_sheet = (strategy_name == "配债股")
@@ -1942,7 +1863,7 @@ for strategy_name in sorted_strategy_names:
         is_stock_dividend_sheet=is_stock_dividend_sheet,
         is_fund_dividend_sheet=is_fund_dividend_sheet,
         is_small_cap_sheet=is_small_cap_sheet,
-        # is_hot_development_sheet=is_hot_development_sheet,
+
         is_performance_reversal_sheet=is_performance_reversal_sheet,
         is_limit_up_callback_sheet=is_limit_up_callback_sheet,
         is_bond_allot_sheet=is_bond_allot_sheet,
