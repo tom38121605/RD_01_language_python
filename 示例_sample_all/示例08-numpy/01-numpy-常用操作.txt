@@ -288,5 +288,10 @@ t错 = (100) # 这只是数字100，不是元组
       y1points = (y1points ).astype(float)
 
 
+26. 求numpy数组的平均值
+
+   ave_num = np.average(num)
+
+
 
 
