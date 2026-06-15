@@ -1,0 +1,58 @@
+
+
+0.   print打印_多种方法
+
+      print("\ntimestamp", timestamp)
+
+      print("delta=", delta[:3])
+
+      print("Timestamp=", f"{AAA}") 
+
+      print('device={} time={}'.format(device.name, time_array[row]) )
+
+      print('device='+f'{device.name}' + ' time=' + f'{time_array[row]}' )
+
+
+
+1.  按下标取其中一段子字符串
+
+      config = "12M_A=10_P=8_D=1_R=2.4_sensor_v131-with2888-3mA-lab-1#"
+      
+      if config[0:3]=="12M":
+          MCLK = 12.288 #MHz
+
+
+2. 搜索一段子字符串
+
+      config = "12M_A=10_P=8_D=1_R=2.4_sensor_v131-with2888-3mA-lab-1#"
+
+      pos1 = config.find("_A=")    
+      pos2 = config.find("_P=")  
+
+      amp_gain = float(config[(pos1+3):(pos2)])  # 10
+      pga_gain = int(config[(pos2+3):(pos3)])    # 8
+
+
+3. 求取字符串长度
+
+      s = "hello world"
+      length = len(s)      # 11
+
+
+
+
+
+
+9. 字符串转数字，字符串删除空格，字符串补空格或补0到固定长度：  
+
+    参考： 02_python-常用的数据转换和数据处理.txt
+
+
+
+
+
+
+
+
+
+
