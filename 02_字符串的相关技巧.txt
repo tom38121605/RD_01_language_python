@@ -39,13 +39,134 @@
       length = len(s)      # 11
 
 
-
-
-
-
-9. 字符串转数字，字符串删除空格，字符串补空格或补0到固定长度：  
+4. 字符串转数字，字符串删除空格，字符串补空格或补0到固定长度：  
 
     参考： 02_python-常用的数据转换和数据处理.txt
+
+
+5.   字符串遍历（逐个取字符）
+
+      s = "mag"
+      for char in s:
+          print(char)
+
+
+6. 字符串格式打印
+
+      1). 快速重复
+          print("A" * 5)  # AAAAA
+
+      2). # 补齐位数，不足补0（日志、编号常用）
+          idx = 5
+          print(f"{idx:04d}")  # 0005
+
+      3). 打印多行字符串
+
+          multi_text = """
+          1781503260465: Sending command
+          Ack: Success
+          """
+          print(multi_text)
+
+
+7. 字符串反转  （-1是步长）
+
+      s = "abcdef"
+      print(s[::-1])   # 字符串反转（经典用法）：fedcba
+      print(s[4:1:-1])  # 从下标1到4，反向取 ： edc
+
+
+8.  判断是否为空 / 纯数字 / 纯字母
+      s1 = ""
+      s2 = "12345"
+      s3 = "abc"
+
+      print(not s1)          # 判断空字符串：True
+      print(s2.isdigit())    # 是否纯数字：True
+      print(s3.isalpha())    # 是否纯字母：True
+      print("Abc123".isalnum()) # 是否字母+数字：True
+
+
+9. 字符串包含
+
+      text = "mag cal mode"
+      print("cal" in text)   # True，判断是否包含子串
+      print("test" not in text) # True
+
+
+10. 字符串分割：
+
+      log = "1781503260277: Sending command"
+      # 按冒号分割
+      part = log.split(":")
+      print(part)  # ['1781503260277', ' Sending command']
+
+      # 按空格分割，自动忽略多余空格
+      s = "a  b c"
+      print(s.split())  # ['a', 'b', 'c']
+
+
+11. join 列表转字符串 
+
+      lst = ["PORT", "CONNECTED"]
+      # 用下划线连接
+      new_str = "_".join(lst)
+      print(new_str)  # PORT_CONNECTED
+
+
+12. 大小写转换
+
+      s = "Hello World"
+      print(s.upper())   # 全大写：HELLO WORLD
+      print(s.lower())   # 全小写：hello world
+      print(s.title())   # 每个单词首字母大写：Hello World
+
+
+13. 去除首尾空格 / 指定字符
+
+      s = "  success  "
+      print(s.strip())   # 去除首尾空格：success
+      print(s.lstrip())  # 只去左边空格
+      print(s.rstrip())  # 只去右边空格
+
+      # 去除首尾指定字符
+      s2 = ",,data,"
+      print(s2.strip(","))  # data
+
+
+14. 字符串替换
+
+      text = "mag cal mode"
+      new_text = text.replace("cal", "calibration")
+      print(new_text)  # mag calibration mode
+
+
+15. 编码 / 解码（串口、报文常用）
+
+      # 字符串 → 字节（发串口）
+      b = "test".encode("utf-8")
+      # 字节 → 字符串（收串口）
+      s = b.decode("utf-8")
+
+
+
+
+
+
+
+
+      
+
+
+
+
+
+
+
+
+
+
+
 
 
 
