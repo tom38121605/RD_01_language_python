@@ -6,7 +6,7 @@
 
       print("delta=", delta[:3])
 
-      print("Timestamp=", f"{AAA}") 
+      print("Timestamp=", f"{timestamp}") 
 
       print('device={} time={}'.format(device.name, time_array[row]) )
 
@@ -24,13 +24,13 @@
 
 2. 搜索一段子字符串
 
-      config = "12M_A=10_P=8_D=1_R=2.4_sensor_v131-with2888-3mA-lab-1#"
+     s1 = "12M_A=10_P=8_D=1_R=2.4_sensor_v131-with2888-3mA-lab-1#"
 
-      pos1 = config.find("_A=")    
-      pos2 = config.find("_P=")  
+      pos1 = s1.find("_A=")    
+      pos2 = s1.find("_P=")  
 
-      amp_gain = float(config[(pos1+3):(pos2)])  # 10
-      pga_gain = int(config[(pos2+3):(pos3)])    # 8
+      amp_gain = float(s1[(pos1+3):(pos2)])  # 10
+      pga_gain = int(s1[(pos2+3):(pos2+4)])      # 8
 
 
 3. 求取字符串长度
@@ -47,8 +47,8 @@
 5.   字符串遍历（逐个取字符）
 
       s = "mag"
-      for char in s:
-          print(char)
+      for c   in s:
+          print( c )
 
 
 6. 字符串格式打印
@@ -57,8 +57,8 @@
           print("A" * 5)  # AAAAA
 
       2). # 补齐位数，不足补0（日志、编号常用）
-          idx = 5
-          print(f"{idx:04d}")  # 0005
+          s = 5
+          print(f"{s:04d}")  # 0005
 
       3). 打印多行字符串
 
@@ -106,7 +106,7 @@
       print(s.split())  # ['a', 'b', 'c']
 
 
-11. join 列表转字符串 
+11. join 用下划线连接字符串 
 
       lst = ["PORT", "CONNECTED"]
       # 用下划线连接
