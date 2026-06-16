@@ -22,14 +22,14 @@ FARDOWN_HIGH = 60
 
 # ---------------------- 0.1：分红股， 远涨远跌字典 ----------------------
 stock_dividend_struct_dict = {
-    "600016": "0.440, -0.338",    # 民生银行
-    "600755": "0.236, -0.338",    # 厦门国贸
-    "601169": "0.696, -0.278",    # 北京银行
-    "605368": "0.307, -0.480",    # 蓝天燃气
-    "600681": "0.256, -0.374",    # 百川能源
-    "603801": "0.021, -0.750",    # 志邦家居
-    "601006": "0.024, -0.293",    # 大秦铁路
-    "600300": "0.530, -0.275"     # 维维股份
+    "600016": "0.425, -0.345",    # 民生银行
+    "600755": "0.227, -0.342",    # 厦门国贸
+    "601169": "0.680, -0.285",    # 北京银行
+    "605368": "0.298, -0.488",    # 蓝天燃气
+    "600681": "0.231, -0.387",    # 百川能源
+    "603801": "0.008, -0.754",    # 志邦家居
+    "601006": "0.018, -0.297",    # 大秦铁路
+    "600300": "0.520, -0.279"     # 维维股份
 
     # # 多策略
     # "600681": "45, 27 ",  # 百川能源
@@ -39,13 +39,13 @@ stock_dividend_struct_dict = {
 
 # ---------------------- 0.2：涨停回调, 远涨远跌字典 ----------------------
 limit_up_callback_struct_dict = {
-    "600662": "0.281, -0.375",    # 外服控股
-    "600681": "0.256, -0.374",    # 百川能源
-    "600814": "0.445, -0.420",    # 杭州解百
-    "600755": "0.236, -0.338",    # 厦门国贸
-    "600858": "0.429, -0.398",    # 银座股份
-    "605368": "0.307, -0.480",    # 蓝天燃气
-    "605388": "0.282, -0.563"     # 均瑶健康
+    "600662": "0.266, -0.382",    # 外服控股
+    "600681": "0.231, -0.387",    # 百川能源
+    "600814": "0.439, -0.422",    # 杭州解百
+    "600755": "0.227, -0.342",    # 厦门国贸
+    "600858": "0.406, -0.408",    # 银座股份
+    "605368": "0.298, -0.488",    # 蓝天燃气
+    "605388": "0.273, -0.566"     # 均瑶健康
 
     # # 多策略
     # "600681": "45, 27 ",  # 百川能源
@@ -59,28 +59,28 @@ limit_up_callback_struct_dict = {
 # ---------------------- 0.3：小盘猛牛, 远涨远跌字典 ----------------------
 
 small_cap_callback_struct_dict = {
-    "300891": "0.293, -0.457",  # 惠云钛业
-    "605077": "0.149, -0.485",  # 华康股份
+    "300891": "0.263, -0.440",  # 惠云钛业
+    "605077": "0.125, -0.496",  # 华康股份
 
 }
 
 # ---------------------- 0.5：配债股, 远涨远跌字典 ----------------------
 
 bond_allot_struct_dict = {
-    "603759": "0.436, -0.539"   # 海天股份
+    "603759": "0.443, -0.537"   # 海天股份
 
 }
 
 
 # ---------------------- 0.6：分红基, 远涨远跌字典 ----------------------
 dividend_fund_struct_dict = {
-    "510720": "0.245, -0.050",    # XD红利国企ETF国泰
-    "513820": "0.479, -0.084",    # 港股通红利ETF汇添富
-    "180102": "0.023, -0.563",    # 华夏合肥高新REIT
-    "159307": "0.314, -0.058",    # 红利低波100ETF博时
-    "510880": "0.488, -0.050",    # 红利ETF华泰柏瑞
-    "515450": "0.952, -0.035",    # 红利低波50ETF南方
-    "515300": "0.752, -0.096"     # 300红利低波ETF嘉实
+    "510720": "0.223, -0.067",    # 红利国企ETF国泰
+    "180102": "0.025, -0.562",    # 华夏合肥高新REIT
+    "159307": "0.297, -0.071",    # 红利低波100ETF博时
+    "513820": "0.462, -0.094",    # 港股通红利ETF汇添富
+    "510880": "0.463, -0.065",    # 红利ETF华泰柏瑞
+    "515450": "0.930, -0.046",    # 红利低波50ETF南方
+    "515300": "0.729, -0.108"     # 300红利低波ETF嘉实
 
 }
 
@@ -108,35 +108,35 @@ swapbond_fund_struct_dict = {
 # ===================== 1.0：业绩反转，远涨远跌字典 =====================
 # 格式：key=股票代码, value="远涨数值,远跌数值"
 performance_reversal_far_dict = {
-    "003032": "0.309, -0.692",    # 传智教育
-    "300527": "0.433, -0.440",    # ST应急
-    "300366": "0.046, -0.743",    # ST创意
-    "002124": "0.199, -0.702",    # 天邦食品
-    "002122": "0.481, -0.556",    # ST汇洲
-    "000698": "0.299, -0.519",    # ST沈化
-    "002689": "0.426, -0.600",    # ST远智
-    "600624": "0.428, -0.583",    # ST复华
-    "600169": "0.295, -0.258",    # ST太重
-    "300460": "0.650, -0.493",    # ST惠伦
-    "000821": "0.065, -0.667",    # ST京机
-    "300173": "0.284, -0.629",    # ST福能
-    "000010": "0.525, -0.596",    # *ST美丽
-    "000488": "0.279, -0.607",    # ST晨鸣
-    "000639": "0.038, -0.759",    # ST西王
-    "000826": "0.637, -0.585",    # *ST启环
-    "00903": "0.299, -0.667",     # ST云动
-    "002055": "0.364, -0.565",    # ST得润
-    "002360": "0.376, -0.327",    # ST同德
-    "002512": "0.471, -0.512",    # ST达华
-    "002691": "0.226, -0.675",    # *ST冀凯
-    "002719": "0.402, -0.576",    # ST麦趣
-    "301030": "0.271, -0.770",    # *ST仕净
-    "600053": "0.023, -0.700",    # *ST九鼎
-    "600537": "0.278, -0.699",    # *ST亿晶
-    "600734": "0.049, -0.732",    # *ST实达
+    "003032": "0.317, -0.691",    # 传智教育
+    "300527": "0.441, -0.437",    # ST应急
+    "300366": "0.070, -0.737",    # ST创意
+    "002124": "0.184, -0.706",    # 天邦食品
+    "002122": "0.459, -0.563",    # ST汇洲
+    "000698": "0.291, -0.522",    # ST沈化
+    "002689": "0.411, -0.593",    # ST远智
+    "600624": "0.410, -0.588",    # ST复华
+    "600169": "0.283, -0.265",    # ST太重
+    "300460": "0.658, -0.491",    # ST惠伦
+    "000821": "0.069, -0.665",    # ST京机
+    "300173": "0.302, -0.614",    # ST福能
+    "000010": "0.511, -0.600",    # *ST美丽
+    "000488": "0.297, -0.612",    # ST晨鸣
+    "000639": "0.068, -0.752",    # ST西王
+    "000826": "0.615, -0.591",    # *ST启环
+    "000903": "0.287, -0.670",    # ST云动
+    "002055": "0.432, -0.530",    # ST得润
+    "002360": "0.369, -0.330",    # ST同德
+    "002512": "0.532, -0.492",    # ST达华
+    "002691": "0.287, -0.659",    # *ST冀凯
+    "002719": "0.413, -0.572",    # ST麦趣
+    "301030": "0.264, -0.771",    # *ST仕净
+    "600053": "0.067, -0.691",    # *ST九鼎
+    "600537": "0.324, -0.683",    # *ST亿晶
+    "600734": "0.049, -0.731",    # *ST实达
     "600735": "0.899, -0.359",    # ST新华锦
-    "600759": "0.276, -0.730",    # ST洲际石油
-    "688201": "0.219, -0.768"     # ST信安
+    "600759": "0.250, -0.736",    # ST洲际石油
+    "688201": "0.246, -0.763"     # ST信安
 }
 
 
@@ -207,6 +207,7 @@ limit_up_callback_dividend_date_dict = {
 small_cap_dividend_date__dict = {
     "300891": ["25年报 26/04/21", "预案 26/04/21", "0.0"], # 惠云钛业
     "605077": ["25年报 超跌 26/04/30", "除息 26/06/17", "2.0+3.0"],  # 华康股份
+    "603759": ["25年报 配债 26/04/30", "预案 26/04/30", "1.15"],  # 海天股份
 }
 
 
@@ -214,7 +215,7 @@ small_cap_dividend_date__dict = {
 
 # ---------------------- 5.1. 配债股年报日期字典 ----------------------
 bond_allot_dividend_data_dict = {
-    "603759": ["25年报 26/04/30", "预案 26/04/30", "1.15"],  # 海天股份
+    "603759": ["25年报 配债 26/04/30", "预案 26/04/30", "1.15"],  # 海天股份
     "001202": ["25年报 26/04/17", "预案 26/04/17", "0.0"],  # 炬申股份
 }
 
@@ -324,7 +325,7 @@ performance_reversal_audit_dict = {
 
     "000010": "  财报内控双无法表示意见 + 待整改 + 步骤3庭外接触投资人",  # *ST美丽福能
     "000488": "  内控否定意见&持续经营不确定 + 整改完成大半 + 或将摘帽？",  # ST晨鸣
-    "000639": "  内控否定意见&18亿资金挪用 + 待整改 + 或将退市",  # ST西王
+    "000639": "  内控否定意见&18亿资金挪用 + 待整改 + 可能退市",  # ST西王
 
     "000826": "  负净资产&持续经营不确定 + 步骤7招募投资人 + 可能退市",  # *ST启环
     "000903": "  财务造假&持续经营不确定 + 摘帽未明 + 暂不退市",  # 云动
@@ -514,7 +515,7 @@ strategy_dict = {
     "600256": "分红股", "603801": "分红股", "002267": "分红股", "600300": "分红股",
 
     #小盘猛牛
-    "605162": "小盘猛牛", "300891": "小盘猛牛","605077": "小盘猛牛",
+    "605162": "小盘猛牛", "300891": "小盘猛牛","605077": "小盘猛牛",  "603759": "小盘猛牛",
 
     #涨停回调
     "605388": "涨停回调", "603132": "涨停回调", "600814": "涨停回调", "600477": "涨停回调",
@@ -522,7 +523,7 @@ strategy_dict = {
     "002154": "涨停回调", "601669": "涨停回调", "600858": "涨停回调", "600516": "涨停回调",
 
     #配债股
-    "001202": "配债股", "603759": "配债股",
+    "001202": "配债股", # "603759": "配债股",
 
     # 分红基
     "180102": "分红基", "515300": "分红基", "159307": "分红基",
@@ -858,7 +859,28 @@ def get_performance_reversal_sort_key(item):  # 业绩反转，按摘帽申请�
 def create_styles():
     styles = {}
 
-#-------------------base module----------------------
+    # -------------------basefont----------------------
+
+    font_normal = xlwt.Font()
+    font_normal.height = 9 * 20
+
+    pink_font = xlwt.Font()
+    pink_font.height = 9 * 20
+    pink_font.colour_index = 14  # 红色10 粉红色14
+
+    red_font = xlwt.Font()
+    red_font.height = 9 * 20
+    red_font.colour_index = 10  # 纯红色
+
+
+    # -------------------base background----------------------
+
+    pattern_yellow = xlwt.Pattern()
+    pattern_yellow.pattern = xlwt.Pattern.SOLID_PATTERN
+    pattern_yellow.pattern_fore_colour = 34   # 34 = 黄色
+
+
+    #-------------------base align----------------------
 
     align_left = xlwt.Alignment()
     align_left.horz = xlwt.Alignment.HORZ_LEFT
@@ -866,287 +888,221 @@ def create_styles():
     align_right = xlwt.Alignment()
     align_right.horz = xlwt.Alignment.HORZ_RIGHT
 
-    align_header = xlwt.Alignment()                   # align_doublecenter
+    align_header = xlwt.Alignment()
     align_header.horz = xlwt.Alignment.HORZ_CENTER
     align_header.vert = xlwt.Alignment.VERT_CENTER
 
-    # font = xlwt.Font()
-    # font.height = 9 * 20
+    align_center = xlwt.Alignment()
+    align_center.horz = xlwt.Alignment.HORZ_CENTER
 
-    pink_font = xlwt.Font()
-    pink_font.height = 9 * 20
-    pink_font.colour_index = 14   # 红色10 粉红色14
-
-
-    # pattern = xlwt.Pattern()
-    # pattern.pattern = xlwt.Pattern.SOLID_PATTERN
-    # pattern.pattern_fore_colour = 34   # 34 = 黄色
-
-
-    # -------------------base module-----end-----------------
+    # -------------------base align-----end-----------------
 
 
     base_style = xlwt.XFStyle()
-    font = xlwt.Font()
-    font.height = 9 * 20
-    base_style.font = font
-    align_base = xlwt.Alignment()  # add
-    align_base.horz = xlwt.Alignment.HORZ_RIGHT  # add
-    base_style.alignment = align_base   # add
+    base_style.font = font_normal
+    base_style.alignment = align_left
     styles["base"] = base_style
 
     header_center = xlwt.XFStyle()
-    header_center.font = font
-    # align_header = xlwt.Alignment()
-    # align_header.horz = xlwt.Alignment.HORZ_CENTER
-    # align_header.vert = xlwt.Alignment.VERT_CENTER
+    header_center.font = font_normal
     header_center.alignment = align_header
     styles["header"] = header_center
 
     percent_right = xlwt.XFStyle()
-    percent_right.font = font
-    align_percent = xlwt.Alignment()
-    align_percent.horz = xlwt.Alignment.HORZ_RIGHT
-    percent_right.alignment = align_percent
+    percent_right.font = font_normal
+    percent_right.alignment = align_right
     styles["percent"] = percent_right
 
     strategy_right = xlwt.XFStyle()
-    strategy_right.font = font
-    align_strategy = xlwt.Alignment()
-    align_strategy.horz = xlwt.Alignment.HORZ_RIGHT
-    strategy_right.alignment = align_strategy
+    strategy_right.font = font_normal
+    strategy_right.alignment = align_right
     styles["strategy"] = strategy_right
 
     yellow_bg = xlwt.XFStyle()
-    yellow_bg.font = font
-    pattern = xlwt.Pattern()
-    pattern.pattern = xlwt.Pattern.SOLID_PATTERN
-    pattern.pattern_fore_colour = 34   # 34 = 黄色
-    yellow_bg.pattern = pattern
-    yellow_bg.alignment = align_percent   # add
+    yellow_bg.font = font_normal
+    yellow_bg.pattern = pattern_yellow
+    yellow_bg.alignment = align_right   # add
     styles["yellow"] = yellow_bg
 
     styles["yellow_percent"] = xlwt.XFStyle()
-    styles["yellow_percent"].font = font
-    styles["yellow_percent"].alignment = align_percent
-    styles["yellow_percent"].pattern = pattern
+    styles["yellow_percent"].font = font_normal
+    styles["yellow_percent"].alignment = align_right
+    styles["yellow_percent"].pattern = pattern_yellow
 
     styles["yellow_strategy"] = xlwt.XFStyle()
-    styles["yellow_strategy"].font = font
-    styles["yellow_strategy"].alignment = align_strategy
-    styles["yellow_strategy"].pattern = pattern
+    styles["yellow_strategy"].font = font_normal
+    styles["yellow_strategy"].alignment = align_right
+    styles["yellow_strategy"].pattern = pattern_yellow
 
     summary_style = xlwt.XFStyle()
-    summary_style.font = font
-    align_summary = xlwt.Alignment()
-    align_summary.horz = xlwt.Alignment.HORZ_CENTER
-    summary_style.alignment = align_summary
+    summary_style.font = font_normal
+    summary_style.alignment = align_center
     styles["summary"] = summary_style
 
     total_percent_right = xlwt.XFStyle()
-    total_percent_right.font = font
-    align_total = xlwt.Alignment()
-    align_total.horz = xlwt.Alignment.HORZ_RIGHT
-    total_percent_right.alignment = align_total
+    total_percent_right.font = font_normal
+    total_percent_right.alignment = align_right
     styles["total_percent"] = total_percent_right
 
     styles["yellow_total_percent"] = xlwt.XFStyle()
-    styles["yellow_total_percent"].font = font
-    styles["yellow_total_percent"].alignment = align_total
-    styles["yellow_total_percent"].pattern = pattern
+    styles["yellow_total_percent"].font = font_normal
+    styles["yellow_total_percent"].alignment = align_right
+    styles["yellow_total_percent"].pattern = pattern_yellow
 
     date_right = xlwt.XFStyle()
-    date_right.font = font
-    align_date = xlwt.Alignment()
-    align_date.horz = xlwt.Alignment.HORZ_RIGHT
-    date_right.alignment = align_date
+    date_right.font = font_normal
+    date_right.alignment = align_right
     styles["date_right"] = date_right
 
     styles["yellow_date_right"] = xlwt.XFStyle()
-    styles["yellow_date_right"].font = font
-    styles["yellow_date_right"].alignment = align_date
-    styles["yellow_date_right"].pattern = pattern
+    styles["yellow_date_right"].font = font_normal
+    styles["yellow_date_right"].alignment = align_right
+    styles["yellow_date_right"].pattern = pattern_yellow
 
     styles["delisting_apply_right"] = xlwt.XFStyle()
-    styles["delisting_apply_right"].font = font
-    styles["delisting_apply_right"].alignment = align_date
+    styles["delisting_apply_right"].font = font_normal
+    styles["delisting_apply_right"].alignment = align_right
 
     styles["yellow_delisting_apply_right"] = xlwt.XFStyle()
-    styles["yellow_delisting_apply_right"].font = font
-    styles["yellow_delisting_apply_right"].alignment = align_date
-    styles["yellow_delisting_apply_right"].pattern = pattern
+    styles["yellow_delisting_apply_right"].font = font_normal
+    styles["yellow_delisting_apply_right"].alignment = align_right
+    styles["yellow_delisting_apply_right"].pattern = pattern_yellow
 
     pink_delisting_apply = xlwt.XFStyle()
-    # pink_font = xlwt.Font()
-    # pink_font.height = 9 * 20
-    # pink_font.colour_index = 14   # 红色10 粉红色14
     pink_delisting_apply.font = pink_font
-    pink_delisting_apply.alignment = align_date
+    pink_delisting_apply.alignment = align_right
     styles["pink_delisting_apply"] = pink_delisting_apply
 
     yellow_pink_delisting_apply = xlwt.XFStyle()
     yellow_pink_delisting_apply.font = pink_font
-    yellow_pink_delisting_apply.alignment = align_date
-    yellow_pink_delisting_apply.pattern = pattern
+    yellow_pink_delisting_apply.alignment = align_right
+    yellow_pink_delisting_apply.pattern = pattern_yellow
     styles["yellow_pink_delisting_apply"] = yellow_pink_delisting_apply
 
     # 要点列样式（左对齐，适配文字）
     memo_left = xlwt.XFStyle()
-    memo_left.font = font
-    align_memo = xlwt.Alignment()
-    align_memo.horz = xlwt.Alignment.HORZ_LEFT
-    memo_left.alignment = align_memo
+    memo_left.font = font_normal
+    memo_left.alignment = align_left
     styles["memo_left"] = memo_left
 
     yellow_memo_left = xlwt.XFStyle()
-    yellow_memo_left.font = font
-    yellow_memo_left.alignment = align_memo
-    yellow_memo_left.pattern = pattern
+    yellow_memo_left.font = font_normal
+    yellow_memo_left.alignment = align_left
+    yellow_memo_left.pattern = pattern_yellow
     styles["yellow_memo_left"] = yellow_memo_left
 
-    # 周线列专用：半周线 / 周线涨 粉红色字体
-    week_pink_font = xlwt.Font()
-    week_pink_font.height = 9 * 20
-    week_pink_font.colour_index = 14  # 粉红色
 
     # 普通行 粉红色
     week_pink_style = xlwt.XFStyle()
-    week_pink_style.font = week_pink_font
+    week_pink_style.font = pink_font
     styles["week_pink"] = week_pink_style
 
     # 黄色行 粉红色（黄底）
     week_yellow_pink_style = xlwt.XFStyle()
-    week_yellow_pink_style.font = week_pink_font
-    week_yellow_pink_style.pattern = pattern
-    week_yellow_pink_style.alignment = align_date
+    week_yellow_pink_style.font = pink_font
+    week_yellow_pink_style.pattern = pattern_yellow
+    week_yellow_pink_style.alignment = align_right
     styles["week_yellow_pink"] = week_yellow_pink_style
-
-    # 远涨专用颜色
-    far_up_pink_font = xlwt.Font()
-    far_up_pink_font.height = 9 * 20
-    far_up_pink_font.colour_index = 14  # 粉红
-
-    far_up_red_font = xlwt.Font()
-    far_up_red_font.height = 9 * 20
-    far_up_red_font.colour_index = 10  # 红色
 
     # 普通行
     far_up_pink = xlwt.XFStyle()
-    far_up_pink.font = far_up_pink_font
-    far_up_pink.alignment = align_date    # add
+    far_up_pink.font = pink_font
+    far_up_pink.alignment = align_right
     styles["far_up_pink"] = far_up_pink
 
     far_up_red = xlwt.XFStyle()
-    far_up_red.font = far_up_red_font
-    far_up_red.alignment = align_date    # add
+    far_up_red.font = red_font
+    far_up_red.alignment = align_right
     styles["far_up_red"] = far_up_red
 
     # 黄色行（黄底）
     far_up_yellow_pink = xlwt.XFStyle()
-    far_up_yellow_pink.font = far_up_pink_font
-    far_up_yellow_pink.pattern = pattern
-    far_up_yellow_pink.alignment = align_date
+    far_up_yellow_pink.font = pink_font
+    far_up_yellow_pink.pattern = pattern_yellow
+    far_up_yellow_pink.alignment = align_right
     styles["far_up_yellow_pink"] = far_up_yellow_pink
 
     far_up_yellow_red = xlwt.XFStyle()
-    far_up_yellow_red.font = far_up_red_font
-    far_up_yellow_red.pattern = pattern
-    far_up_yellow_red.alignment = align_date
+    far_up_yellow_red.font = red_font
+    far_up_yellow_red.pattern = pattern_yellow
+    far_up_yellow_red.alignment = align_right
     styles["far_up_yellow_red"] = far_up_yellow_red
-
-    # 远跌专用颜色
-    far_down_pink_font = xlwt.Font()
-    far_down_pink_font.height = 9 * 20
-    far_down_pink_font.colour_index = 14  # 粉红
-
-    far_down_red_font = xlwt.Font()
-    far_down_red_font.height = 9 * 20
-    far_down_red_font.colour_index = 10  # 红色
 
     # 普通行
     far_down_pink = xlwt.XFStyle()
-    far_down_pink.font = far_down_pink_font
-    far_down_pink.alignment = align_date   # add
+    far_down_pink.font = pink_font
+    far_down_pink.alignment = align_right
     styles["far_down_pink"] = far_down_pink
 
     far_down_red = xlwt.XFStyle()
-    far_down_red.font = far_down_red_font
-    far_down_red.alignment = align_date   # add
+    far_down_red.font = red_font
+    far_down_red.alignment = align_right
     styles["far_down_red"] = far_down_red
 
     # 黄色行（黄底）
     far_down_yellow_pink = xlwt.XFStyle()
-    far_down_yellow_pink.font = far_down_pink_font
-    far_down_yellow_pink.pattern = pattern
-    far_down_yellow_pink.alignment = align_date
+    far_down_yellow_pink.font = pink_font
+    far_down_yellow_pink.pattern = pattern_yellow
+    far_down_yellow_pink.alignment = align_right
     styles["far_down_yellow_pink"] = far_down_yellow_pink
 
     far_down_yellow_red = xlwt.XFStyle()
-    far_down_yellow_red.font = far_down_red_font
-    far_down_yellow_red.pattern = pattern
-    far_down_yellow_red.alignment = align_date
+    far_down_yellow_red.font = red_font
+    far_down_yellow_red.pattern = pattern_yellow
+    far_down_yellow_red.alignment = align_right
     styles["far_down_yellow_red"] = far_down_yellow_red
 
-    # ===================== 审计列 颜色样式 =====================
-    audit_pink_font = xlwt.Font()
-    audit_pink_font.height = 9 * 20
-    audit_pink_font.colour_index = 14  # 粉红
 
-    audit_red_font = xlwt.Font()
-    audit_red_font.height = 9 * 20
-    audit_red_font.colour_index = 10  # 红色
+    # ===================== 审计列 颜色样式 =====================
 
     # 普通行
     audit_pink = xlwt.XFStyle()
-    audit_pink.font = audit_pink_font
+    audit_pink.font = pink_font
     audit_pink.alignment = align_left     # add
     styles["audit_pink"] = audit_pink
 
     audit_red = xlwt.XFStyle()
-    audit_red.font = audit_red_font
-    audit_red.alignment = align_left     # add
+    audit_red.font = red_font
+    audit_red.alignment = align_left
     styles["audit_red"] = audit_red
 
     audit_normal = xlwt.XFStyle()
-    # audit_normal.font = audit_red_font
-    audit_normal.alignment = align_left     # add
+    # audit_normal.font = font_normal
+    audit_normal.alignment = align_left
     styles["audit_normal"] = audit_normal
 
     # 黄色行（黄底）
     audit_yellow_pink = xlwt.XFStyle()
-    audit_yellow_pink.font = audit_pink_font
-    audit_yellow_pink.pattern = pattern
-    audit_yellow_pink.alignment = align_left #align_date
+    audit_yellow_pink.font = pink_font
+    audit_yellow_pink.pattern = pattern_yellow
+    audit_yellow_pink.alignment = align_left
     styles["audit_yellow_pink"] = audit_yellow_pink
 
     audit_yellow_red = xlwt.XFStyle()
-    audit_yellow_red.font = audit_red_font
-    audit_yellow_red.pattern = pattern
-    audit_yellow_red.alignment = align_left #align_date
+    audit_yellow_red.font = red_font
+    audit_yellow_red.pattern = pattern_yellow
+    audit_yellow_red.alignment = align_left
     styles["audit_yellow_red"] = audit_yellow_red
 
     audit_yellow_normal = xlwt.XFStyle()
-    # audit_yellow_normal.font = audit_red_font
-    audit_yellow_normal.pattern = pattern
-    audit_yellow_normal.alignment = align_left #align_date
+    # audit_yellow_normal.font = font_normal
+    audit_yellow_normal.pattern = pattern_yellow
+    audit_yellow_normal.alignment = align_left
     styles["audit_yellow_normal"] = audit_yellow_normal
 
 
     # 红色字体样式（年化≤1.5用）
     red_style = xlwt.XFStyle()
-    red_font = xlwt.Font()
-    red_font.height = 9 * 20
-    red_font.colour_index = 10  # 纯红色
     red_style.font = red_font
-    red_style.alignment = align_date
+    red_style.alignment = align_right
     styles["red_text"] = red_style
 
 
     # 黄底 + 红色
     yellow_red_style = xlwt.XFStyle()
     yellow_red_style.font = red_font
-    yellow_red_style.alignment = align_date
-    yellow_red_style.pattern = pattern
+    yellow_red_style.alignment = align_right
+    yellow_red_style.pattern = pattern_yellow
     styles["yellow_red_text"] = yellow_red_style
 
 
@@ -1362,18 +1318,21 @@ def write_sheet_data1(
         8: 10, 9: 10, 10: 8, 11: 8
     }
 
+    # "分红股", "分红基", "涨停回调", "配债股", "小盘猛牛"
     col_widths2 = {    # K=10
         0: 8, 1: 10, 2: 8, 3: 8, 4: 10, 5: 9, 6: 6, 7: 10,
-        8: 10, 9: 8, 10: 15, 11: 16, 12: 12, 13: 9, 14: 8, 15: 8
+        8: 10, 9: 8, 10: 18, 11: 16, 12: 12, 13: 9, 14: 8, 15: 8
     }
+
+    # "业绩反转"
     col_widths3 = {    # K=10
         0: 8, 1: 8, 2: 6, 3: 6, 4: 7, 5: 6, 6: 4, 7: 10,
         8: 10, 9: 8, 10: 19, 11: 7, 12: 6, 13: 6, 14: 60, 15: 30
     }
 
     # 应用列宽
-    special_sheets = ["分红股", "分红基", "涨停回调", "配债股", "小盘猛牛"]   # col_widths2
-    special_sheets2 = ["业绩反转"]   # col_widths3
+    special_sheets = ["分红股", "分红基", "涨停回调", "配债股", "小盘猛牛"]    # col_widths2
+    special_sheets2 = ["业绩反转"]                                          # col_widths3
 
     current_sheet_name = sheetin.name.strip()
 
