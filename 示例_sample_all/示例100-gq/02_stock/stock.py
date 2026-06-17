@@ -22,14 +22,14 @@ FARDOWN_HIGH = 60
 
 # ---------------------- 0.1：分红股， 远涨远跌字典 ----------------------
 stock_dividend_struct_dict = {
-    "600016": "0.425, -0.345",    # 民生银行
-    "600755": "0.227, -0.342",    # 厦门国贸
-    "601169": "0.680, -0.285",    # 北京银行
-    "605368": "0.298, -0.488",    # 蓝天燃气
-    "600681": "0.231, -0.387",    # 百川能源
-    "603801": "0.008, -0.754",    # 志邦家居
-    "601006": "0.018, -0.297",    # 大秦铁路
-    "600300": "0.520, -0.279"     # 维维股份
+    "600016": "0.413, -0.350",    # 民生银行
+    "600755": "0.221, -0.346",    # 厦门国贸
+    "601169": "0.667, -0.290",    # 北京银行
+    "605368": "0.258, -0.504",    # 蓝天燃气
+    "600681": "0.214, -0.395",    # 百川能源
+    "603801": "0.008, -0.762",    # 志邦家居
+    "601006": "0.008, -0.304",    # 大秦铁路
+    "600300": "0.485, -0.296"     # 维维股份
 
     # # 多策略
     # "600681": "45, 27 ",  # 百川能源
@@ -39,13 +39,13 @@ stock_dividend_struct_dict = {
 
 # ---------------------- 0.2：涨停回调, 远涨远跌字典 ----------------------
 limit_up_callback_struct_dict = {
-    "600662": "0.266, -0.382",    # 外服控股
-    "600681": "0.231, -0.387",    # 百川能源
-    "600814": "0.439, -0.422",    # 杭州解百
-    "600755": "0.227, -0.342",    # 厦门国贸
-    "600858": "0.406, -0.408",    # 银座股份
-    "605368": "0.298, -0.488",    # 蓝天燃气
-    "605388": "0.273, -0.566"     # 均瑶健康
+    "600662": "0.263, -0.384",    # 外服控股
+    "600681": "0.214, -0.395",    # 百川能源
+    "600814": "0.395, -0.440",    # 杭州解百
+    "600755": "0.221, -0.346",    # 厦门国贸
+    "600858": "0.357, -0.429",    # 银座股份
+    "605368": "0.258, -0.504",    # 蓝天燃气
+    "605388": "0.237, -0.578"     # 均瑶健康
 
     # # 多策略
     # "600681": "45, 27 ",  # 百川能源
@@ -59,8 +59,9 @@ limit_up_callback_struct_dict = {
 # ---------------------- 0.3：小盘猛牛, 远涨远跌字典 ----------------------
 
 small_cap_callback_struct_dict = {
-    "300891": "0.263, -0.440",  # 惠云钛业
-    "605077": "0.125, -0.496",  # 华康股份
+    "300891": "0.247, -0.465",    # 惠云钛业
+    "605077": "0.133, -0.500",    # XD华康股份
+    "603759": "0.402, -0.550"     # 海天股份
 
 }
 
@@ -74,13 +75,13 @@ bond_allot_struct_dict = {
 
 # ---------------------- 0.6：分红基, 远涨远跌字典 ----------------------
 dividend_fund_struct_dict = {
-    "510720": "0.223, -0.067",    # 红利国企ETF国泰
-    "180102": "0.025, -0.562",    # 华夏合肥高新REIT
-    "159307": "0.297, -0.071",    # 红利低波100ETF博时
-    "513820": "0.462, -0.094",    # 港股通红利ETF汇添富
-    "510880": "0.463, -0.065",    # 红利ETF华泰柏瑞
-    "515450": "0.930, -0.046",    # 红利低波50ETF南方
-    "515300": "0.729, -0.108"     # 300红利低波ETF嘉实
+    "510720": "0.207, -0.079",    # 红利国企ETF国泰
+    "180102": "0.022, -0.564",    # 华夏合肥高新REIT
+    "159307": "0.289, -0.077",    # 红利低波100ETF博时
+    "513820": "0.448, -0.103",    # 港股通红利ETF汇添富
+    "510880": "0.447, -0.076",    # 红利ETF华泰柏瑞
+    "515450": "0.915, -0.054",    # 红利低波50ETF南方
+    "515300": "0.715, -0.115"     # 300红利低波ETF嘉实
 
 }
 
@@ -108,35 +109,35 @@ swapbond_fund_struct_dict = {
 # ===================== 1.0：业绩反转，远涨远跌字典 =====================
 # 格式：key=股票代码, value="远涨数值,远跌数值"
 performance_reversal_far_dict = {
-    "003032": "0.317, -0.691",    # 传智教育
-    "300527": "0.441, -0.437",    # ST应急
-    "300366": "0.070, -0.737",    # ST创意
-    "002124": "0.184, -0.706",    # 天邦食品
-    "002122": "0.459, -0.563",    # ST汇洲
-    "000698": "0.291, -0.522",    # ST沈化
-    "002689": "0.411, -0.593",    # ST远智
-    "600624": "0.410, -0.588",    # ST复华
-    "600169": "0.283, -0.265",    # ST太重
-    "300460": "0.658, -0.491",    # ST惠伦
-    "000821": "0.069, -0.665",    # ST京机
-    "300173": "0.302, -0.614",    # ST福能
-    "000010": "0.511, -0.600",    # *ST美丽
-    "000488": "0.297, -0.612",    # ST晨鸣
-    "000639": "0.068, -0.752",    # ST西王
-    "000826": "0.615, -0.591",    # *ST启环
-    "000903": "0.287, -0.670",    # ST云动
-    "002055": "0.432, -0.530",    # ST得润
-    "002360": "0.369, -0.330",    # ST同德
-    "002512": "0.532, -0.492",    # ST达华
-    "002691": "0.287, -0.659",    # *ST冀凯
-    "002719": "0.413, -0.572",    # ST麦趣
-    "301030": "0.264, -0.771",    # *ST仕净
-    "600053": "0.067, -0.691",    # *ST九鼎
-    "600537": "0.324, -0.683",    # *ST亿晶
-    "600734": "0.049, -0.731",    # *ST实达
-    "600735": "0.899, -0.359",    # ST新华锦
-    "600759": "0.250, -0.736",    # ST洲际石油
-    "688201": "0.246, -0.763"     # ST信安
+    "003032": "0.266, -0.702",    # 传智教育
+    "300527": "0.425, -0.443",    # ST应急
+    "300366": "0.052, -0.741",    # ST创意
+    "002124": "0.148, -0.714",    # 天邦食品
+    "002122": "0.415, -0.576",    # ST汇洲
+    "000698": "0.243, -0.540",    # ST沈化
+    "002689": "0.377, -0.580",    # ST远智
+    "600624": "0.421, -0.585",    # ST复华
+    "600169": "0.272, -0.272",    # ST太重
+    "300460": "0.681, -0.484",    # ST惠伦
+    "000821": "0.058, -0.669",    # ST京机
+    "300173": "0.298, -0.625",    # ST福能
+    "000010": "0.439, -0.619",    # *ST美丽
+    "000488": "0.261, -0.623",    # ST晨鸣
+    "000639": "0.023, -0.763",    # ST西王
+    "000826": "0.607, -0.593",    # *ST启环
+    "000903": "0.255, -0.678",    # ST云动
+    "002055": "0.458, -0.487",    # ST得润
+    "002360": "0.329, -0.350",    # ST同德
+    "002512": "0.475, -0.511",    # ST达华
+    "002691": "0.242, -0.671",    # *ST冀凯
+    "002719": "0.375, -0.584",    # ST麦趣
+    "301030": "0.196, -0.791",    # *ST仕净
+    "600053": "0.057, -0.694",    # *ST九鼎
+    "600537": "0.389, -0.668",    # *ST亿晶
+    "600734": "0.086, -0.723",    # *ST实达
+    "600735": "0.847, -0.376",    # ST新华锦
+    "600759": "0.260, -0.734",    # ST洲际石油
+    "688201": "0.196, -0.773"     # ST信安
 }
 
 
@@ -323,22 +324,22 @@ performance_reversal_audit_dict = {
     "000821": "  财务造假 + 整改已ok + 或将摘帽 + 暂不退市",  # ST京机
     "300173": "  财务造假 + 整改已ok + 或将摘帽 + 暂不退市",  # ST福能
 
-    "000010": "  财报内控双无法表示意见 + 待整改 + 步骤3庭外接触投资人",  # *ST美丽福能
+    "000010": "  财报内控双无法表示意见 + 待整改 + 重整步骤3庭外接触投资人",  # *ST美丽福能
     "000488": "  内控否定意见&持续经营不确定 + 整改完成大半 + 或将摘帽？",  # ST晨鸣
     "000639": "  内控否定意见&18亿资金挪用 + 待整改 + 可能退市",  # ST西王
 
-    "000826": "  负净资产&持续经营不确定 + 步骤7招募投资人 + 可能退市",  # *ST启环
+    "000826": "  负净资产&持续经营不确定 + 重整步骤7招募投资人 + 可能退市",  # *ST启环
     "000903": "  财务造假&持续经营不确定 + 摘帽未明 + 暂不退市",  # 云动
     "002055": "  财务造假&持续经营不确定 + 摘帽未明 + 暂不退市",  # ST得润
-    "002360": "  财报保留&内控否定 + 步骤7招募投资人 + 暂不退市",  # ST同德
+    "002360": "  财报保留&内控否定 + 重整步骤7招募投资人 + 暂不退市",  # ST同德
     "002512": "  财务造假 + 整改已ok + 27年报后或摘帽 + 暂不退市",  # ST达华
     "002691": "  财务亏损 + 26Q1营收巨降 + 或换大股东 + 可能退市",  # *ST冀凯
     "002719": "  三年亏损持续经营不确定 + 摘帽未明 + 暂不退市",  # ST麦趣
-    "301030": "  净资产负4亿&无法表达意见&内控否定 + 步骤7启动预重整 + 可能退市",  # *ST仕净
+    "301030": "  净资产负4亿&无法表达意见&内控否定 + 重整步骤7启动预重整 + 可能退市",  # *ST仕净
     "600053": "  财务亏损 + 收购南京神源生 + 可能退市",  # *ST九鼎
     "600537": "  净资产负8kw&内控否定 + 重整投资人注入23亿 + 较小可能退市",  # *ST亿晶
     "600734": "  财务亏损 + 注入大数据资产 + 较高摘帽概率 + 可能退市",  # *ST实达
-    "600735": "  挪用4亿&内控否定 + 3个石墨矿 + 步骤8债权人会议 + 暂不退市",  # ST新华锦
+    "600735": "  挪用4亿&内控否定 + 3个石墨矿 + 重整步骤8债权人会议 + 暂不退市",  # ST新华锦
     "600759": "  财报保留意见&内控否定意见 + 挪用68亿流水(或已还清)",  # ST洲际
     "688201": "  内控否定 + 较高摘帽概率 + 暂不退市",  # ST信安
 
@@ -548,7 +549,7 @@ strategy_dict = {
     "113701": "可转债", "111024": "可转债",  "110081": "可转债", "127015": "可转债",
     "404003": "可转债", "127033": "可转债", "128124": "可转债", "127025": "可转债",
     "113575": "可转债", "110092": "可转债", "118027": "可转债", "123265": "可转债",
-    "123266": "可转债",
+    "123266": "可转债", "754809": "可转债",
 
     # 业绩反转
     "000903": "业绩反转", "300527": "业绩反转", "603595": "业绩反转", "300052": "业绩反转",
@@ -621,7 +622,6 @@ def _write_annual_rate(sheetin, row_idx, col_idx, annual_rate_text, styles, is_y
         else:
             sheetin.write(row_idx, col_idx, annual_rate_text, styles["date_right"])
 
-
 def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, styles, is_yellow=False):
     """写入远涨和远跌数据并应用颜色"""
     far_up = ""
@@ -648,53 +648,128 @@ def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, s
         try:
             val = int(far_up)
             if val <= 50:
-                far_up_style = styles["far_up_yellow_pink"]
+                far_up_style = styles["far_yellow_pink"]
             elif val >= 70:
-                far_up_style = styles["far_up_yellow_red"]
+                far_up_style = styles["far_yellow_red"]
             else:
-                far_up_style = styles["yellow"]
+                far_up_style = styles["far_yellow_normal"]
         except:
-            far_up_style = styles["yellow"]
+            far_up_style = styles["far_yellow_normal"]
         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
 
         # 远跌
         try:
             val = int(far_down.strip())
             if val >= 60:
-                far_down_style = styles["far_down_yellow_pink"]
+                far_down_style = styles["far_yellow_pink"]
             elif val <= 30:
-                far_down_style = styles["far_down_yellow_red"]
+                far_down_style = styles["far_yellow_red"]
             else:
-                far_down_style = styles["yellow"]
+                far_down_style = styles["far_yellow_normal"]
         except:
-            far_down_style = styles["yellow"]
+            far_down_style = styles["far_yellow_normal"]
         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
     else:
         # 远涨
         try:
             val = int(far_up)
             if val <= 50:
-                far_up_style = styles["far_up_pink"]
+                far_up_style = styles["fa_pink"]
             elif val >= 70:
-                far_up_style = styles["far_up_red"]
+                far_up_style = styles["far_red"]
             else:
-                far_up_style = styles["base"]
+                far_up_style = styles["far_normal"]
         except:
-            far_up_style = styles["base"]
+            far_up_style = styles["far_normal"]
         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
 
         # 远跌
         try:
             val = int(far_down.strip())
             if val >= 60:
-                far_down_style = styles["far_down_pink"]
+                far_down_style = styles["far_pink"]
             elif val <= 30:
-                far_down_style = styles["far_down_red"]
+                far_down_style = styles["far_red"]
             else:
-                far_down_style = styles["base"]
+                far_down_style = styles["far_normal"]
         except:
-            far_down_style = styles["base"]
+            far_down_style = styles["far_normal"]
         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
+
+
+# def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, styles, is_yellow=False):
+#     """写入远涨和远跌数据并应用颜色"""
+#     far_up = ""
+#     far_down = ""
+#     if struct_str:
+#         parts = struct_str.split(",")
+#         if len(parts) >= 2:
+#             far_up = parts[0].strip()
+#             far_down = parts[1].strip()
+#
+#     # 乘100并取整
+#     try:
+#         far_up = str(int(float(far_up) * 100))
+#     except:
+#         far_up = ""
+#     try:
+#         far_down = str(int(abs(float(far_down)) * 100))
+#     except:
+#         far_down = ""
+#
+#     # 选择样式
+#     if is_yellow:
+#         # 远涨
+#         try:
+#             val = int(far_up)
+#             if val <= 50:
+#                 far_up_style = styles["far_up_yellow_pink"]
+#             elif val >= 70:
+#                 far_up_style = styles["far_up_yellow_red"]
+#             else:
+#                 far_up_style = styles["yellow"]
+#         except:
+#             far_up_style = styles["yellow"]
+#         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
+#
+#         # 远跌
+#         try:
+#             val = int(far_down.strip())
+#             if val >= 60:
+#                 far_down_style = styles["far_down_yellow_pink"]
+#             elif val <= 30:
+#                 far_down_style = styles["far_down_yellow_red"]
+#             else:
+#                 far_down_style = styles["yellow"]
+#         except:
+#             far_down_style = styles["yellow"]
+#         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
+#     else:
+#         # 远涨
+#         try:
+#             val = int(far_up)
+#             if val <= 50:
+#                 far_up_style = styles["far_up_pink"]
+#             elif val >= 70:
+#                 far_up_style = styles["far_up_red"]
+#             else:
+#                 far_up_style = styles["base"]
+#         except:
+#             far_up_style = styles["base"]
+#         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
+#
+#         # 远跌
+#         try:
+#             val = int(far_down.strip())
+#             if val >= 60:
+#                 far_down_style = styles["far_down_pink"]
+#             elif val <= 30:
+#                 far_down_style = styles["far_down_red"]
+#             else:
+#                 far_down_style = styles["base"]
+#         except:
+#             far_down_style = styles["base"]
+#         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
 
 
 #---日期解析工具函数
@@ -1004,53 +1079,93 @@ def create_styles():
     week_yellow_pink_style.alignment = align_right
     styles["week_yellow_pink"] = week_yellow_pink_style
 
-    # 普通行
-    far_up_pink = xlwt.XFStyle()
-    far_up_pink.font = pink_font
-    far_up_pink.alignment = align_right
-    styles["far_up_pink"] = far_up_pink
 
-    far_up_red = xlwt.XFStyle()
-    far_up_red.font = red_font
-    far_up_red.alignment = align_right
-    styles["far_up_red"] = far_up_red
+
+    # ====================far==============================
+    # 普通行
+
+    far_pink = xlwt.XFStyle()
+    far_pink.font = pink_font
+    far_pink.alignment = align_right
+    styles["far_pink"] = far_pink
+
+    far_red = xlwt.XFStyle()
+    far_red.font = red_font
+    far_red.alignment = align_right
+    styles["far_red"] = far_red
+
+    far_normal = xlwt.XFStyle()
+    far_normal.font = font_normal
+    far_normal.alignment = align_right
+    styles["far_normal"] = far_normal
 
     # 黄色行（黄底）
-    far_up_yellow_pink = xlwt.XFStyle()
-    far_up_yellow_pink.font = pink_font
-    far_up_yellow_pink.pattern = pattern_yellow
-    far_up_yellow_pink.alignment = align_right
-    styles["far_up_yellow_pink"] = far_up_yellow_pink
 
-    far_up_yellow_red = xlwt.XFStyle()
-    far_up_yellow_red.font = red_font
-    far_up_yellow_red.pattern = pattern_yellow
-    far_up_yellow_red.alignment = align_right
-    styles["far_up_yellow_red"] = far_up_yellow_red
+    far_yellow_pink = xlwt.XFStyle()
+    far_yellow_pink.font = pink_font
+    far_yellow_pink.pattern = pattern_yellow
+    far_yellow_pink.alignment = align_right
+    styles["far_yellow_pink"] = far_yellow_pink
 
-    # 普通行
-    far_down_pink = xlwt.XFStyle()
-    far_down_pink.font = pink_font
-    far_down_pink.alignment = align_right
-    styles["far_down_pink"] = far_down_pink
+    far_yellow_red = xlwt.XFStyle()
+    far_yellow_red.font = red_font
+    far_yellow_red.pattern = pattern_yellow
+    far_yellow_red.alignment = align_right
+    styles["far_yellow_red"] = far_yellow_red
 
-    far_down_red = xlwt.XFStyle()
-    far_down_red.font = red_font
-    far_down_red.alignment = align_right
-    styles["far_down_red"] = far_down_red
+    far_yellow_normal = xlwt.XFStyle()
+    far_yellow_normal.font = font_normal
+    far_yellow_normal.pattern = pattern_yellow
+    far_yellow_normal.alignment = align_right
+    styles["far_yellow_normal"] = far_yellow_normal
 
-    # 黄色行（黄底）
-    far_down_yellow_pink = xlwt.XFStyle()
-    far_down_yellow_pink.font = pink_font
-    far_down_yellow_pink.pattern = pattern_yellow
-    far_down_yellow_pink.alignment = align_right
-    styles["far_down_yellow_pink"] = far_down_yellow_pink
-
-    far_down_yellow_red = xlwt.XFStyle()
-    far_down_yellow_red.font = red_font
-    far_down_yellow_red.pattern = pattern_yellow
-    far_down_yellow_red.alignment = align_right
-    styles["far_down_yellow_red"] = far_down_yellow_red
+    # # 普通行
+    # far_up_pink = xlwt.XFStyle()
+    # far_up_pink.font = pink_font
+    # far_up_pink.alignment = align_right
+    # styles["far_up_pink"] = far_up_pink
+    #
+    # far_up_red = xlwt.XFStyle()
+    # far_up_red.font = red_font
+    # far_up_red.alignment = align_right
+    # styles["far_up_red"] = far_up_red
+    #
+    # # 黄色行（黄底）
+    # far_up_yellow_pink = xlwt.XFStyle()
+    # far_up_yellow_pink.font = pink_font
+    # far_up_yellow_pink.pattern = pattern_yellow
+    # far_up_yellow_pink.alignment = align_right
+    # styles["far_up_yellow_pink"] = far_up_yellow_pink
+    #
+    # far_up_yellow_red = xlwt.XFStyle()
+    # far_up_yellow_red.font = red_font
+    # far_up_yellow_red.pattern = pattern_yellow
+    # far_up_yellow_red.alignment = align_right
+    # styles["far_up_yellow_red"] = far_up_yellow_red
+    #
+    # # 普通行
+    # far_down_pink = xlwt.XFStyle()
+    # far_down_pink.font = pink_font
+    # far_down_pink.alignment = align_right
+    # styles["far_down_pink"] = far_down_pink
+    #
+    # far_down_red = xlwt.XFStyle()
+    # far_down_red.font = red_font
+    # far_down_red.alignment = align_right
+    # styles["far_down_red"] = far_down_red
+    #
+    # # 黄色行（黄底）
+    # far_down_yellow_pink = xlwt.XFStyle()
+    # far_down_yellow_pink.font = pink_font
+    # far_down_yellow_pink.pattern = pattern_yellow
+    # far_down_yellow_pink.alignment = align_right
+    # styles["far_down_yellow_pink"] = far_down_yellow_pink
+    #
+    # far_down_yellow_red = xlwt.XFStyle()
+    # far_down_yellow_red.font = red_font
+    # far_down_yellow_red.pattern = pattern_yellow
+    # far_down_yellow_red.alignment = align_right
+    # styles["far_down_yellow_red"] = far_down_yellow_red
 
 
     # ===================== 审计列 颜色样式 =====================
@@ -1239,7 +1354,6 @@ def write_sheet_data2(
             sheetin.write(percent_row, col_idx, f"{pct}%", styles["summary"])
             col_idx += 1
 
-
 def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up, far_down, styles, is_yellow=False):
     """写入远涨和远跌数据并应用颜色（简化版，直接使用已处理好的数值）"""
     if is_yellow:
@@ -1247,53 +1361,108 @@ def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up
         try:
             val = int(far_up) if far_up else 0
             if val <= 50 and val != 0:
-                far_up_style = styles["far_up_yellow_pink"]
+                far_up_style = styles["far_yellow_pink"]
             elif val >= 70:
-                far_up_style = styles["far_up_yellow_red"]
+                far_up_style = styles["far_yellow_red"]
             else:
-                far_up_style = styles["yellow"]
+                far_up_style = styles["far_yellow_normal"]
         except:
-            far_up_style = styles["yellow"]
+            far_up_style = styles["far_yellow_normal"]
         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
 
         # 远跌
         try:
             val = int(far_down) if far_down else 0
             if val >= 60:
-                far_down_style = styles["far_down_yellow_pink"]
+                far_down_style = styles["far_yellow_pink"]
             elif val <= 30 and val != 0:
-                far_down_style = styles["far_down_yellow_red"]
+                far_down_style = styles["far_yellow_red"]
             else:
-                far_down_style = styles["yellow"]
+                far_down_style = styles["far_yellow_normal"]
         except:
-            far_down_style = styles["yellow"]
+            far_down_style = styles["far_yellow_normal"]
         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
     else:
         # 远涨
         try:
             val = int(far_up) if far_up else 0
             if val <= 50 and val != 0:
-                far_up_style = styles["far_up_pink"]
+                far_up_style = styles["far_pink"]
             elif val >= 70:
-                far_up_style = styles["far_up_red"]
+                far_up_style = styles["far_red"]
             else:
-                far_up_style = styles["base"]
+                far_up_style = styles["far_normal"]
         except:
-            far_up_style = styles["base"]
+            far_up_style = styles["far_normal"]
         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
 
         # 远跌
         try:
             val = int(far_down) if far_down else 0
             if val >= 60:
-                far_down_style = styles["far_down_pink"]
+                far_down_style = styles["far_pink"]
             elif val <= 30 and val != 0:
-                far_down_style = styles["far_down_red"]
+                far_down_style = styles["far_red"]
             else:
-                far_down_style = styles["base"]
+                far_down_style = styles["far_normal"]
         except:
-            far_down_style = styles["base"]
+            far_down_style = styles["far_normal"]
         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
+
+# def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up, far_down, styles, is_yellow=False):
+#     """写入远涨和远跌数据并应用颜色（简化版，直接使用已处理好的数值）"""
+#     if is_yellow:
+#         # 远涨
+#         try:
+#             val = int(far_up) if far_up else 0
+#             if val <= 50 and val != 0:
+#                 far_up_style = styles["far_up_yellow_pink"]
+#             elif val >= 70:
+#                 far_up_style = styles["far_up_yellow_red"]
+#             else:
+#                 far_up_style = styles["yellow"]
+#         except:
+#             far_up_style = styles["yellow"]
+#         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
+#
+#         # 远跌
+#         try:
+#             val = int(far_down) if far_down else 0
+#             if val >= 60:
+#                 far_down_style = styles["far_down_yellow_pink"]
+#             elif val <= 30 and val != 0:
+#                 far_down_style = styles["far_down_yellow_red"]
+#             else:
+#                 far_down_style = styles["yellow"]
+#         except:
+#             far_down_style = styles["yellow"]
+#         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
+#     else:
+#         # 远涨
+#         try:
+#             val = int(far_up) if far_up else 0
+#             if val <= 50 and val != 0:
+#                 far_up_style = styles["far_up_pink"]
+#             elif val >= 70:
+#                 far_up_style = styles["far_up_red"]
+#             else:
+#                 far_up_style = styles["base"]
+#         except:
+#             far_up_style = styles["base"]
+#         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
+#
+#         # 远跌
+#         try:
+#             val = int(far_down) if far_down else 0
+#             if val >= 60:
+#                 far_down_style = styles["far_down_pink"]
+#             elif val <= 30 and val != 0:
+#                 far_down_style = styles["far_down_red"]
+#             else:
+#                 far_down_style = styles["base"]
+#         except:
+#             far_down_style = styles["base"]
+#         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
 
 
 
@@ -1548,9 +1717,11 @@ def write_sheet_data1(
 
                 audit_text = performance_reversal_audit_dict.get(code, "")
                 audit_stripped = audit_text.strip()
-                if audit_stripped.endswith("已ok"):
+                if "整改已ok" in audit_stripped and "暂不退市" in audit_stripped:
                     sheetin.write(row_idx, 14, audit_text, styles["audit_yellow_pink"])
-                elif audit_stripped.endswith("雷"):
+                elif "重整" in audit_stripped and "可能退市" in audit_stripped:
+                    sheetin.write(row_idx, 14, audit_text, styles["audit_yellow_normal"])
+                elif audit_stripped.endswith("可能退市"):
                     sheetin.write(row_idx, 14, audit_text, styles["audit_yellow_red"])
                 else:
                     # sheetin.write(row_idx, 14, audit_text, styles["yellow"])
@@ -1683,9 +1854,11 @@ def write_sheet_data1(
 
                 audit_text = performance_reversal_audit_dict.get(code, "")
                 audit_stripped = audit_text.strip()
-                if audit_stripped.endswith("已ok"):
+                if "整改已ok" in audit_stripped and "暂不退市" in audit_stripped:
                     sheetin.write(row_idx, 14, audit_text, styles["audit_pink"])
-                elif audit_stripped.endswith("雷"):
+                elif "重整" in audit_stripped and "可能退市" in audit_stripped:
+                    sheetin.write(row_idx, 14, audit_text, styles["audit_normal"])
+                elif "可能退市" in audit_stripped:
                     sheetin.write(row_idx, 14, audit_text, styles["audit_red"])
                 else:
                     # sheetin.write(row_idx, 14, audit_text, styles["base"])
