@@ -159,6 +159,7 @@ dividend_stock_date_dict = {
     "000001": ["25年报 26/03/21", "除息 26/06/12", "3.6"],    # 平安银行
     "601916": ["25年报 26/03/31", "或除息 26/07/16", "1.31"],    # 浙商银行
     "600016": ["25年报 26/03/31", "大会 26/06/17 ", "1.36+0.53"],    # 民生银行
+    # "600016": ["25年报 26/03/31", "大会 26/07/17 ", "1.36+0.53"],    # 民生银行
     "601169": ["25年报 26/04/28", "预案 待定 26/05/21", "2.78"],    # 北京银行
     "002807": ["25年报 26/04/29", "除息 无效 26/05/29", "1.0+1.2"],    # 江阴银行
     "603801": ["25年报 26/04/30", "大会 待定 26/05/23", "4.0"],    # 志邦家居
@@ -247,7 +248,7 @@ fund_dividend_date_dict = {
 # ---------------------- 7： 业绩反转，字典合集 ----------------------
 
 # ----------------- 7.1：业绩反转,申请摘帽日期字典 -----------------
-performance_reversal_delisting_application_dict = {
+performance_reversal_unst_application_dict = {
 
     "003032": "25年报 26/04/28",  # *ST传智
     "300527": "摘帽申请 26/09/16",  # ST应急
@@ -609,18 +610,19 @@ def _write_annual_rate(sheetin, row_idx, col_idx, annual_rate_text, styles, is_y
 
     if is_yellow:
         if annual_val >= 4.5:
-            sheetin.write(row_idx, col_idx, annual_rate_text, styles["yellow_pink_delisting_apply"])
+            sheetin.write(row_idx, col_idx, annual_rate_text, styles["yellow_annual_pink"])
         elif annual_val <= 1.5:
-            sheetin.write(row_idx, col_idx, annual_rate_text, styles["yellow_red_text"])
+            sheetin.write(row_idx, col_idx, annual_rate_text, styles["yellow_annual_red"])
         else:
-            sheetin.write(row_idx, col_idx, annual_rate_text, styles["yellow_date_right"])
+            sheetin.write(row_idx, col_idx, annual_rate_text, styles["yellow_annual_normal"])
     else:
         if annual_val >= 4.5:
-            sheetin.write(row_idx, col_idx, annual_rate_text, styles["pink_delisting_apply"])
+            sheetin.write(row_idx, col_idx, annual_rate_text, styles["annual_pink"])
         elif annual_val <= 1.5:
-            sheetin.write(row_idx, col_idx, annual_rate_text, styles["red_text"])
+            sheetin.write(row_idx, col_idx, annual_rate_text, styles["annual_red"])
         else:
-            sheetin.write(row_idx, col_idx, annual_rate_text, styles["date_right"])
+            sheetin.write(row_idx, col_idx, annual_rate_text, styles["annual_normal"])
+
 
 def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, styles, is_yellow=False):
     """写入远涨和远跌数据并应用颜色"""
@@ -648,26 +650,26 @@ def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, s
         try:
             val = int(far_up)
             if val <= 50:
-                far_up_style = styles["far_yellow_pink"]
+                far_up_style = styles["yellow_far_pink"]
             elif val >= 70:
-                far_up_style = styles["far_yellow_red"]
+                far_up_style = styles["yellow_far_red"]
             else:
-                far_up_style = styles["far_yellow_normal"]
+                far_up_style = styles["yellow_far_normal"]
         except:
-            far_up_style = styles["far_yellow_normal"]
+            far_up_style = styles["yellow_far_normal"]
         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
 
         # 远跌
         try:
             val = int(far_down.strip())
             if val >= 60:
-                far_down_style = styles["far_yellow_pink"]
+                far_down_style = styles["yellow_far_pink"]
             elif val <= 30:
-                far_down_style = styles["far_yellow_red"]
+                far_down_style = styles["yellow_far_red"]
             else:
-                far_down_style = styles["far_yellow_normal"]
+                far_down_style = styles["yellow_far_normal"]
         except:
-            far_down_style = styles["far_yellow_normal"]
+            far_down_style = styles["yellow_far_normal"]
         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
     else:
         # 远涨
@@ -697,80 +699,6 @@ def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, s
         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
 
 
-# def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, styles, is_yellow=False):
-#     """写入远涨和远跌数据并应用颜色"""
-#     far_up = ""
-#     far_down = ""
-#     if struct_str:
-#         parts = struct_str.split(",")
-#         if len(parts) >= 2:
-#             far_up = parts[0].strip()
-#             far_down = parts[1].strip()
-#
-#     # 乘100并取整
-#     try:
-#         far_up = str(int(float(far_up) * 100))
-#     except:
-#         far_up = ""
-#     try:
-#         far_down = str(int(abs(float(far_down)) * 100))
-#     except:
-#         far_down = ""
-#
-#     # 选择样式
-#     if is_yellow:
-#         # 远涨
-#         try:
-#             val = int(far_up)
-#             if val <= 50:
-#                 far_up_style = styles["far_up_yellow_pink"]
-#             elif val >= 70:
-#                 far_up_style = styles["far_up_yellow_red"]
-#             else:
-#                 far_up_style = styles["yellow"]
-#         except:
-#             far_up_style = styles["yellow"]
-#         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
-#
-#         # 远跌
-#         try:
-#             val = int(far_down.strip())
-#             if val >= 60:
-#                 far_down_style = styles["far_down_yellow_pink"]
-#             elif val <= 30:
-#                 far_down_style = styles["far_down_yellow_red"]
-#             else:
-#                 far_down_style = styles["yellow"]
-#         except:
-#             far_down_style = styles["yellow"]
-#         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
-#     else:
-#         # 远涨
-#         try:
-#             val = int(far_up)
-#             if val <= 50:
-#                 far_up_style = styles["far_up_pink"]
-#             elif val >= 70:
-#                 far_up_style = styles["far_up_red"]
-#             else:
-#                 far_up_style = styles["base"]
-#         except:
-#             far_up_style = styles["base"]
-#         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
-#
-#         # 远跌
-#         try:
-#             val = int(far_down.strip())
-#             if val >= 60:
-#                 far_down_style = styles["far_down_pink"]
-#             elif val <= 30:
-#                 far_down_style = styles["far_down_red"]
-#             else:
-#                 far_down_style = styles["base"]
-#         except:
-#             far_down_style = styles["base"]
-#         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
-
 
 #---日期解析工具函数
 
@@ -793,20 +721,35 @@ def parse_date(date_str):   # 内部子函数
         return datetime(int(year), int(month), int(day))
     return datetime(2099, 12, 31)
 
-
-
 # ---判断摘帽日期是否小于3个月
 
-def is_delisting_date_less_than_2months(code):
-    delisting_date_str = performance_reversal_delisting_application_dict.get(code, "")
-    delisting_date_str = delisting_date_str.strip()
-    delisting_date= parse_date(delisting_date_str)
+def is_unst_date_less_than_2months(date_str):
+    # unst_date_str = performance_reversal_unst_application_dict.get(code, "")
+    unst_date_str = date_str.strip()
 
-    if delisting_date == datetime(2099, 12, 31):
+    unst_date= parse_date(unst_date_str)  # 日期解释
+
+    if unst_date == datetime(2099, 12, 31):
         return False
     current_date = datetime.now()
-    delta = delisting_date - current_date
+    delta = unst_date - current_date
     return delta.days < 90 and delta.days >= 0
+
+
+def is_div_date_less_60days(date_str):
+    # div_date_str = dividend_stock_date_dict.get(code, ["", "", ""])[1]
+    div_date_str = date_str.strip()
+    div_date = parse_date(div_date_str)
+
+    if code == "600016":
+        print(div_date)
+
+    if div_date == datetime(2099, 12, 31):
+        return False
+    current_date = datetime.now()
+    delta = div_date - current_date
+
+    return delta.days < 60   # and delta.days >= 0
 
 
 # ---------------------- 12. 各策略排序函数 ----------------------
@@ -899,7 +842,7 @@ def get_performance_reversal_sort_key(item):  # 业绩反转，按摘帽申请�
     code = item[0]
 
     # 获取摘帽申请日期（和分红股完全一样的逻辑）
-    reversal_date_str = performance_reversal_delisting_application_dict.get(code, "")
+    reversal_date_str = performance_reversal_unst_application_dict.get(code, "")
 
     # 解析日期函数 → 完全参考分红股
     def parse_reversal_date(date_str):
@@ -936,8 +879,8 @@ def create_styles():
 
     # -------------------basefont----------------------
 
-    font_normal = xlwt.Font()
-    font_normal.height = 9 * 20
+    normal_font = xlwt.Font()
+    normal_font.height = 9 * 20
 
     pink_font = xlwt.Font()
     pink_font.height = 9 * 20
@@ -946,6 +889,10 @@ def create_styles():
     red_font = xlwt.Font()
     red_font.height = 9 * 20
     red_font.colour_index = 10  # 纯红色
+
+    brown_font = xlwt.Font()
+    brown_font.height = 9 * 20
+    brown_font.colour_index = 44  # 棕色
 
 
     # -------------------base background----------------------
@@ -973,115 +920,52 @@ def create_styles():
     # -------------------base align-----end-----------------
 
 
-    base_style = xlwt.XFStyle()
-    base_style.font = font_normal
-    base_style.alignment = align_left
-    styles["base"] = base_style
+    # ------------------------ header ----ok-------------------
 
     header_center = xlwt.XFStyle()
-    header_center.font = font_normal
+    header_center.font = normal_font
     header_center.alignment = align_header
     styles["header"] = header_center
 
-    percent_right = xlwt.XFStyle()
-    percent_right.font = font_normal
-    percent_right.alignment = align_right
-    styles["percent"] = percent_right
 
-    strategy_right = xlwt.XFStyle()
-    strategy_right.font = font_normal
-    strategy_right.alignment = align_right
-    styles["strategy"] = strategy_right
-
-    yellow_bg = xlwt.XFStyle()
-    yellow_bg.font = font_normal
-    yellow_bg.pattern = pattern_yellow
-    yellow_bg.alignment = align_right   # add
-    styles["yellow"] = yellow_bg
-
-    styles["yellow_percent"] = xlwt.XFStyle()
-    styles["yellow_percent"].font = font_normal
-    styles["yellow_percent"].alignment = align_right
-    styles["yellow_percent"].pattern = pattern_yellow
-
-    styles["yellow_strategy"] = xlwt.XFStyle()
-    styles["yellow_strategy"].font = font_normal
-    styles["yellow_strategy"].alignment = align_right
-    styles["yellow_strategy"].pattern = pattern_yellow
+    # ------------------------ summary ----ok-------------------
 
     summary_style = xlwt.XFStyle()
-    summary_style.font = font_normal
+    summary_style.font = normal_font
     summary_style.alignment = align_center
     styles["summary"] = summary_style
 
-    total_percent_right = xlwt.XFStyle()
-    total_percent_right.font = font_normal
-    total_percent_right.alignment = align_right
-    styles["total_percent"] = total_percent_right
-
-    styles["yellow_total_percent"] = xlwt.XFStyle()
-    styles["yellow_total_percent"].font = font_normal
-    styles["yellow_total_percent"].alignment = align_right
-    styles["yellow_total_percent"].pattern = pattern_yellow
-
-    date_right = xlwt.XFStyle()
-    date_right.font = font_normal
-    date_right.alignment = align_right
-    styles["date_right"] = date_right
-
-    styles["yellow_date_right"] = xlwt.XFStyle()
-    styles["yellow_date_right"].font = font_normal
-    styles["yellow_date_right"].alignment = align_right
-    styles["yellow_date_right"].pattern = pattern_yellow
-
-    styles["delisting_apply_right"] = xlwt.XFStyle()
-    styles["delisting_apply_right"].font = font_normal
-    styles["delisting_apply_right"].alignment = align_right
-
-    styles["yellow_delisting_apply_right"] = xlwt.XFStyle()
-    styles["yellow_delisting_apply_right"].font = font_normal
-    styles["yellow_delisting_apply_right"].alignment = align_right
-    styles["yellow_delisting_apply_right"].pattern = pattern_yellow
-
-    pink_delisting_apply = xlwt.XFStyle()
-    pink_delisting_apply.font = pink_font
-    pink_delisting_apply.alignment = align_right
-    styles["pink_delisting_apply"] = pink_delisting_apply
-
-    yellow_pink_delisting_apply = xlwt.XFStyle()
-    yellow_pink_delisting_apply.font = pink_font
-    yellow_pink_delisting_apply.alignment = align_right
-    yellow_pink_delisting_apply.pattern = pattern_yellow
-    styles["yellow_pink_delisting_apply"] = yellow_pink_delisting_apply
-
-    # 要点列样式（左对齐，适配文字）
-    memo_left = xlwt.XFStyle()
-    memo_left.font = font_normal
-    memo_left.alignment = align_left
-    styles["memo_left"] = memo_left
-
-    yellow_memo_left = xlwt.XFStyle()
-    yellow_memo_left.font = font_normal
-    yellow_memo_left.alignment = align_left
-    yellow_memo_left.pattern = pattern_yellow
-    styles["yellow_memo_left"] = yellow_memo_left
 
 
-    # 普通行 粉红色
-    week_pink_style = xlwt.XFStyle()
-    week_pink_style.font = pink_font
-    styles["week_pink"] = week_pink_style
+    # ------------------------ base text---k--------------------
 
-    # 黄色行 粉红色（黄底）
-    week_yellow_pink_style = xlwt.XFStyle()
-    week_yellow_pink_style.font = pink_font
-    week_yellow_pink_style.pattern = pattern_yellow
-    week_yellow_pink_style.alignment = align_right
-    styles["week_yellow_pink"] = week_yellow_pink_style
+    base_text = xlwt.XFStyle()
+    base_text.font = normal_font
+    base_text.alignment = align_left
+    styles["base_text"] = base_text
 
 
+    yellow_base_text = xlwt.XFStyle()
+    yellow_base_text.font = normal_font
+    yellow_base_text.pattern = pattern_yellow
+    yellow_base_text.alignment = align_left
+    styles["yellow_base_text"] = yellow_base_text
 
-    # ====================far==============================
+
+    # ------------------------ base digit---ok--------------------
+
+    base_digit = xlwt.XFStyle()
+    base_digit.font = normal_font
+    base_digit.alignment = align_right
+    styles["base_digit"] = base_digit
+
+    yellow_base_digit = xlwt.XFStyle()
+    yellow_base_digit.font = normal_font
+    yellow_base_digit.pattern = pattern_yellow
+    yellow_base_digit.alignment = align_right
+    styles["yellow_base_digit"] = yellow_base_digit
+
+    # ------------------------ far ---ok--------------------
     # 普通行
 
     far_pink = xlwt.XFStyle()
@@ -1095,80 +979,110 @@ def create_styles():
     styles["far_red"] = far_red
 
     far_normal = xlwt.XFStyle()
-    far_normal.font = font_normal
+    far_normal.font = normal_font
     far_normal.alignment = align_right
     styles["far_normal"] = far_normal
 
     # 黄色行（黄底）
 
-    far_yellow_pink = xlwt.XFStyle()
-    far_yellow_pink.font = pink_font
-    far_yellow_pink.pattern = pattern_yellow
-    far_yellow_pink.alignment = align_right
-    styles["far_yellow_pink"] = far_yellow_pink
+    yellow_far_pink = xlwt.XFStyle()
+    yellow_far_pink.font = pink_font
+    yellow_far_pink.pattern = pattern_yellow
+    yellow_far_pink.alignment = align_right
+    styles["yellow_far_pink"] = yellow_far_pink
 
-    far_yellow_red = xlwt.XFStyle()
-    far_yellow_red.font = red_font
-    far_yellow_red.pattern = pattern_yellow
-    far_yellow_red.alignment = align_right
-    styles["far_yellow_red"] = far_yellow_red
+    yellow_far_red = xlwt.XFStyle()
+    yellow_far_red.font = red_font
+    yellow_far_red.pattern = pattern_yellow
+    yellow_far_red.alignment = align_right
+    styles["yellow_far_red"] = yellow_far_red
 
-    far_yellow_normal = xlwt.XFStyle()
-    far_yellow_normal.font = font_normal
-    far_yellow_normal.pattern = pattern_yellow
-    far_yellow_normal.alignment = align_right
-    styles["far_yellow_normal"] = far_yellow_normal
-
-    # # 普通行
-    # far_up_pink = xlwt.XFStyle()
-    # far_up_pink.font = pink_font
-    # far_up_pink.alignment = align_right
-    # styles["far_up_pink"] = far_up_pink
-    #
-    # far_up_red = xlwt.XFStyle()
-    # far_up_red.font = red_font
-    # far_up_red.alignment = align_right
-    # styles["far_up_red"] = far_up_red
-    #
-    # # 黄色行（黄底）
-    # far_up_yellow_pink = xlwt.XFStyle()
-    # far_up_yellow_pink.font = pink_font
-    # far_up_yellow_pink.pattern = pattern_yellow
-    # far_up_yellow_pink.alignment = align_right
-    # styles["far_up_yellow_pink"] = far_up_yellow_pink
-    #
-    # far_up_yellow_red = xlwt.XFStyle()
-    # far_up_yellow_red.font = red_font
-    # far_up_yellow_red.pattern = pattern_yellow
-    # far_up_yellow_red.alignment = align_right
-    # styles["far_up_yellow_red"] = far_up_yellow_red
-    #
-    # # 普通行
-    # far_down_pink = xlwt.XFStyle()
-    # far_down_pink.font = pink_font
-    # far_down_pink.alignment = align_right
-    # styles["far_down_pink"] = far_down_pink
-    #
-    # far_down_red = xlwt.XFStyle()
-    # far_down_red.font = red_font
-    # far_down_red.alignment = align_right
-    # styles["far_down_red"] = far_down_red
-    #
-    # # 黄色行（黄底）
-    # far_down_yellow_pink = xlwt.XFStyle()
-    # far_down_yellow_pink.font = pink_font
-    # far_down_yellow_pink.pattern = pattern_yellow
-    # far_down_yellow_pink.alignment = align_right
-    # styles["far_down_yellow_pink"] = far_down_yellow_pink
-    #
-    # far_down_yellow_red = xlwt.XFStyle()
-    # far_down_yellow_red.font = red_font
-    # far_down_yellow_red.pattern = pattern_yellow
-    # far_down_yellow_red.alignment = align_right
-    # styles["far_down_yellow_red"] = far_down_yellow_red
+    yellow_far_normal = xlwt.XFStyle()
+    yellow_far_normal.font = normal_font
+    yellow_far_normal.pattern = pattern_yellow
+    yellow_far_normal.alignment = align_right
+    styles["yellow_far_normal"] = yellow_far_normal
 
 
-    # ===================== 审计列 颜色样式 =====================
+    # ------------------------ date ---ok--------------------
+    # 普通行
+
+    date_pink = xlwt.XFStyle()
+    date_pink.font = pink_font
+    date_pink.alignment = align_right
+    styles["date_pink"] = date_pink
+
+    date_red = xlwt.XFStyle()
+    date_red.font = red_font
+    date_red.alignment = align_right
+    styles["date_red"] = date_red
+
+    date_normal = xlwt.XFStyle()
+    date_normal.font = normal_font
+    date_normal.alignment = align_right
+    styles["date_normal"] = date_normal
+
+    # 黄色行（黄底）
+
+    yellow_date_pink = xlwt.XFStyle()
+    yellow_date_pink.font = pink_font
+    yellow_date_pink.pattern = pattern_yellow
+    yellow_date_pink.alignment = align_right
+    styles["yellow_date_pink"] = yellow_date_pink
+
+    yellow_date_red = xlwt.XFStyle()
+    yellow_date_red.font = red_font
+    yellow_date_red.pattern = pattern_yellow
+    yellow_date_red.alignment = align_right
+    styles["yellow_date_red"] = yellow_date_red
+
+    yellow_date_normal = xlwt.XFStyle()
+    yellow_date_normal.font = normal_font
+    yellow_date_normal.pattern = pattern_yellow
+    yellow_date_normal.alignment = align_right
+    styles["yellow_date_normal"] = yellow_date_normal
+
+
+    # ------------------------ 年化 annual  ---oK--------------------
+    # 普通行
+
+    annual_pink = xlwt.XFStyle()
+    annual_pink.font = pink_font
+    annual_pink.alignment = align_right
+    styles["annual_pink"] = annual_pink
+
+    annual_red = xlwt.XFStyle()
+    annual_red.font = red_font
+    annual_red.alignment = align_right
+    styles["annual_red"] = annual_red
+
+    annual_normal = xlwt.XFStyle()
+    annual_normal.font = normal_font
+    annual_normal.alignment = align_right
+    styles["annual_normal"] = annual_normal
+
+    # 黄色行（黄底）
+
+    yellow_annual_pink = xlwt.XFStyle()
+    yellow_annual_pink.font = pink_font
+    yellow_annual_pink.pattern = pattern_yellow
+    yellow_annual_pink.alignment = align_right
+    styles["yellow_annual_pink"] = yellow_annual_pink
+
+    yellow_annual_red = xlwt.XFStyle()
+    yellow_annual_red.font = red_font
+    yellow_annual_red.pattern = pattern_yellow
+    yellow_annual_red.alignment = align_right
+    styles["yellow_annual_red"] = yellow_annual_red
+
+    yellow_annual_normal = xlwt.XFStyle()
+    yellow_annual_normal.font = normal_font
+    yellow_annual_normal.pattern = pattern_yellow
+    yellow_annual_normal.alignment = align_right
+    styles["yellow_annual_normal"] = yellow_annual_normal
+
+
+    # ------------------------审计 audit ---ok--------------------
 
     # 普通行
     audit_pink = xlwt.XFStyle()
@@ -1182,43 +1096,93 @@ def create_styles():
     styles["audit_red"] = audit_red
 
     audit_normal = xlwt.XFStyle()
-    # audit_normal.font = font_normal
+    audit_normal.font = normal_font
     audit_normal.alignment = align_left
     styles["audit_normal"] = audit_normal
 
+    audit_brown = xlwt.XFStyle()
+    audit_brown.font = brown_font
+    audit_brown.alignment = align_left
+    styles["audit_brown"] = audit_brown
+
+
     # 黄色行（黄底）
-    audit_yellow_pink = xlwt.XFStyle()
-    audit_yellow_pink.font = pink_font
-    audit_yellow_pink.pattern = pattern_yellow
-    audit_yellow_pink.alignment = align_left
-    styles["audit_yellow_pink"] = audit_yellow_pink
+    yellow_audit_pink = xlwt.XFStyle()
+    yellow_audit_pink.font = pink_font
+    yellow_audit_pink.pattern = pattern_yellow
+    yellow_audit_pink.alignment = align_left
+    styles["yellow_audit_pink"] = yellow_audit_pink
 
-    audit_yellow_red = xlwt.XFStyle()
-    audit_yellow_red.font = red_font
-    audit_yellow_red.pattern = pattern_yellow
-    audit_yellow_red.alignment = align_left
-    styles["audit_yellow_red"] = audit_yellow_red
+    yellow_audit_red = xlwt.XFStyle()
+    yellow_audit_red.font = red_font
+    yellow_audit_red.pattern = pattern_yellow
+    yellow_audit_red.alignment = align_left
+    styles["yellow_audit_red"] = yellow_audit_red
 
-    audit_yellow_normal = xlwt.XFStyle()
-    # audit_yellow_normal.font = font_normal
-    audit_yellow_normal.pattern = pattern_yellow
-    audit_yellow_normal.alignment = align_left
-    styles["audit_yellow_normal"] = audit_yellow_normal
+    yellow_audit_normal = xlwt.XFStyle()
+    yellow_audit_normal.font = normal_font
+    yellow_audit_normal.pattern = pattern_yellow
+    yellow_audit_normal.alignment = align_left
+    styles["yellow_audit_normal"] = yellow_audit_normal
+
+    yellow_audit_brown = xlwt.XFStyle()
+    yellow_audit_brown.font = brown_font
+    yellow_audit_brown.pattern = pattern_yellow
+    yellow_audit_brown.alignment = align_left
+    styles["yellow_audit_brown"] = yellow_audit_brown
 
 
-    # 红色字体样式（年化≤1.5用）
-    red_style = xlwt.XFStyle()
-    red_style.font = red_font
-    red_style.alignment = align_right
-    styles["red_text"] = red_style
+    # ------------------------ 要点 ----ok-------------------
+
+    memo_left = xlwt.XFStyle()
+    memo_left.font = normal_font
+    memo_left.alignment = align_left
+    styles["memo_left"] = memo_left
+
+    yellow_memo_left = xlwt.XFStyle()
+    yellow_memo_left.font = normal_font
+    yellow_memo_left.alignment = align_left
+    yellow_memo_left.pattern = pattern_yellow
+    styles["yellow_memo_left"] = yellow_memo_left
 
 
-    # 黄底 + 红色
-    yellow_red_style = xlwt.XFStyle()
-    yellow_red_style.font = red_font
-    yellow_red_style.alignment = align_right
-    yellow_red_style.pattern = pattern_yellow
-    styles["yellow_red_text"] = yellow_red_style
+    # ------------------------ week -----ok------------------
+    # 普通行 粉红色
+    week_pink = xlwt.XFStyle()
+    week_pink.font = pink_font
+    week_pink.alignment = align_left
+    styles["week_pink"] = week_pink
+
+    week_normal = xlwt.XFStyle()
+    week_normal.font = normal_font
+    week_normal.alignment = align_left
+    styles["week_normal"] = week_normal
+
+    # 黄色行 粉红色（黄底）
+    yellow_week_pink = xlwt.XFStyle()
+    yellow_week_pink.font = pink_font
+    yellow_week_pink.pattern = pattern_yellow
+    yellow_week_pink.alignment = align_left
+    styles["yellow_week_pink"] = yellow_week_pink
+
+    yellow_week_normal = xlwt.XFStyle()
+    yellow_week_normal.font = normal_font
+    yellow_week_normal.pattern = pattern_yellow
+    yellow_week_normal.alignment = align_left
+    styles["yellow_week_normal"] = yellow_week_normal
+
+    # ------------------------ strategy ---ok--------------------
+
+    strategy_right = xlwt.XFStyle()
+    strategy_right.font = normal_font
+    strategy_right.alignment = align_right
+    styles["strategy"] = strategy_right
+
+    yellow_strategy = xlwt.XFStyle()
+    yellow_strategy.font = normal_font
+    yellow_strategy.alignment = align_right
+    yellow_strategy.pattern = pattern_yellow
+    styles["yellow_strategy"] = yellow_strategy
 
 
     return styles
@@ -1298,28 +1262,28 @@ def write_sheet_data2(
 
         # 高亮第10名
         if rank == 10:
-            sheetin.write(row_idx, 0, code, styles["yellow"])
-            sheetin.write(row_idx, 1, info["名称"], styles["yellow"])
-            sheetin.write(row_idx, 2, info["总数量"], styles["yellow"])
-            sheetin.write(row_idx, 3, info["当前价"], styles["yellow"])
-            sheetin.write(row_idx, 4, info["金额"], styles["yellow"])
-            sheetin.write(row_idx, 5, info["仓位%"], styles["yellow_percent"])
-            sheetin.write(row_idx, 6, rank, styles["yellow"])
-            sheetin.write(row_idx, 7, cumulative, styles["yellow"])
-            sheetin.write(row_idx, 8, f"{total_cumulative_percent}%", styles["yellow_total_percent"])
+            sheetin.write(row_idx, 0, code, styles["yellow_base_digit"])
+            sheetin.write(row_idx, 1, info["名称"], styles["yellow_base_digit"])  # yellow_base_text
+            sheetin.write(row_idx, 2, info["总数量"], styles["yellow_base_digit"])
+            sheetin.write(row_idx, 3, info["当前价"], styles["yellow_base_digit"])
+            sheetin.write(row_idx, 4, info["金额"], styles["yellow_base_digit"])
+            sheetin.write(row_idx, 5, info["仓位%"], styles["yellow_base_digit"])
+            sheetin.write(row_idx, 6, rank, styles["yellow_base_digit"])
+            sheetin.write(row_idx, 7, cumulative, styles["yellow_base_digit"])
+            sheetin.write(row_idx, 8, f"{total_cumulative_percent}%", styles["yellow_base_digit"])
             sheetin.write(row_idx, 9, strategy, styles["yellow_strategy"])
             # 写入远涨远跌（黄色背景）
             _write_far_up_down_simple(sheetin, row_idx, 10, 11, far_up, far_down, styles, is_yellow=True)
         else:
-            sheetin.write(row_idx, 0, code, styles["base"])
-            sheetin.write(row_idx, 1, info["名称"], styles["base"])
-            sheetin.write(row_idx, 2, info["总数量"], styles["base"])
-            sheetin.write(row_idx, 3, info["当前价"], styles["base"])
-            sheetin.write(row_idx, 4, info["金额"], styles["base"])
-            sheetin.write(row_idx, 5, info["仓位%"], styles["percent"])
-            sheetin.write(row_idx, 6, rank, styles["base"])
-            sheetin.write(row_idx, 7, cumulative, styles["base"])
-            sheetin.write(row_idx, 8, f"{total_cumulative_percent}%", styles["total_percent"])
+            sheetin.write(row_idx, 0, code, styles["base_digit"])
+            sheetin.write(row_idx, 1, info["名称"], styles["base_digit"])   # base_text
+            sheetin.write(row_idx, 2, info["总数量"], styles["base_digit"])
+            sheetin.write(row_idx, 3, info["当前价"], styles["base_digit"])
+            sheetin.write(row_idx, 4, info["金额"], styles["base_digit"])
+            sheetin.write(row_idx, 5, info["仓位%"], styles["base_digit"])
+            sheetin.write(row_idx, 6, rank, styles["base_digit"])
+            sheetin.write(row_idx, 7, cumulative, styles["base_digit"])
+            sheetin.write(row_idx, 8, f"{total_cumulative_percent}%", styles["base_digit"])
             sheetin.write(row_idx, 9, strategy, styles["strategy"])
             # 写入远涨远跌（普通背景）
             _write_far_up_down_simple(sheetin, row_idx, 10, 11, far_up, far_down, styles, is_yellow=False)
@@ -1361,26 +1325,26 @@ def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up
         try:
             val = int(far_up) if far_up else 0
             if val <= 50 and val != 0:
-                far_up_style = styles["far_yellow_pink"]
+                far_up_style = styles["yellow_far_pink"]
             elif val >= 70:
-                far_up_style = styles["far_yellow_red"]
+                far_up_style = styles["yellow_far_red"]
             else:
-                far_up_style = styles["far_yellow_normal"]
+                far_up_style = styles["yellow_far_normal"]
         except:
-            far_up_style = styles["far_yellow_normal"]
+            far_up_style = styles["yellow_far_normal"]
         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
 
         # 远跌
         try:
             val = int(far_down) if far_down else 0
             if val >= 60:
-                far_down_style = styles["far_yellow_pink"]
+                far_down_style = styles["yellow_far_pink"]
             elif val <= 30 and val != 0:
-                far_down_style = styles["far_yellow_red"]
+                far_down_style = styles["yellow_far_red"]
             else:
-                far_down_style = styles["far_yellow_normal"]
+                far_down_style = styles["yellow_far_normal"]
         except:
-            far_down_style = styles["far_yellow_normal"]
+            far_down_style = styles["yellow_far_normal"]
         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
     else:
         # 远涨
@@ -1408,62 +1372,6 @@ def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up
         except:
             far_down_style = styles["far_normal"]
         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
-
-# def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up, far_down, styles, is_yellow=False):
-#     """写入远涨和远跌数据并应用颜色（简化版，直接使用已处理好的数值）"""
-#     if is_yellow:
-#         # 远涨
-#         try:
-#             val = int(far_up) if far_up else 0
-#             if val <= 50 and val != 0:
-#                 far_up_style = styles["far_up_yellow_pink"]
-#             elif val >= 70:
-#                 far_up_style = styles["far_up_yellow_red"]
-#             else:
-#                 far_up_style = styles["yellow"]
-#         except:
-#             far_up_style = styles["yellow"]
-#         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
-#
-#         # 远跌
-#         try:
-#             val = int(far_down) if far_down else 0
-#             if val >= 60:
-#                 far_down_style = styles["far_down_yellow_pink"]
-#             elif val <= 30 and val != 0:
-#                 far_down_style = styles["far_down_yellow_red"]
-#             else:
-#                 far_down_style = styles["yellow"]
-#         except:
-#             far_down_style = styles["yellow"]
-#         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
-#     else:
-#         # 远涨
-#         try:
-#             val = int(far_up) if far_up else 0
-#             if val <= 50 and val != 0:
-#                 far_up_style = styles["far_up_pink"]
-#             elif val >= 70:
-#                 far_up_style = styles["far_up_red"]
-#             else:
-#                 far_up_style = styles["base"]
-#         except:
-#             far_up_style = styles["base"]
-#         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
-#
-#         # 远跌
-#         try:
-#             val = int(far_down) if far_down else 0
-#             if val >= 60:
-#                 far_down_style = styles["far_down_pink"]
-#             elif val <= 30 and val != 0:
-#                 far_down_style = styles["far_down_red"]
-#             else:
-#                 far_down_style = styles["base"]
-#         except:
-#             far_down_style = styles["base"]
-#         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
-
 
 
 # ==================== 个股策略写入到excel函数====================
@@ -1594,15 +1502,15 @@ def write_sheet_data1(
         # 高亮第10名（黄色背景）
         # if rank == 10:
         if rank in (10, 20):
-            sheetin.write(row_idx, 0, code, styles["yellow"])
-            sheetin.write(row_idx, 1, info["名称"], styles["yellow"])
-            sheetin.write(row_idx, 2, info["总数量"], styles["yellow"])
-            sheetin.write(row_idx, 3, info["当前价"], styles["yellow"])
-            sheetin.write(row_idx, 4, info["金额"], styles["yellow"])
-            sheetin.write(row_idx, 5, info["仓位%"], styles["yellow_percent"])
-            sheetin.write(row_idx, 6, rank, styles["yellow"])
-            sheetin.write(row_idx, 7, cumulative, styles["yellow"])
-            sheetin.write(row_idx, 8, f"{total_cumulative_percent}%", styles["yellow_total_percent"])
+            sheetin.write(row_idx, 0, code, styles["yellow_base_digit"])
+            sheetin.write(row_idx, 1, info["名称"], styles["yellow_base_digit"])  # yellow_base_text
+            sheetin.write(row_idx, 2, info["总数量"], styles["yellow_base_digit"])
+            sheetin.write(row_idx, 3, info["当前价"], styles["yellow_base_digit"])
+            sheetin.write(row_idx, 4, info["金额"], styles["yellow_base_digit"])
+            sheetin.write(row_idx, 5, info["仓位%"], styles["yellow_base_digit"])
+            sheetin.write(row_idx, 6, rank, styles["yellow_base_digit"])
+            sheetin.write(row_idx, 7, cumulative, styles["yellow_base_digit"])
+            sheetin.write(row_idx, 8, f"{total_cumulative_percent}%", styles["yellow_base_digit"])
             sheetin.write(row_idx, 9, strategy, styles["yellow_strategy"])
 
             # 各策略特殊字段写入（黄色背景）
@@ -1612,9 +1520,15 @@ def write_sheet_data1(
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheetin.write(row_idx, 10, next_report, styles["yellow"])
-                sheetin.write(row_idx, 11, div_date, styles["yellow"])
-                sheetin.write(row_idx, 12, per_div, styles["yellow_date_right"])
+                sheetin.write(row_idx, 10, next_report, styles["yellow_date_normal"])
+
+                # sheetin.write(row_idx, 11, div_date, styles["yellow_date_normal"])
+                if is_div_date_less_60days(div_date):
+                    sheetin.write(row_idx, 11, div_date, styles["yellow_date_pink"])
+                else:
+                    sheetin.write(row_idx, 11, div_date, styles["yellow_date_normal"])
+
+                sheetin.write(row_idx, 12, per_div, styles["yellow_base_digit"])
 
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
@@ -1628,9 +1542,15 @@ def write_sheet_data1(
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheetin.write(row_idx, 10, next_report, styles["yellow_date_right"])
-                sheetin.write(row_idx, 11, div_date, styles["yellow_date_right"])
-                sheetin.write(row_idx, 12, per_div, styles["yellow_date_right"])
+                sheetin.write(row_idx, 10, next_report, styles["yellow_date_normal"])
+
+                # sheetin.write(row_idx, 11, div_date, styles["yellow_date_normal"])
+                if is_div_date_less_60days(div_date):
+                    sheetin.write(row_idx, 11, div_date, styles["yellow_date_pink"])
+                else:
+                    sheetin.write(row_idx, 11, div_date, styles["yellow_date_normal"])
+
+                sheetin.write(row_idx, 12, per_div, styles["yellow_base_digit"])
 
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
@@ -1644,9 +1564,15 @@ def write_sheet_data1(
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheetin.write(row_idx, 10, next_report, styles["yellow_date_right"])
-                sheetin.write(row_idx, 11, div_date, styles["yellow_date_right"])
-                sheetin.write(row_idx, 12, per_div, styles["yellow_date_right"])
+                sheetin.write(row_idx, 10, next_report, styles["yellow_date_normal"])
+
+                # sheetin.write(row_idx, 11, div_date, styles["yellow_date_normal"])
+                if is_div_date_less_60days(div_date):
+                    sheetin.write(row_idx, 11, div_date, styles["yellow_date_pink"])
+                else:
+                    sheetin.write(row_idx, 11, div_date, styles["yellow_date_normal"])
+
+                sheetin.write(row_idx, 12, per_div, styles["yellow_base_digit"])
 
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
@@ -1660,9 +1586,15 @@ def write_sheet_data1(
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheetin.write(row_idx, 10, next_report, styles["yellow_date_right"])
-                sheetin.write(row_idx, 11, div_date, styles["yellow_date_right"])
-                sheetin.write(row_idx, 12, per_div, styles["yellow_date_right"])
+                sheetin.write(row_idx, 10, next_report, styles["yellow_date_normal"])
+
+                # sheetin.write(row_idx, 11, div_date, styles["yellow_date_normal"])
+                if is_div_date_less_60days(div_date):
+                    sheetin.write(row_idx, 11, div_date, styles["yellow_date_pink"])
+                else:
+                    sheetin.write(row_idx, 11, div_date, styles["yellow_date_normal"])
+
+                sheetin.write(row_idx, 12, per_div, styles["yellow_base_digit"])
 
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
@@ -1676,9 +1608,15 @@ def write_sheet_data1(
                 next_date = item_list[1]
                 per_div = item_list[2]
 
-                sheetin.write(row_idx, 10, last_date, styles["yellow"])
-                sheetin.write(row_idx, 11, next_date, styles["yellow"])
-                sheetin.write(row_idx, 12, per_div, styles["yellow_date_right"])
+                sheetin.write(row_idx, 10, last_date, styles["yellow_date_normal"])
+
+                # sheetin.write(row_idx, 11, next_date, styles["yellow_date_normal"])
+                if is_div_date_less_60days(next_date):
+                    sheetin.write(row_idx, 11, next_date, styles["yellow_date_pink"])
+                else:
+                    sheetin.write(row_idx, 11, next_date, styles["yellow_date_normal"])
+
+                sheetin.write(row_idx, 12, per_div, styles["yellow_base_digit"])
 
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
@@ -1699,18 +1637,18 @@ def write_sheet_data1(
                                    styles, is_yellow=True)
 
             elif is_performance_reversal_sheet:  # 业绩反转
-                delisting_date = performance_reversal_delisting_application_dict.get(code, "")
-                if is_delisting_date_less_than_2months(code):
-                    sheetin.write(row_idx, 10, delisting_date, styles["yellow_pink_delisting_apply"])
+                unst_date = performance_reversal_unst_application_dict.get(code, "")
+                if is_unst_date_less_than_2months(unst_date):
+                    sheetin.write(row_idx, 10, unst_date, styles["yellow_date_pink"])
                 else:
-                    sheetin.write(row_idx, 10, delisting_date, styles["yellow_delisting_apply_right"])
+                    sheetin.write(row_idx, 10, unst_date, styles["yellow_date_normal"])
 
                 week_line = performance_reversal_week_line_dict.get(code, "")
                 week_line_stripped = week_line.strip()
                 if week_line_stripped in ("半周线", "周线涨"):
-                    sheetin.write(row_idx, 11, week_line, styles["week_yellow_pink"])
+                    sheetin.write(row_idx, 11, week_line, styles["yellow_week_pink"])
                 else:
-                    sheetin.write(row_idx, 11, week_line, styles["yellow"])
+                    sheetin.write(row_idx, 11, week_line, styles["yellow_week_normal"])
 
                 _write_far_up_down(sheetin, row_idx, 12, 13, performance_reversal_far_dict.get(code, ","),
                                    styles, is_yellow=True)
@@ -1718,28 +1656,29 @@ def write_sheet_data1(
                 audit_text = performance_reversal_audit_dict.get(code, "")
                 audit_stripped = audit_text.strip()
                 if "整改已ok" in audit_stripped and "暂不退市" in audit_stripped:
-                    sheetin.write(row_idx, 14, audit_text, styles["audit_yellow_pink"])
+                    sheetin.write(row_idx, 14, audit_text, styles["yellow_audit_pink"])
+                elif "已申请摘帽" in audit_stripped:
+                        sheetin.write(row_idx, 14, audit_text, styles["yellow_audit_pink"])
                 elif "重整" in audit_stripped and "可能退市" in audit_stripped:
-                    sheetin.write(row_idx, 14, audit_text, styles["audit_yellow_normal"])
+                    sheetin.write(row_idx, 14, audit_text, styles["yellow_audit_brown"])
                 elif audit_stripped.endswith("可能退市"):
-                    sheetin.write(row_idx, 14, audit_text, styles["audit_yellow_red"])
+                    sheetin.write(row_idx, 14, audit_text, styles["yellow_audit_red"])
                 else:
-                    # sheetin.write(row_idx, 14, audit_text, styles["yellow"])
-                    sheetin.write(row_idx, 14, audit_text, styles["audit_yellow_normal"])
+                    sheetin.write(row_idx, 14, audit_text, styles["yellow_audit_normal"])
 
                 memo = performance_reversal_memo_dict.get(code, "")
                 sheetin.write(row_idx, 15, memo, styles["yellow_memo_left"])
 
         else:  # 普通行（非黄色背景）
-            sheetin.write(row_idx, 0, code, styles["base"])
-            sheetin.write(row_idx, 1, info["名称"], styles["base"])
-            sheetin.write(row_idx, 2, info["总数量"], styles["base"])
-            sheetin.write(row_idx, 3, info["当前价"], styles["base"])
-            sheetin.write(row_idx, 4, info["金额"], styles["base"])
-            sheetin.write(row_idx, 5, info["仓位%"], styles["percent"])
-            sheetin.write(row_idx, 6, rank, styles["base"])
-            sheetin.write(row_idx, 7, cumulative, styles["base"])
-            sheetin.write(row_idx, 8, f"{total_cumulative_percent}%", styles["total_percent"])
+            sheetin.write(row_idx, 0, code, styles["base_digit"])
+            sheetin.write(row_idx, 1, info["名称"], styles["base_digit"])   # base_text
+            sheetin.write(row_idx, 2, info["总数量"], styles["base_digit"])
+            sheetin.write(row_idx, 3, info["当前价"], styles["base_digit"])
+            sheetin.write(row_idx, 4, info["金额"], styles["base_digit"])
+            sheetin.write(row_idx, 5, info["仓位%"], styles["base_digit"])
+            sheetin.write(row_idx, 6, rank, styles["base_digit"])
+            sheetin.write(row_idx, 7, cumulative, styles["base_digit"])
+            sheetin.write(row_idx, 8, f"{total_cumulative_percent}%", styles["base_digit"])
             sheetin.write(row_idx, 9, strategy, styles["strategy"])
 
             # 各策略特殊字段写入（普通背景）
@@ -1749,9 +1688,15 @@ def write_sheet_data1(
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheetin.write(row_idx, 10, next_report, styles["base"])
-                sheetin.write(row_idx, 11, div_date, styles["base"])
-                sheetin.write(row_idx, 12, per_div, styles["date_right"])
+                sheetin.write(row_idx, 10, next_report, styles["date_normal"])
+
+                # sheetin.write(row_idx, 11, div_date, styles["date_normal"])
+                if is_div_date_less_60days(div_date):
+                    sheetin.write(row_idx, 11, div_date, styles["date_pink"])
+                else:
+                    sheetin.write(row_idx, 11, div_date, styles["date_normal"])
+
+                sheetin.write(row_idx, 12, per_div, styles["base_digit"])
 
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
@@ -1765,9 +1710,15 @@ def write_sheet_data1(
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheetin.write(row_idx, 10, next_report, styles["date_right"])
-                sheetin.write(row_idx, 11, div_date, styles["date_right"])
-                sheetin.write(row_idx, 12, per_div, styles["date_right"])
+                sheetin.write(row_idx, 10, next_report, styles["date_normal"])
+
+                # sheetin.write(row_idx, 11, div_date, styles["date_normal"])
+                if is_div_date_less_60days(div_date):
+                    sheetin.write(row_idx, 11, div_date, styles["date_pink"])
+                else:
+                    sheetin.write(row_idx, 11, div_date, styles["date_normal"])
+
+                sheetin.write(row_idx, 12, per_div, styles["base_digit"])
 
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
@@ -1781,9 +1732,15 @@ def write_sheet_data1(
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheetin.write(row_idx, 10, next_report, styles["date_right"])
-                sheetin.write(row_idx, 11, div_date, styles["date_right"])
-                sheetin.write(row_idx, 12, per_div, styles["date_right"])
+                sheetin.write(row_idx, 10, next_report, styles["date_normal"])
+
+                # sheetin.write(row_idx, 11, div_date, styles["date_normal"])
+                if is_div_date_less_60days(div_date):
+                    sheetin.write(row_idx, 11, div_date, styles["date_pink"])
+                else:
+                    sheetin.write(row_idx, 11, div_date, styles["date_normal"])
+
+                sheetin.write(row_idx, 12, per_div, styles["base_digit"])
 
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
@@ -1797,9 +1754,15 @@ def write_sheet_data1(
                 div_date = item_list[1]
                 per_div = item_list[2]
 
-                sheetin.write(row_idx, 10, next_report, styles["date_right"])
-                sheetin.write(row_idx, 11, div_date, styles["date_right"])
-                sheetin.write(row_idx, 12, per_div, styles["date_right"])
+                sheetin.write(row_idx, 10, next_report, styles["date_normal"])
+
+                # sheetin.write(row_idx, 11, div_date, styles["date_normal"])
+                if is_div_date_less_60days(div_date):
+                    sheetin.write(row_idx, 11, div_date, styles["date_pink"])
+                else:
+                    sheetin.write(row_idx, 11, div_date, styles["date_normal"])
+
+                sheetin.write(row_idx, 12, per_div, styles["base_digit"])
 
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
@@ -1813,9 +1776,15 @@ def write_sheet_data1(
                 next_date = item_list[1]
                 per_div = item_list[2]
 
-                sheetin.write(row_idx, 10, last_date, styles["base"])
-                sheetin.write(row_idx, 11, next_date, styles["base"])
-                sheetin.write(row_idx, 12, per_div, styles["date_right"])
+                sheetin.write(row_idx, 10, last_date, styles["date_normal"])
+
+                # sheetin.write(row_idx, 11, next_date, styles["date_normal"])
+                if is_div_date_less_60days(next_date):
+                    sheetin.write(row_idx, 11, next_date, styles["date_pink"])
+                else:
+                    sheetin.write(row_idx, 11, next_date, styles["date_normal"])
+
+                sheetin.write(row_idx, 12, per_div, styles["base_digit"])
 
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
@@ -1836,18 +1805,18 @@ def write_sheet_data1(
                                    styles, is_yellow=False)
 
             elif is_performance_reversal_sheet:  # 业绩反转
-                delisting_date = performance_reversal_delisting_application_dict.get(code, "")
-                if is_delisting_date_less_than_2months(code):
-                    sheetin.write(row_idx, 10, delisting_date, styles["pink_delisting_apply"])
+                unst_date = performance_reversal_unst_application_dict.get(code, "")
+                if is_unst_date_less_than_2months(unst_date):
+                    sheetin.write(row_idx, 10, unst_date, styles["date_pink"])
                 else:
-                    sheetin.write(row_idx, 10, delisting_date, styles["delisting_apply_right"])
+                    sheetin.write(row_idx, 10, unst_date, styles["date_normal"])
 
                 week_line = performance_reversal_week_line_dict.get(code, "")
                 week_line_stripped = week_line.strip()
                 if week_line_stripped in ("半周线", "周线涨"):
                     sheetin.write(row_idx, 11, week_line, styles["week_pink"])
                 else:
-                    sheetin.write(row_idx, 11, week_line, styles["base"])
+                    sheetin.write(row_idx, 11, week_line, styles["week_normal"])
 
                 _write_far_up_down(sheetin, row_idx, 12, 13, performance_reversal_far_dict.get(code, ","),
                                    styles, is_yellow=False)
@@ -1856,12 +1825,17 @@ def write_sheet_data1(
                 audit_stripped = audit_text.strip()
                 if "整改已ok" in audit_stripped and "暂不退市" in audit_stripped:
                     sheetin.write(row_idx, 14, audit_text, styles["audit_pink"])
+                elif "已申请摘帽" in audit_stripped:
+                    sheetin.write(row_idx, 14, audit_text, styles["audit_pink"])
+                elif "重整" in audit_stripped and "暂不退市" in audit_stripped:
+                    sheetin.write(row_idx, 14, audit_text, styles["audit_pink"])
+                elif "重整" in audit_stripped and "暂不退市" in audit_stripped:
+                    sheetin.write(row_idx, 14, audit_text, styles["audit_pink"])
                 elif "重整" in audit_stripped and "可能退市" in audit_stripped:
-                    sheetin.write(row_idx, 14, audit_text, styles["audit_normal"])
+                    sheetin.write(row_idx, 14, audit_text, styles["audit_brown"])
                 elif "可能退市" in audit_stripped:
                     sheetin.write(row_idx, 14, audit_text, styles["audit_red"])
                 else:
-                    # sheetin.write(row_idx, 14, audit_text, styles["base"])
                     sheetin.write(row_idx, 14, audit_text, styles["audit_normal"])
 
                 memo = performance_reversal_memo_dict.get(code, "")
