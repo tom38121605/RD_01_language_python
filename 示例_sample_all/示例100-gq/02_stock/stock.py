@@ -624,6 +624,8 @@ def _write_annual_rate(sheetin, row_idx, col_idx, annual_rate_text, styles, is_y
             sheetin.write(row_idx, col_idx, annual_rate_text, styles["annual_normal"])
 
 
+# 远涨：小于50粉红色，大于70红色
+# 远跌：大于60粉红色，小于30红色
 def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, styles, is_yellow=False):
     """写入远涨和远跌数据并应用颜色"""
     far_up = ""
@@ -634,6 +636,7 @@ def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, s
             far_up = parts[0].strip()
             far_down = parts[1].strip()
 
+
     # 乘100并取整
     try:
         far_up = str(int(float(far_up) * 100))
@@ -643,6 +646,11 @@ def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, s
         far_down = str(int(abs(float(far_down)) * 100))
     except:
         far_down = ""
+
+    # # if (code == "605368"):
+    # print(struct_str)
+    # print(far_up)
+    # print(far_down)
 
     # 选择样式
     if is_yellow:
@@ -676,7 +684,7 @@ def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, s
         try:
             val = int(far_up)
             if val <= 50:
-                far_up_style = styles["fa_pink"]
+                far_up_style = styles["far_pink"]
             elif val >= 70:
                 far_up_style = styles["far_red"]
             else:
@@ -1199,8 +1207,8 @@ def write_sheet_data2(
         total_capital=500000):
     # 设置列宽（增加两列，列索引需要调整）
     col_widths = {    # K=10
-        0: 8, 1: 15, 2: 8, 3: 8, 4: 10, 5: 9, 6: 6, 7: 10,
-        8: 10, 9: 10, 10: 8, 11: 8
+        0: 8, 1: 15, 2: 7, 3: 7, 4: 7, 5: 6, 6: 5, 7: 10,
+        8: 10, 9: 10, 10: 6, 11: 6
     }
     for col, width in col_widths.items():
         sheetin.col(col).width = width * 256
@@ -1260,6 +1268,11 @@ def write_sheet_data2(
                 except:
                     far_down = far_down_raw if far_down_raw else ""
 
+        # if(code=="605368"):
+        #     print(far_data)
+        #     print(far_up)
+        #     print(far_down)
+
         # 高亮第10名
         if rank == 10:
             sheetin.write(row_idx, 0, code, styles["yellow_base_digit"])
@@ -1318,6 +1331,8 @@ def write_sheet_data2(
             sheetin.write(percent_row, col_idx, f"{pct}%", styles["summary"])
             col_idx += 1
 
+# 远涨：小于50粉红色，大于70红色
+# 远跌：大于60粉红色，小于30红色
 def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up, far_down, styles, is_yellow=False):
     """写入远涨和远跌数据并应用颜色（简化版，直接使用已处理好的数值）"""
     if is_yellow:
@@ -1390,15 +1405,16 @@ def write_sheet_data1(
         is_oversea_sheet=False,
         is_swapbond_sheet=False):
 
+
     col_widths = {    # K=10
-        0: 8, 1: 15, 2: 8, 3: 8, 4: 10, 5: 9, 6: 6, 7: 10,
-        8: 10, 9: 10, 10: 8, 11: 8
+        0: 8, 1: 15, 2: 7, 3: 7, 4: 7, 5: 6, 6: 5, 7: 10,
+        8: 10, 9: 10, 10: 6, 11: 6
     }
 
     # "分红股", "分红基", "涨停回调", "配债股", "小盘猛牛"
     col_widths2 = {    # K=10
-        0: 8, 1: 10, 2: 8, 3: 8, 4: 10, 5: 9, 6: 6, 7: 10,
-        8: 10, 9: 8, 10: 18, 11: 16, 12: 12, 13: 9, 14: 8, 15: 8
+        0: 8, 1: 12, 2: 7, 3: 7, 4: 7, 5: 6, 6: 5, 7: 10,
+        8: 10, 9: 8, 10: 14, 11: 16, 12: 10, 13: 9, 14: 8, 15: 8
     }
 
     # "业绩反转"
@@ -1522,7 +1538,6 @@ def write_sheet_data1(
 
                 sheetin.write(row_idx, 10, next_report, styles["yellow_date_normal"])
 
-                # sheetin.write(row_idx, 11, div_date, styles["yellow_date_normal"])
                 if is_div_date_less_60days(div_date):
                     sheetin.write(row_idx, 11, div_date, styles["yellow_date_pink"])
                 else:
@@ -1544,7 +1559,6 @@ def write_sheet_data1(
 
                 sheetin.write(row_idx, 10, next_report, styles["yellow_date_normal"])
 
-                # sheetin.write(row_idx, 11, div_date, styles["yellow_date_normal"])
                 if is_div_date_less_60days(div_date):
                     sheetin.write(row_idx, 11, div_date, styles["yellow_date_pink"])
                 else:
@@ -1566,7 +1580,6 @@ def write_sheet_data1(
 
                 sheetin.write(row_idx, 10, next_report, styles["yellow_date_normal"])
 
-                # sheetin.write(row_idx, 11, div_date, styles["yellow_date_normal"])
                 if is_div_date_less_60days(div_date):
                     sheetin.write(row_idx, 11, div_date, styles["yellow_date_pink"])
                 else:
@@ -1588,7 +1601,6 @@ def write_sheet_data1(
 
                 sheetin.write(row_idx, 10, next_report, styles["yellow_date_normal"])
 
-                # sheetin.write(row_idx, 11, div_date, styles["yellow_date_normal"])
                 if is_div_date_less_60days(div_date):
                     sheetin.write(row_idx, 11, div_date, styles["yellow_date_pink"])
                 else:
@@ -1610,7 +1622,6 @@ def write_sheet_data1(
 
                 sheetin.write(row_idx, 10, last_date, styles["yellow_date_normal"])
 
-                # sheetin.write(row_idx, 11, next_date, styles["yellow_date_normal"])
                 if is_div_date_less_60days(next_date):
                     sheetin.write(row_idx, 11, next_date, styles["yellow_date_pink"])
                 else:
@@ -1690,7 +1701,6 @@ def write_sheet_data1(
 
                 sheetin.write(row_idx, 10, next_report, styles["date_normal"])
 
-                # sheetin.write(row_idx, 11, div_date, styles["date_normal"])
                 if is_div_date_less_60days(div_date):
                     sheetin.write(row_idx, 11, div_date, styles["date_pink"])
                 else:
@@ -1712,7 +1722,6 @@ def write_sheet_data1(
 
                 sheetin.write(row_idx, 10, next_report, styles["date_normal"])
 
-                # sheetin.write(row_idx, 11, div_date, styles["date_normal"])
                 if is_div_date_less_60days(div_date):
                     sheetin.write(row_idx, 11, div_date, styles["date_pink"])
                 else:
@@ -1734,7 +1743,6 @@ def write_sheet_data1(
 
                 sheetin.write(row_idx, 10, next_report, styles["date_normal"])
 
-                # sheetin.write(row_idx, 11, div_date, styles["date_normal"])
                 if is_div_date_less_60days(div_date):
                     sheetin.write(row_idx, 11, div_date, styles["date_pink"])
                 else:
@@ -1756,7 +1764,6 @@ def write_sheet_data1(
 
                 sheetin.write(row_idx, 10, next_report, styles["date_normal"])
 
-                # sheetin.write(row_idx, 11, div_date, styles["date_normal"])
                 if is_div_date_less_60days(div_date):
                     sheetin.write(row_idx, 11, div_date, styles["date_pink"])
                 else:
@@ -1778,7 +1785,6 @@ def write_sheet_data1(
 
                 sheetin.write(row_idx, 10, last_date, styles["date_normal"])
 
-                # sheetin.write(row_idx, 11, next_date, styles["date_normal"])
                 if is_div_date_less_60days(next_date):
                     sheetin.write(row_idx, 11, next_date, styles["date_pink"])
                 else:
@@ -1853,7 +1859,7 @@ position_dict = {}
 
 # 依次遍历下面的sheet
 for sheet_name in ["01", "02", "03", "04"]:
-# for sheet_name in ["01", "02"]:
+# for sheet_name in ["01"]:
     sheet = old_workbook.sheet_by_name(sheet_name)   # 当前的sheet neme，如 “01”
     # print(sheet)   # <01>
 
