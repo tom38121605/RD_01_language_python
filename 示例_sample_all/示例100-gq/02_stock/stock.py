@@ -1330,6 +1330,11 @@ def write_sheet_data2(
             sheetin.write(percent_row, col_idx, f"{pct}%", styles["summary"])
             col_idx += 1
 
+    # 列索引从0开始：6=排名, 7=累积金额, 8=累积仓位%, 9=策略
+    for col_idx in [6, 7, 8, 9]:
+        sheetin.col(col_idx).hidden = 1
+
+
 # 远涨：小于50粉红色，大于70红色
 # 远跌：大于60粉红色，小于30红色
 def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up, far_down, styles, is_yellow=False):
@@ -1848,6 +1853,11 @@ def write_sheet_data1(
 
         row_idx += 1
 
+        # 列索引从0开始：6=排名, 7=累积金额, 8=累积仓位%, 9=策略
+        for col_idx in [6, 7, 8, 9]:
+            sheetin.col(col_idx).hidden = 1
+
+
 
 
 # ============================== 原有主程序代码 ===============================
@@ -2008,10 +2018,8 @@ write_sheet_data2(
     main_sheet,
     full_data,
     styles,
-
     summary_data=summary_data,
     summary_percent=summary_percent,
-
     total_capital=total_capital
 )
 
