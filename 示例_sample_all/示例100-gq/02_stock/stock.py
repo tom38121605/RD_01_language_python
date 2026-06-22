@@ -1,35 +1,33 @@
-﻿# 远涨 -- 小于50时显示粉红色字体，大于70时显示红色字体   //改为 45，65
-# 远跌 -- 大于60时显示粉红色字体，小于30时显示红色字体
-
-
-from datetime import datetime, timedelta
+﻿from datetime import datetime, timedelta
 import xlrd
 import xlwt
 from collections import defaultdict
 import re
 
 
+# 大盘上升趋势 ，高位震荡趋势
+# FARUP_LOW, FARUP_HIGH = 50, 70         # 远涨
+# FARDOWN_LOW, FARDOWN_HIGH  = 30 , 60   # 远跌
+
+# 大盘下降趋势 ，低位震荡趋势
+FARUP_LOW, FARUP_HIGH = 45, 65         # 远涨
+FARDOWN_LOW, FARDOWN_HIGH  = 35 , 65   # 远跌
+
+
 ROW_HEIGHT = 11 * 20
-
-FARUP_LOW = 50
-FARUP_HIGH = 70
-FARDOWN_LOW = 30
-FARDOWN_HIGH = 60
-
-
 
 # ============================== 一。每周维护字典  ===============================
 
 # ---------------------- 0.1：分红股， 远涨远跌字典 ----------------------
 stock_dividend_struct_dict = {
-    "600016": "0.381, -0.365",    # 民生银行
-    "600755": "0.231, -0.348",    # XD厦门国贸
-    "601169": "0.625, -0.308",    # 北京银行
-    "605368": "0.208, -0.524",    # 蓝天燃气
-    "600681": "0.185, -0.410",    # 百川能源
-    "603801": "0.017, -0.763",    # 志邦家居
-    "601006": "0.017, -0.311",    # 大秦铁路
-    "600300": "0.475, -0.300"     # 维维股份
+    "600016": "0.385, -0.363",  # 民生银行
+    "600755": "0.249, -0.339",  # 厦门国贸
+    "601169": "0.644, -0.300",  # 北京银行
+    "605368": "0.186, -0.532",  # 蓝天燃气
+    "600681": "0.192, -0.406",  # 百川能源
+    "603801": "0.037, -0.761",  # 志邦家居
+    "601006": "0.035, -0.305",  # 大秦铁路
+    "600300": "0.480, -0.298"  # 维维股份
 
     # # 多策略
     # "600681": "45, 27 ",  # 百川能源
@@ -39,13 +37,13 @@ stock_dividend_struct_dict = {
 
 # ---------------------- 0.2：涨停回调, 远涨远跌字典 ----------------------
 limit_up_callback_struct_dict = {
-    "600662": "0.294, -0.387",    # 外服控股
-    "600681": "0.185, -0.410",    # 百川能源
-    "600814": "0.389, -0.442",    # 杭州解百
-    "600755": "0.231, -0.348",    # XD厦门国贸
-    "600858": "0.351, -0.431",    # 银座股份
-    "605368": "0.208, -0.524",    # 蓝天燃气
-    "605388": "0.234, -0.579"     # 均瑶健康
+    "600662": "0.276, -0.395",    # 外服控股
+    "600681": "0.192, -0.406",    # 百川能源
+    "600814": "0.382, -0.445",    # 杭州解百
+    "600755": "0.249, -0.339",    # 厦门国贸
+    "600858": "0.365, -0.425",    # 银座股份
+    "605368": "0.186, -0.532",    # 蓝天燃气
+    "605388": "0.237, -0.578"     # 均瑶健康
 
     # # 多策略
     # "600681": "45, 27 ",  # 百川能源
@@ -59,9 +57,9 @@ limit_up_callback_struct_dict = {
 # ---------------------- 0.3：小盘猛牛, 远涨远跌字典 ----------------------
 
 small_cap_callback_struct_dict = {
-    "300891": "0.247, -0.465",    # 惠云钛业
-    "605077": "0.107, -0.512",    # 华康股份
-    "603759": "0.373, -0.559"     # 海天股份
+    "300891": "0.326, -0.413",    # 惠云钛业
+    "605077": "0.131, -0.501",    # 华康股份
+    "603759": "0.387, -0.555"     # 海天股份
 
 }
 
@@ -72,16 +70,15 @@ bond_allot_struct_dict = {
 
 }
 
-
 # ---------------------- 0.6：分红基, 远涨远跌字典 ----------------------
 dividend_fund_struct_dict = {
-    "510720": "0.181, -0.099",    # 红利国企ETF国泰
-    "180102": "0.007, -0.574",    # 华夏合肥高新REIT
-    "159307": "0.267, -0.092",    # 红利低波100ETF博时
-    "513820": "0.413, -0.125",    # 港股通红利ETF汇添富
-    "510880": "0.418, -0.094",    # 红利ETF华泰柏瑞
-    "515450": "0.876, -0.073",    # 红利低波50ETF南方
-    "515300": "0.681, -0.133"     # 300红利低波ETF嘉实
+    "510720": "0.197, -0.087",    # 红利国企ETF国泰
+    "180102": "0.010, -0.594",    # 华夏合肥高新REIT
+    "159307": "0.269, -0.092",    # 红利低波100ETF博时
+    "513820": "0.410, -0.127",    # 港股通红利ETF汇添富
+    "510880": "0.431, -0.086",    # 红利ETF华泰柏瑞
+    "515450": "0.881, -0.071",    # 红利低波50ETF南方
+    "515300": "0.693, -0.126"     # 300红利低波ETF嘉实
 
 }
 
@@ -109,35 +106,35 @@ swapbond_fund_struct_dict = {
 # ===================== 1.0：业绩反转，远涨远跌字典 =====================
 # 格式：key=股票代码, value="远涨数值,远跌数值"
 performance_reversal_far_dict = {
-    "003032": "0.242, -0.708",    # 传智教育
-    "300527": "0.400, -0.452",    # ST应急
-    "300366": "0.026, -0.748",    # ST创意
-    "002124": "0.092, -0.728",    # 天邦食品
-    "002122": "0.393, -0.583",    # ST汇洲
-    "000698": "0.215, -0.550",    # ST沈化
-    "002689": "0.347, -0.580",    # ST远智
-    "600624": "0.392, -0.594",    # ST复华
-    "600169": "0.225, -0.298",    # ST太重
-    "300460": "0.727, -0.469",    # ST惠伦
-    "000821": "0.018, -0.681",    # ST京机
-    "300173": "0.267, -0.634",    # ST福能
-    "000010": "0.367, -0.638",    # *ST美丽
-    "000488": "0.261, -0.623",    # ST晨鸣
-    "000639": "0.008, -0.771",    # ST西王
-    "000826": "0.570, -0.602",    # *ST启环
-    "000903": "0.268, -0.675",    # ST云动
-    "002055": "0.494, -0.457",    # ST得润
-    "002360": "0.334, -0.348",    # ST同德
-    "002512": "0.428, -0.526",    # ST达华
-    "002691": "0.186, -0.686",    # *ST冀凯
-    "002719": "0.329, -0.598",    # ST麦趣
-    "301030": "0.179, -0.794",    # *ST仕净
-    "600053": "0.039, -0.699",    # *ST九鼎
-    "600537": "0.319, -0.684",    # *ST亿晶
-    "600734": "0.032, -0.737",    # *ST实达
-    "600735": "0.850, -0.375",    # ST新华锦
-    "600759": "0.198, -0.747",    # ST洲际石油
-    "688201": "0.199, -0.772"     # ST信安
+    "003032": "0.179, -0.723",    # 传智教育
+    "300527": "0.380, -0.460",    # ST应急
+    "300366": "0.050, -0.751",    # ST创意
+    "002124": "0.087, -0.730",    # 天邦食品
+    "002122": "0.354, -0.594",    # ST汇洲
+    "000698": "0.235, -0.543",    # ST沈化
+    "002689": "0.332, -0.593",    # ST远智
+    "600624": "0.352, -0.605",    # ST复华
+    "600169": "0.185, -0.321",    # ST太重
+    "300460": "0.650, -0.493",    # ST惠伦
+    "000821": "0.004, -0.696",    # ST京机
+    "300173": "0.242, -0.641",    # ST福能
+    "000010": "0.396, -0.630",    # *ST美丽
+    "000488": "0.248, -0.627",    # ST晨鸣
+    "000639": "0.032, -0.777",    # ST西王
+    "000826": "0.556, -0.606",    # *ST启环
+    "000903": "0.248, -0.680",    # ST云动
+    "002055": "0.420, -0.457",    # ST得润
+    "002360": "0.294, -0.375",    # ST同德
+    "002512": "0.363, -0.548",    # ST达华
+    "002691": "0.170, -0.690",    # *ST冀凯
+    "002719": "0.262, -0.618",    # ST麦趣
+    "301030": "0.117, -0.804",    # *ST仕净
+    "600053": "0.078, -0.688",    # *ST九鼎
+    "600537": "0.274, -0.746",    # *ST亿晶
+    "600734": "0.017, -0.746",    # *ST实达
+    "600735": "0.795, -0.394",    # ST新华锦
+    "600759": "0.156, -0.756",    # ST洲际石油
+    "688201": "0.221, -0.768"     # ST信安
 }
 
 
@@ -656,9 +653,9 @@ def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, s
         # 远涨
         try:
             val = int(far_up)
-            if val <= 50:
+            if val <= FARUP_LOW:
                 far_up_style = styles["yellow_far_pink"]
-            elif val >= 70:
+            elif val >= FARUP_HIGH:
                 far_up_style = styles["yellow_far_red"]
             else:
                 far_up_style = styles["yellow_far_normal"]
@@ -669,9 +666,9 @@ def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, s
         # 远跌
         try:
             val = int(far_down.strip())
-            if val >= 60:
+            if val >= FARDOWN_HIGH:
                 far_down_style = styles["yellow_far_pink"]
-            elif val <= 30:
+            elif val <= FARDOWN_LOW:
                 far_down_style = styles["yellow_far_red"]
             else:
                 far_down_style = styles["yellow_far_normal"]
@@ -682,9 +679,9 @@ def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, s
         # 远涨
         try:
             val = int(far_up)
-            if val <= 50:
+            if val <= FARUP_LOW:
                 far_up_style = styles["far_pink"]
-            elif val >= 70:
+            elif val >= FARUP_HIGH:
                 far_up_style = styles["far_red"]
             else:
                 far_up_style = styles["far_normal"]
@@ -695,9 +692,9 @@ def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, s
         # 远跌
         try:
             val = int(far_down.strip())
-            if val >= 60:
+            if val >= FARDOWN_HIGH:
                 far_down_style = styles["far_pink"]
-            elif val <= 30:
+            elif val <= FARDOWN_LOW:
                 far_down_style = styles["far_red"]
             else:
                 far_down_style = styles["far_normal"]
@@ -1343,9 +1340,9 @@ def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up
         # 远涨
         try:
             val = int(far_up) if far_up else 0
-            if val <= 50 and val != 0:
+            if val <= FARUP_LOW and val != 0:
                 far_up_style = styles["yellow_far_pink"]
-            elif val >= 70:
+            elif val >= FARUP_HIGH:
                 far_up_style = styles["yellow_far_red"]
             else:
                 far_up_style = styles["yellow_far_normal"]
@@ -1356,9 +1353,9 @@ def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up
         # 远跌
         try:
             val = int(far_down) if far_down else 0
-            if val >= 60:
+            if val >= FARDOWN_HIGH:
                 far_down_style = styles["yellow_far_pink"]
-            elif val <= 30 and val != 0:
+            elif val <= FARDOWN_LOW and val != 0:
                 far_down_style = styles["yellow_far_red"]
             else:
                 far_down_style = styles["yellow_far_normal"]
@@ -1369,9 +1366,9 @@ def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up
         # 远涨
         try:
             val = int(far_up) if far_up else 0
-            if val <= 50 and val != 0:
+            if val <= FARUP_LOW and val != 0:
                 far_up_style = styles["far_pink"]
-            elif val >= 70:
+            elif val >= FARUP_HIGH:
                 far_up_style = styles["far_red"]
             else:
                 far_up_style = styles["far_normal"]
@@ -1382,9 +1379,9 @@ def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up
         # 远跌
         try:
             val = int(far_down) if far_down else 0
-            if val >= 60:
+            if val >= FARDOWN_HIGH:
                 far_down_style = styles["far_pink"]
-            elif val <= 30 and val != 0:
+            elif val <= FARDOWN_LOW and val != 0:
                 far_down_style = styles["far_red"]
             else:
                 far_down_style = styles["far_normal"]
