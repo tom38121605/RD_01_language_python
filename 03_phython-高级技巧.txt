@@ -1,0 +1,15 @@
+﻿
+
+1.   高级合并 for 和 if 语句 
+
+      lines = text.strip().split('\n')
+
+      # 合并语句
+      # lines = [line.strip() for line in lines if line.strip()]
+
+      # 分拆语句
+      new_lines = []
+      for line in lines:
+          if line.strip():
+              new_lines.append(line)
+      lines = new_lines
