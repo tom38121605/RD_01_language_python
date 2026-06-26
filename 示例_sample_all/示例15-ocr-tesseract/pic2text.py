@@ -1,34 +1,24 @@
 
-import sys
-import numpy as np
-import matplotlib.pyplot as plt
-import h5py
-from os.path import expanduser
-import os.path
 
-import time
-import datetime
-import ntplib
-import glob
-
+# import numpy as np
 import pytesseract
 from PIL import Image
 import re
 
 
 image_path = "01.png"
-
 img = Image.open(image_path)
 
 pytesseract.pytesseract.tesseract_cmd = r"D:\Program Files\Tesseract-OCR\tesseract.exe"
-
-# config = "--psm 6 -c segment_penalty=10"
-# text = pytesseract.image_to_string(img, config=config, lang='eng')
-
 text = pytesseract.image_to_string(img, lang='eng')
 
+text = re.sub(r"\.\s+", ".", text)
+
+text = text.replace("Zz", "Z")
+
 print("文字：",text)
-print("-" * 50)
+
+# print("-" * 50)
 
 # 解析表格
 lines = text.strip().split('\n')
@@ -71,3 +61,6 @@ for code, values in result_dict.items():
     print(f"  {code}: X={values['X']}, Z={values['Z']}")
 
 
+
+# config = "--psm 6 -c segment_penalty=10"
+# text = pytesseract.image_to_string(img, config=config, lang='eng')
