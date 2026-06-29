@@ -10,9 +10,10 @@ image_path = "01.png"
 img = Image.open(image_path)
 
 pytesseract.pytesseract.tesseract_cmd = r"D:\Program Files\Tesseract-OCR\tesseract.exe"
-text = pytesseract.image_to_string(img, lang='eng')
+# text = pytesseract.image_to_string(img, lang='eng')
+text = pytesseract.image_to_string(img, lang='chi_sim+eng')
 
-text = re.sub(r"\.\s+", ".", text)
+text = re.sub(r"\.\s+", ".", text)  # 把 ". "替换成 "."  //去掉 小数点后面的空格
 
 text = text.replace("Zz", "Z")
 
