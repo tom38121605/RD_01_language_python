@@ -128,7 +128,8 @@ for num_list in data:
     # f2.write(f"{number1}\n")
     # f3.write(f"{number2}\n")
 
-    f9.write(f"{number0}	{number1}	{number2}\n")
+    # f9.write(f"{number0}	{number1}	{number2}\n")    #--use
+    f9.write(f"{number0}\t{number1}\t{number2}\n")    #--use
 
     x1points.append(number0)
     y1points.append(number1)
