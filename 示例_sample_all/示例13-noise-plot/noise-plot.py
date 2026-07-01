@@ -19,7 +19,7 @@ fs = 3676.5
 
 #-------------------- 设置文件路径，文件名称 ----easy--------------------
 
-config = "20C"
+config = "22C"
 
 t_path = config + ".txt"
 # plot_path1 = ('plots/22C_FR.png')
@@ -31,8 +31,11 @@ plot_path1 = ('plots/'+ config + '_FR.png')
 t_data_x = []   # 10R
 t_data_y = []   # Bridge
 
-with open(t_path, 'r') as csvfile:
-    datafile = csv.reader(csvfile, delimiter = '\t')
+# with open(t_path, 'r') as csvfile:
+#     datafile = csv.reader(csvfile, delimiter = '\t')
+with open(t_path, 'r') as txtfile:
+    datafile = csv.reader(txtfile, delimiter='\t')
+
     for row in datafile:
         t_data_x.append(float(row[0]))    # 每行的第0列
         t_data_y.append(float(row[1]))    # 每行的第1列
