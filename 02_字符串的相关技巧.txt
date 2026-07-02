@@ -159,6 +159,31 @@
     把 小数点 + 空格 整体，直接替换成一个小数点 .
 
 
+17. 字符串分割，用制表符/t分割字符串
+
+      1). 示例：
+
+         header_line = "code   	name	 up	 AA	BB	CC	DD	EE"
+         headers = [h.strip() for h in header_line.strip().split('\t')]
+         print(headers)   #['code', 'name', 'up', 'AA', 'BB', 'CC', 'DD', 'EE']
+
+      2). 等价分步写法（方便看懂流程）
+
+         header_line = "code   	name	 up	 AA	BB	CC	DD	EE"
+
+         # 1. 去除首尾空白
+         line_clean = header_line.strip()
+
+         # 2. 按制表符分割
+         temp_list = line_clean.split('\t')
+
+         # 3. 每个字段去空格
+         headers = []
+         for item in temp_list:
+             headers.append(item.strip())
+         print(headers)
+
+
 
 
 
