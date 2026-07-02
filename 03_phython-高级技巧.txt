@@ -14,7 +14,34 @@
       lines = new_lines
 
 
-2.  字典的lambda x讲解      //相当于定义了一个简化的内联函数 （可以理解成直接拿掉lambda x，然后计算后面的值）
+2. 正则匹配搜索字符串，如搜索： F后带数字的文件名
+
+    1). 示例：
+
+         import re
+
+         sfile = 'F2B.txt'
+         result = re.search(r'F(\d+)', sfile)
+
+         AAA = result.group(0)
+         BBB = int( result.group(1) )
+
+         print(AAA)   # F2
+         print(BBB)   # 2
+
+
+    2). 匹配分析：
+
+      模式 r'F(\d+)'：
+
+      F：匹配字母 F（大写）
+      \d+：匹配一个或多个数字（0-9）
+      ()：括号表示捕获组，会把匹配到的字符串提取出来
+
+     对于 'F2B.txt'，会匹配到 'F2'，捕获组内容是： group(0) = 'F2'，   group(1) = '2'
+
+
+3.  字典的lambda x讲解      //相当于定义了一个简化的内联函数 （可以理解成直接拿掉lambda x，然后计算后面的值）
 
      字典数据如下：
       position_dict = {
@@ -58,18 +85,6 @@
        x[1]其实是字典 position_dict里面，这里是嵌套的一个子字典 （每一行除键值之外的数据）
 
 
-3. 正则匹配搜索字符串，如搜索： F后带数字的文件名
-
-         import re
-
-         sfile = 'F2B.txt'
-         result = re.search(r'F(\d+)', sfile)
-
-         AAA = result.group(0)
-         BBB = int( result.group(1) )
-
-         print(AAA)   # F2
-         print(BBB)   # 2
 
 
 
