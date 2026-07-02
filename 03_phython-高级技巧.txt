@@ -1,5 +1,4 @@
 ﻿
-
 1.   高级合并 for 和 if 语句 
 
       lines = text.strip().split('\n')
@@ -13,3 +12,70 @@
           if line.strip():
               new_lines.append(line)
       lines = new_lines
+
+
+2.  字典的lambda x讲解      //相当于定义了一个简化的内联函数 （可以理解成直接拿掉lambda x，然后计算后面的值）
+
+     字典数据如下：
+      position_dict = {
+        "A01": {"名称":"甲", "重量": 1000},
+        "A02": {"名称":"乙", "重量": 5000},
+        "A03": {"名称":"丙", "重量": 3000},
+      }
+
+      position_dict.items() 长这样：
+      [
+        ("A01", {"名称":"甲", "重量":1000}),
+        ("A02", {"名称":"乙", "重量":5000}),
+        ("A03", {"名称":"丙", "重量":3000})
+      ]
+
+     //字典应用
+    AAA = lambda x: x[1]["重量"]
+    sorted_positions = sorted(position_dict.items(), key=AAA, reverse=True)  //把字典里的栏目，按重量从大到小排序
+
+    答1： lambda的作用
+
+         lambda x: x[1]["重量"]    # x[1]  --  每一行除键值之外的数据， 如：  {"名称":"甲", "重量":1000}
+
+         相当于调用下面的函数：
+
+         def lambda(x):
+        # 重点： x -- 当前行的所有数据
+            return x[1]["重量"]
+
+   答2： 调用x时传入什么数据   //sorted会自动依次调用每一行数据
+
+       第1次：x = ("A01", {"重量":1000})
+
+       第2次：x = ("A02", {"重量":5000})
+
+   答3： 为什么取出的数据的是x[1]
+       
+       字典 position_dict.items() 遍历出来，每一项格式永远是：
+           ( key , value )
+
+       x[1]其实是字典 position_dict里面，这里是嵌套的一个子字典 （每一行除键值之外的数据）
+
+
+3. 正则匹配搜索字符串，如搜索： F后带数字的文件名
+
+         import re
+
+         sfile = 'F2B.txt'
+         result = re.search(r'F(\d+)', sfile)
+
+         AAA = result.group(0)
+         BBB = int( result.group(1) )
+
+         print(AAA)   # F2
+         print(BBB)   # 2
+
+
+
+
+
+
+
+
+
