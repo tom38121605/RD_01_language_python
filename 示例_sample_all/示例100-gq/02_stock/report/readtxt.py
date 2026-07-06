@@ -2,19 +2,29 @@ import glob
 import re
 
 # 获取当前目录下所有 F#*.txt 文件并排序
-files = sorted(glob.glob("F[0-9]*.txt"), key=lambda x: int(re.search(r'F(\d+)', x).group(1)))
+prefiles = glob.glob("F[0-9]*.txt")
+print("pre files", prefiles)
+
+key1 = lambda x: int(re.search(r'F(\d+)', x).group(1))
+files = sorted(prefiles, key=key1  )
+print("sorted files", files)
 
 all_test_dicts = {}
 all_names = {}  # 存储每个字典中代码对应的名称
 
 for file_path in files:
+
+    #----------------------文件名和字典名处理-------------------------
+
     # 提取数字和后面的文字
     match = re.search(r'F(\d+)([^.]*)\.txt', file_path)
     if not match:
         continue
 
     num = match.group(1)
-    suffix = match.group(2)  # 例如 "分红股" 或 "涨停回调"
+    suffix = match.group(2)  # 例如 "分红G" 或 "涨停回调"
+
+    # print(num, suffix)    # 2 B
 
     # 生成字典名
     if suffix:
@@ -25,8 +35,13 @@ for file_path in files:
     data_dict = {}
     name_dict = {}  # 存储代码对应的名称
 
+
+    #----------------------读取文件内容-------------------------
+
     with open(file_path, 'r', encoding='gbk') as f:
         lines = f.readlines()
+
+    print(lines)
 
     header_line = None
     data_start_line = 0
@@ -35,13 +50,18 @@ for file_path in files:
         if '代码' in line and '名称' in line:
             header_line = line
             data_start_line = i + 1
+            print("start=",data_start_line)
+
             break
 
     if header_line is None:
         header_line = lines[1]
         data_start_line = 2
 
+    # 首行字符串，通过tab分拆出“代码，名称”等
     headers = [h.strip() for h in header_line.strip().split('\t')]
+
+#------------------------------------------------------------------------
 
     for line in lines[data_start_line:]:
         if line.strip() and not line.startswith('数据来源'):
