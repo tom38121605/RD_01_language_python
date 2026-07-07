@@ -49,7 +49,8 @@
          import re
 
          sfile = 'F2B.txt'
-         match = re.search(r'F(\d+)([^.]*)\.txt', sfile)
+         # match = re.search(r'F(\d+)([^.]*)\.txt', sfile)      # 数字  + 非点字符
+         match = re.search(r'F(\d+)(.*)\.txt', sfile)             # 数字  + 所有字符
 
          AAA = match.group(0)
          BBB = int(match.group(1))
@@ -99,16 +100,15 @@
 
          抓猪步骤：
 
-          从开头匹配 F                                     →  匹配成功
-          (\d+) 抓取连续数字 2                         →  括号把2存入 group(1)     // 第一头猪
-          ([^.]*) 抓取后面、小数点前所有字符 B   →  括号把B存入 group(2)     // 第二头猪
-          \.txt 匹配末尾 .txt                              →  匹配成功
+          从开头匹配 F                                           →  匹配成功
+          (\d+) 抓取连续数字 2                               →  括号把2存入 group(1)     // 第一头猪
+          ([^.]*) 抓取后面、小数点前所有非点字符 B   →  括号把B存入 group(2)     // 第二头猪
+          \.txt 匹配末尾 .txt                                     →  匹配成功
 
 
     6).  re.search()：在字符串任意位置找匹配，不用严格从头匹配
 
           sfile = 'abc.txt F33s8.txt'  ， 也能抓到猪 F33s8.txt， 33， s8
-
 
 
 4.  内联函数 lambda x 讲解      //相当于定义了一个简化的内联函数 （可以理解成直接拿掉lambda x，然后计算后面的值）
@@ -153,6 +153,21 @@
            ( key , value )
 
        x[1]其实是字典 position_dict里面，这里是嵌套的一个子字典 （每一行除键值之外的数据）
+
+
+5. enumerate的功能
+      功能： 会在每个元素前面加一个序号， 相当于列表的下标号
+
+      list1 = [('16', '0.283, -0.412'), ('55', '0.204, -0.362')]
+
+      for idx, (code, value) in enumerate(list1):
+          print(idx)   # 0
+          print(code)  # 16
+          print(value) # 0.283, -0.412
+  
+    
+
+
 
 
 
