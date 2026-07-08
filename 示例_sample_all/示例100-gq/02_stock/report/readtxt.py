@@ -162,17 +162,22 @@ with open('dict.txt', 'w', encoding='utf-8') as f:
             name = name_dict.get(code, '')   # 通过列表里元组的code(GP代码)，取得字典里相应的name(GP名称)
             print(name)  # 民生YH
 
-            if idx == len(items) - 1: # 最后一行，末尾没有逗号
-                if name:
-                    sline = f'    "{code}": "{value}"   # {name}\n'  # "600755": "0.204, -0.362"   # 厦门GM
-                else:
-                    sline = f'    "{code}": "{value}"\n'
+            # if idx == len(items) - 1: # 最后一行，末尾没有逗号
+            #     if name:
+            #         sline = f'    "{code}": "{value}"   # {name}\n'  # "600755": "0.204, -0.362"   # 厦门GM
+            #     else:
+            #         sline = f'    "{code}": "{value}"\n'
+            #
+            # else:   #末尾多一个逗号
+            #     if name:
+            #         sline = f'    "{code}": "{value}",   # {name}\n'  # "600016": "0.283, -0.412",   # 民生YH
+            #     else:
+            #         sline = f'    "{code}": "{value}",\n'
 
-            else:   #末尾多一个逗号
-                if name:
-                    sline = f'    "{code}": "{value}",   # {name}\n'  # "600016": "0.283, -0.412",   # 民生YH
-                else:
-                    sline = f'    "{code}": "{value}",\n'
+            if name:
+                sline = f'    "{code}": "{value}",   # {name}\n'  # "600016": "0.283, -0.412",   # 民生YH
+            else:
+                sline = f'    "{code}": "{value}",\n'
 
             f.write(sline)
         f.write("}\n\n")
