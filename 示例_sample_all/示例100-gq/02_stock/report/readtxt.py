@@ -125,7 +125,10 @@ for file_path in files:
     for code, info in data_dict.items():
         far_up = info.get('远涨', 0)
         far_down = info.get('远跌', 0)
-        test_dict[code] = f"{far_up}, {far_down}"
+        nar_up = info.get('近涨', 0)
+        nar_down = info.get('近跌', 0)
+
+        test_dict[code] = f"{far_up}, {far_down}, {nar_up}, {nar_down}"
 
     all_test_dicts[dict_name] = test_dict   # 数据部分的字典
     all_names[dict_name] = name_dict        # 注释部分的字典
