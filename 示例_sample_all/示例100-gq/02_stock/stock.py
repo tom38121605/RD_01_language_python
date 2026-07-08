@@ -12,6 +12,7 @@ import re
 # 大盘下降趋势 ，低位震荡趋势
 FARUP_LOW, FARUP_HIGH = 30, 50         # 远涨
 FARDOWN_LOW, FARDOWN_HIGH  = 35 , 65   # 远跌
+NARUP_LOW, NARUP_HIGH = 9, 25         # 近涨
 
 ROW_HEIGHT = 11 * 20
 
@@ -20,14 +21,18 @@ ROW_HEIGHT = 11 * 20
 
 # ---------------------- 0.1：分红股， 远涨远跌字典 ----------------------
 stock_dividend_struct_dict = {
-    "600016": "0.34, -0.39",   # 民生银行
-    "600755": "0.269, -0.328",   # 厦门国贸
-    "601169": "0.661, -0.293",   # 北京银行
-    "605368": "0.143, -0.549",   # 蓝天燃气
-    "600681": "0.167, -0.418",   # 百川能源
-    "603801": "0.028, -0.793",   # 志邦家居
-    "601006": "0.06, -0.332",   # 大秦铁路
-    "600300": "0.45, -0.312"   # 维维股份
+
+    # "605368": "0.143, -0.549, 0.066, -0.198",  # 蓝天RQ
+    # "600755": "0.204, -0.362, 0.013, -0.212",  # 厦门GM
+
+    "600016": "0.348, -0.387, 0.057, -0.161",   # 民生银行
+    "600755": "0.308, -0.302, 0.108, -0.138",   # 厦门国贸
+    "601169": "0.661, -0.293, 0.051, -0.076",   # 北京银行
+    "605368": "0.159, -0.543, 0.083, -0.342",   # 蓝天燃气
+    "600681": "0.178, -0.413, 0.061, -0.373",   # 百川能源
+    "603801": "0.028, -0.793, 0.028, -0.423",   # 志邦家居
+    "601006": "0.075, -0.322, 0.075, -0.124",   # 大秦铁路
+    "600300": "0.45, -0.312, 0.069, -0.222",   # 维维股份
 
     # # 多策略
     # "600681": "45, 27 ",  # 百川能源
@@ -37,13 +42,20 @@ stock_dividend_struct_dict = {
 
 # ---------------------- 0.2：涨停回调, 远涨远跌字典 ----------------------
 limit_up_callback_struct_dict = {
-    "600662": "0.242, -0.411",   # 外服控股
-    "600681": "0.167, -0.418",   # 百川能源
-    "600814": "0.299, -0.478",   # 杭州解百
-    "600755": "0.269, -0.328",   # 厦门国贸
-    "600858": "0.296, -0.454",   # 银座股份
-    "605368": "0.143, -0.549",   # 蓝天燃气
-    "605388": "0.175, -0.6"   # 均瑶健康
+
+    # "605368": "0.143, -0.549, 0.066, -0.198",  # 蓝天RQ
+    # "600755": "0.204, -0.362, 0.013, -0.212",  # 厦门GM
+    #
+    # "600662": "0.236, -0.414, 0.133, -0.375",  # 外服KG
+    # "605388": "0.156, -0.606, 0.015, -0.469",  # 均瑶JK
+
+    "600662": "0.264, -0.401, 0.056, -0.361",  # 外服控股
+    "600681": "0.178, -0.413, 0.061, -0.373",  # 百川能源
+    "600814": "0.318, -0.471, 0.055, -0.434",  # 杭州解百
+    "600755": "0.308, -0.302, 0.108, -0.138",  # 厦门国贸
+    "600858": "0.31, -0.448, 0.056, -0.37",  # 银座股份
+    "605368": "0.159, -0.543, 0.083, -0.342",  # 蓝天燃气
+    "605388": "0.167, -0.602, 0.025, -0.464",  # 均瑶健康
 
     # # 多策略
     # "600681": "45, 27 ",  # 百川能源
@@ -57,84 +69,84 @@ limit_up_callback_struct_dict = {
 # ---------------------- 0.3：小盘猛牛, 远涨远跌字典 ----------------------
 
 small_cap_callback_struct_dict = {
-    "300891": "0.17, -0.498",   # 惠云钛业
-    "605077": "0.024, -0.548",   # 华康股份
-    "603759": "0.401, -0.557"   # 海天股份
+    "300891": "0.166, -0.5, 0.028, -0.435",   # 惠云钛业
+    "605077": "0.011, -0.554, 0.007, -0.449",   # 华康股份
+    "603759": "0.375, -0.565, 0.084, -0.438",   # 海天股份
 }
 
 # ---------------------- 0.5：配债股, 远涨远跌字典 ----------------------
 
 bond_allot_struct_dict = {
-    "603759": "0.443, -0.537"   # 海天股份
+    "603759": "0.375, -0.565, 0.084, -0.438",   # 海天股份
 
 }
 
 # ---------------------- 0.6：分红基, 远涨远跌字典 ----------------------
 dividend_fund_struct_dict = {
-    "510720": "0.163, -0.113",   # 红利国企ETF国泰
-    "159307": "0.254, -0.102",   # 红利低波100ETF博时
-    "180102": "0.089, -0.601",   # 华夏合肥高新REIT
-    "508056": "0.168, -0.508",   # 中金普洛斯REIT
-    "513820": "0.373, -0.151",   # 港股通红利ETF汇添富
-    "510880": "0.394, -0.11",   # 红利ETF华泰柏瑞
-    "515450": "0.867, -0.078",   # 红利低波50ETF南方
-    "515300": "0.671, -0.138"   # 300红利低波ETF嘉实
+    "510720": "0.174, -0.105, 0.069, -0.098",   # 红利国企ETF国泰
+    "159307": "0.266, -0.093, 0.059, -0.09",   # 红利低波100ETF博时
+    "180102": "0.087, -0.602, 0.087, -0.376",   # 华夏合肥高新REIT
+    "508056": "0.161, -0.511, 0.15, -0.274",   # 中金普洛斯REIT
+    "513820": "0.4, -0.134, 0.06, -0.1",   # 港股通红利ETF汇添富
+    "510880": "0.41, -0.099, 0.064, -0.094",   # 红利ETF华泰柏瑞
+    "515450": "0.89, -0.066, 0.055, -0.066",   # 红利低波50ETF南方
+    "515300": "0.679, -0.133, 0.045, -0.109",   # 300红利低波ETF嘉实
 }
 
 # ---------------------- 0.7：超跌基, 远涨远跌字典 ----------------------
 overdown_fund_struct_dict = {
-    "512290": "0.251, -0.288",   # 生物医药ETF国泰
-    "512010": "0.157, -0.347",   # 医药ETF易方达
-    "515710": "0.035, -0.464",   # 食品饮料ETF华宝
-    "164906": "0.34, -0.382",   # 中概互联网LOF
-    "159766": "0.021, -0.54"   # 旅游ETF富国
+    "512290": "0.229, -0.3, 0.151, -0.09",   # 生物医药ETF国泰
+    "512010": "0.141, -0.356, 0.108, -0.107",   # 医药ETF易方达
+    "515710": "0.038, -0.463, 0.038, -0.229",   # 食品饮料ETF华宝
+    "164906": "0.4, -0.354, 0.127, -0.272",   # 中概互联网LOF
+    "159766": "0.028, -0.536, 0.028, -0.35",   # 旅游ETF富国
 }
 
 # ---------------------- 0.8：海外基, 远涨远跌字典 ----------------------
 oversea_fund_struct_dict = {
-    "159329": "0.002, -0.342",   # 沙特ETF南方
-    "164824": "0.193, -0.24",   # 印度基金LOF
-    "161126": "0.28, -0.098",   # 标普医疗保健LOF
-    "159100": "0.14, -0.228"   # 巴西ETF华夏
+    "159329": "0.002, -0.342, 0.028, -0.35",   # 沙特ETF南方
+    "164824": "0.193, -0.24, 0.028, -0.35",   # 印度基金LOF
+    "161126": "0.28, -0.098, 0.028, -0.35",   # 标普医疗保健LOF
+    "159100": "0.14, -0.228, 0.028, -0.35"   # 巴西ETF华夏
 }
 
 # ---------------------- 0.9：可转债, 远涨远跌字典 ----------------------
 swapbond_fund_struct_dict = {
-    "127025": "0.11, 0.18 ",  # 冀东转债
+    "127025": "0.11, 0.18, 0.028, -0.35",  # 冀东转债
 }
 
 
 # ===================== 1.0：业绩反转，远涨远跌字典 =====================
 # 格式：key=股票代码, value="远涨数值,远跌数值"
 performance_reversal_far_dict = {
-    "003032": "0.055, -0.752",   # 传智教育
-    "300527": "0.4, -0.452",   # ST应急
-    "300366": "0.037, -0.779",   # ST创意
-    "002124": "0.199, -0.702",   # 天邦食品
-    "002122": "0.371, -0.589",   # ST汇洲
-    "000698": "0.247, -0.538",   # ST沈化
-    "002689": "0.299, -0.551",   # ST远智
-    "600624": "0.327, -0.613",   # ST复华
-    "600169": "0.139, -0.348",   # ST太重
-    "300460": "0.845, -0.433",   # ST惠伦
-    "000821": "0.082, -0.717",   # ST京机
-    "300173": "0.116, -0.678",   # ST福能
-    "000010": "0.317, -0.651",   # *ST美丽
-    "000488": "0.236, -0.63",   # ST晨鸣
-    "000826": "0.407, -0.644",   # *ST启环
-    "000903": "0.14, -0.708",   # ST云动
-    "002055": "0.456, -0.425",   # ST得润
-    "002360": "0.273, -0.381",   # ST同德
-    "002512": "0.128, -0.631",   # ST达华
-    "002691": "0.077, -0.715",   # *ST冀凯
-    "002719": "0.107, -0.68",   # ST麦趣
-    "301030": "0.115, -0.829",   # *ST仕净
-    "600053": "0.101, -0.689",   # *ST九鼎
-    "600537": "0.222, -0.712",   # *ST亿晶
-    "600734": "0.155, -0.764",   # *ST实达
-    "600735": "0.786, -0.397",   # ST新华锦
-    "600759": "0.203, -0.759",   # ST洲际
-    "688201": "0.176, -0.776"   # ST信安
+    "003032": "0.059, -0.751, 0.059, -0.315",   # 传智教育
+    "300527": "0.413, -0.447, 0.158, -0.175",   # ST应急
+    "300366": "0.077, -0.771, 0.077, -0.368",   # ST创意
+    "002124": "0.158, -0.71, 0.118, -0.308",   # 天邦食品
+    "002122": "0.343, -0.597, 0.167, -0.254",   # ST汇洲
+    "000698": "0.251, -0.537, 0.113, -0.268",   # ST沈化
+    "002689": "0.299, -0.551, 0.079, -0.376",   # ST远智
+    "600624": "0.323, -0.614, 0.154, -0.345",   # ST复华
+    "600169": "0.15, -0.341, 0.093, -0.224",   # ST太重
+    "300460": "0.826, -0.439, 0.258, -0.091",   # ST惠伦
+    "000821": "0.117, -0.708, 0.117, -0.522",   # ST京机
+    "300173": "0.13, -0.674, 0.07, -0.344",   # ST福能
+    "000010": "0.331, -0.648, 0.128, -0.626",   # *ST美丽
+    "000488": "0.23, -0.632, 0.109, -0.364",   # ST晨鸣
+    "000826": "0.43, -0.638, 0.122, -0.367",   # *ST启环
+    "000903": "0.146, -0.706, 0.059, -0.371",   # ST云动
+    "002055": "0.49, -0.412, 0.272, -0.174",   # ST得润
+    "002360": "0.296, -0.363, 0.205, -0.259",   # ST同德
+    "002512": "0.241, -0.594, 0.133, -0.511",   # ST达华
+    "002691": "0.106, -0.707, 0.089, -0.566",   # *ST冀凯
+    "002719": "0.127, -0.675, 0.073, -0.439",   # ST麦趣
+    "301030": "0.139, -0.825, 0.139, -0.467",   # *ST仕净
+    "600053": "0.112, -0.686, 0.112, -0.686",   # *ST九鼎
+    "600537": "0.226, -0.711, 0.121, -0.408",   # *ST亿晶
+    "600734": "0.189, -0.757, 0.189, -0.639",   # *ST实达
+    "600735": "0.835, -0.38, 0.147, -0.189",   # ST新华锦
+    "600759": "0.296, -0.735, 0.296, -0.735",   # ST洲际
+    "688201": "0.194, -0.773, 0.066, -0.598",   # ST信安
 }
 
 
@@ -502,6 +514,16 @@ performance_reversal_week_line_dict = {
 }
 
 
+# ----------------- 8.0: 操作方法 字典 -----------------
+
+full_trade_dict = {
+
+    "600662": "  大网格",  # 外服KG
+    "600755": "  大网格",  # 厦门GM
+    "605368": "  中小网格",  # 蓝天RQ
+
+}
+
 # ============================== 三。策略名称总字典  ===============================
 
 
@@ -624,17 +646,17 @@ def _write_annual_rate(sheetin, row_idx, col_idx, annual_rate_text, styles, is_y
             sheetin.write(row_idx, col_idx, annual_rate_text, styles["annual_normal"])
 
 
-# 远涨：小于50粉红色，大于70红色
-# 远跌：大于60粉红色，小于30红色
-def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, styles, is_yellow=False):
+def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, nar_up_col, struct_str, styles, is_yellow=False):
     """写入远涨和远跌数据并应用颜色"""
     far_up = ""
     far_down = ""
+    nar_up = ""
     if struct_str:
         parts = struct_str.split(",")
         if len(parts) >= 2:
             far_up = parts[0].strip()
             far_down = parts[1].strip()
+            nar_up = parts[2].strip()
 
 
     # 乘100并取整
@@ -646,6 +668,10 @@ def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, s
         far_down = str(int(abs(float(far_down)) * 100))
     except:
         far_down = ""
+    try:
+        nar_up = str(int(abs(float(nar_up)) * 100))
+    except:
+        nar_up = ""
 
     # # if (code == "605368"):
     # print(struct_str)
@@ -679,6 +705,20 @@ def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, s
         except:
             far_down_style = styles["yellow_far_normal"]
         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
+
+        # 近涨
+        try:
+            val = int(nar_up)
+            if val <= NARUP_LOW:
+                nar_up_style = styles["yellow_far_pink"]
+            elif val >= NARUP_HIGH:
+                nar_up_style = styles["yellow_far_red"]
+            else:
+                nar_up_style = styles["yellow_far_normal"]
+        except:
+            nar_up_style = styles["yellow_far_normal"]
+        sheetin.write(row_idx, nar_up_col, nar_up, nar_up_style)
+
     else:
         # 远涨
         try:
@@ -705,6 +745,100 @@ def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, s
         except:
             far_down_style = styles["far_normal"]
         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
+
+        # 远涨
+        try:
+            val = int(nar_up)
+            if val <= NARUP_LOW:
+                nar_up_style = styles["far_pink"]
+            elif val >= NARUP_HIGH:
+                nar_up_style = styles["far_red"]
+            else:
+                nar_up_style = styles["far_normal"]
+        except:
+            nar_up_style = styles["far_normal"]
+        sheetin.write(row_idx, nar_up_col, nar_up, nar_up_style)
+
+
+# def _write_far_up_down(sheetin, row_idx, far_up_col, far_down_col, struct_str, styles, is_yellow=False):
+#     """写入远涨和远跌数据并应用颜色"""
+#     far_up = ""
+#     far_down = ""
+#     if struct_str:
+#         parts = struct_str.split(",")
+#         if len(parts) >= 2:
+#             far_up = parts[0].strip()
+#             far_down = parts[1].strip()
+#
+#
+#     # 乘100并取整
+#     try:
+#         far_up = str(int(float(far_up) * 100))
+#     except:
+#         far_up = ""
+#     try:
+#         far_down = str(int(abs(float(far_down)) * 100))
+#     except:
+#         far_down = ""
+#
+#     # # if (code == "605368"):
+#     # print(struct_str)
+#     # print(far_up)
+#     # print(far_down)
+#
+#     # 选择样式
+#     if is_yellow:
+#         # 远涨
+#         try:
+#             val = int(far_up)
+#             if val <= FARUP_LOW:
+#                 far_up_style = styles["yellow_far_pink"]
+#             elif val >= FARUP_HIGH:
+#                 far_up_style = styles["yellow_far_red"]
+#             else:
+#                 far_up_style = styles["yellow_far_normal"]
+#         except:
+#             far_up_style = styles["yellow_far_normal"]
+#         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
+#
+#         # 远跌
+#         try:
+#             val = int(far_down.strip())
+#             if val >= FARDOWN_HIGH:
+#                 far_down_style = styles["yellow_far_pink"]
+#             elif val <= FARDOWN_LOW:
+#                 far_down_style = styles["yellow_far_red"]
+#             else:
+#                 far_down_style = styles["yellow_far_normal"]
+#         except:
+#             far_down_style = styles["yellow_far_normal"]
+#         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
+#     else:
+#         # 远涨
+#         try:
+#             val = int(far_up)
+#             if val <= FARUP_LOW:
+#                 far_up_style = styles["far_pink"]
+#             elif val >= FARUP_HIGH:
+#                 far_up_style = styles["far_red"]
+#             else:
+#                 far_up_style = styles["far_normal"]
+#         except:
+#             far_up_style = styles["far_normal"]
+#         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
+#
+#         # 远跌
+#         try:
+#             val = int(far_down.strip())
+#             if val >= FARDOWN_HIGH:
+#                 far_down_style = styles["far_pink"]
+#             elif val <= FARDOWN_LOW:
+#                 far_down_style = styles["far_red"]
+#             else:
+#                 far_down_style = styles["far_normal"]
+#         except:
+#             far_down_style = styles["far_normal"]
+#         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
 
 
 
@@ -1208,14 +1342,14 @@ def write_sheet_data2(
     # 设置列宽（增加两列，列索引需要调整）
     col_widths = {    # K=10
         0: 8, 1: 15, 2: 7, 3: 7, 4: 7, 5: 6, 6: 5, 7: 8,
-        8: 8, 9: 10, 10: 6, 11: 6
+        8: 8, 9: 10, 10: 6, 11: 6, 12: 6, 13: 18
     }
     for col, width in col_widths.items():
         sheetin.col(col).width = width * 256
 
     # 表头（增加 "远涨" 和 "远跌" 两列）
     headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位%", "排名", "累积金额",
-               "累积仓位%", "策略", "远涨", "远跌"]
+               "累积仓位%", "策略", "远涨", "远跌", "近涨", "操作方法"]
     sheetin.row(0).height = ROW_HEIGHT
 
     # 写入每个sheet的第row0行表头
@@ -1258,6 +1392,7 @@ def write_sheet_data2(
             if len(parts) >= 2:
                 far_up_raw = parts[0].strip()
                 far_down_raw = parts[1].strip()
+                nar_up_raw = parts[2].strip()
                 # 乘100并取整
                 try:
                     far_up = str(int(float(far_up_raw) * 100))
@@ -1267,6 +1402,15 @@ def write_sheet_data2(
                     far_down = str(int(abs(float(far_down_raw)) * 100))
                 except:
                     far_down = far_down_raw if far_down_raw else ""
+                try:
+                    nar_up = str(int(abs(float(nar_up_raw)) * 100))
+                except:
+                    nar_up = nar_up_raw if nar_up_raw else ""
+
+        trade_data = None
+        trade_data = full_trade_dict.get(code, "")
+        trade_raw = trade_data
+
 
         # 高亮第10名
         # if rank == 10:
@@ -1282,7 +1426,9 @@ def write_sheet_data2(
             sheetin.write(row_idx, 8, f"{total_cumulative_percent}%", styles["yellow_base_digit"])
             sheetin.write(row_idx, 9, strategy, styles["yellow_strategy"])
             # 写入远涨远跌（黄色背景）
-            _write_far_up_down_simple(sheetin, row_idx, 10, 11, far_up, far_down, styles, is_yellow=True)
+            # _write_far_up_down_simple(sheetin, row_idx, 10, 11, far_up, far_down, styles, is_yellow=True)
+            _write_far_up_down_simple(sheetin, row_idx, 10, 11,12, far_up, far_down, nar_up, styles, is_yellow=True)
+            sheetin.write(row_idx, 13, trade_raw, styles["yellow_base_text"])
         else:
             sheetin.write(row_idx, 0, code, styles["base_digit"])
             sheetin.write(row_idx, 1, info["名称"], styles["base_digit"])   # base_text
@@ -1295,7 +1441,11 @@ def write_sheet_data2(
             sheetin.write(row_idx, 8, f"{total_cumulative_percent}%", styles["base_digit"])
             sheetin.write(row_idx, 9, strategy, styles["strategy"])
             # 写入远涨远跌（普通背景）
-            _write_far_up_down_simple(sheetin, row_idx, 10, 11, far_up, far_down, styles, is_yellow=False)
+            # _write_far_up_down_simple(sheetin, row_idx, 10, 11, far_up, far_down, styles, is_yellow=False)
+            _write_far_up_down_simple(sheetin, row_idx, 10, 11, 12, far_up, far_down, nar_up, styles, is_yellow=False)
+
+            sheetin.write(row_idx, 13, trade_raw, styles["base_text"])
+
         row_idx += 1
 
     # 写入总仓位汇总（各策略金额汇总和排序）
@@ -1332,9 +1482,7 @@ def write_sheet_data2(
     #     sheetin.col(col_idx).hidden = 1
 
 
-# 远涨：小于50粉红色，大于70红色
-# 远跌：大于60粉红色，小于30红色
-def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up, far_down, styles, is_yellow=False):
+def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, nar_up_col, far_up, far_down, nar_up, styles, is_yellow=False):
     """写入远涨和远跌数据并应用颜色（简化版，直接使用已处理好的数值）"""
     if is_yellow:
         # 远涨
@@ -1362,6 +1510,26 @@ def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up
         except:
             far_down_style = styles["yellow_far_normal"]
         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
+
+        # 近涨
+        # try:
+        #     val = int(nar_up) if nar_up else 0
+        #     nar_up_style = styles["yellow_far_normal"]
+        # except:
+        #     nar_up_style = styles["yellow_far_normal"]
+        # sheetin.write(row_idx, nar_up_col, nar_up, nar_up_style)
+        try:
+            val = int(nar_up) if far_up else 0
+            if val <= NARUP_LOW and val != 0:
+                nar_up_style = styles["yellow_far_pink"]
+            elif val >= NARUP_HIGH:
+                nar_up_style = styles["yellow_far_red"]
+            else:
+                nar_up_style = styles["yellow_far_normal"]
+        except:
+            nar_up_style = styles["yellow_far_normal"]
+        sheetin.write(row_idx, nar_up_col, nar_up, nar_up_style)
+
     else:
         # 远涨
         try:
@@ -1389,6 +1557,81 @@ def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up
             far_down_style = styles["far_normal"]
         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
 
+        # 近涨
+        # try:
+        #     val = int(nar_up) if nar_up else 0
+        #     nar_up_style = styles["far_normal"]
+        # except:
+        #     far_up_style = styles["far_normal"]
+        # sheetin.write(row_idx, nar_up_col, nar_up, nar_up_style)
+
+        try:
+            val = int(nar_up) if nar_up else 0
+            if val <= NARUP_LOW and val != 0:
+                nar_up_style = styles["far_pink"]
+            elif val >= NARUP_HIGH:
+                nar_up_style = styles["far_red"]
+            else:
+                nar_up_style = styles["far_normal"]
+        except:
+            nar_up_style = styles["far_normal"]
+        sheetin.write(row_idx, nar_up_col, nar_up, nar_up_style)
+
+# def _write_far_up_down_simple(sheetin, row_idx, far_up_col, far_down_col, far_up, far_down, styles, is_yellow=False):
+#     """写入远涨和远跌数据并应用颜色（简化版，直接使用已处理好的数值）"""
+#     if is_yellow:
+#         # 远涨
+#         try:
+#             val = int(far_up) if far_up else 0
+#             if val <= FARUP_LOW and val != 0:
+#                 far_up_style = styles["yellow_far_pink"]
+#             elif val >= FARUP_HIGH:
+#                 far_up_style = styles["yellow_far_red"]
+#             else:
+#                 far_up_style = styles["yellow_far_normal"]
+#         except:
+#             far_up_style = styles["yellow_far_normal"]
+#         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
+#
+#         # 远跌
+#         try:
+#             val = int(far_down) if far_down else 0
+#             if val >= FARDOWN_HIGH:
+#                 far_down_style = styles["yellow_far_pink"]
+#             elif val <= FARDOWN_LOW and val != 0:
+#                 far_down_style = styles["yellow_far_red"]
+#             else:
+#                 far_down_style = styles["yellow_far_normal"]
+#         except:
+#             far_down_style = styles["yellow_far_normal"]
+#         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
+#     else:
+#         # 远涨
+#         try:
+#             val = int(far_up) if far_up else 0
+#             if val <= FARUP_LOW and val != 0:
+#                 far_up_style = styles["far_pink"]
+#             elif val >= FARUP_HIGH:
+#                 far_up_style = styles["far_red"]
+#             else:
+#                 far_up_style = styles["far_normal"]
+#         except:
+#             far_up_style = styles["far_normal"]
+#         sheetin.write(row_idx, far_up_col, far_up, far_up_style)
+#
+#         # 远跌
+#         try:
+#             val = int(far_down) if far_down else 0
+#             if val >= FARDOWN_HIGH:
+#                 far_down_style = styles["far_pink"]
+#             elif val <= FARDOWN_LOW and val != 0:
+#                 far_down_style = styles["far_red"]
+#             else:
+#                 far_down_style = styles["far_normal"]
+#         except:
+#             far_down_style = styles["far_normal"]
+#         sheetin.write(row_idx, far_down_col, far_down, far_down_style)
+
 
 # ==================== 个股策略写入到excel函数====================
 def write_sheet_data1(
@@ -1407,21 +1650,28 @@ def write_sheet_data1(
         is_swapbond_sheet=False):
 
 
+    #"超跌基", "海外基, "可转债","空策L",
     col_widths = {    # K=10
         0: 8, 1: 15, 2: 7, 3: 7, 4: 7, 5: 6, 6: 5, 7: 8,
-        8: 8, 9: 10, 10: 6, 11: 6
+        8: 8, 9: 10, 10: 6, 11: 6, 12: 6
     }
 
     # "分红股", "分红基", "涨停回调", "配债股", "小盘猛牛"
     col_widths2 = {    # K=10
         0: 8, 1: 12, 2: 7, 3: 7, 4: 7, 5: 6, 6: 5, 7: 8,
-        8: 8, 9: 8, 10: 14, 11: 16, 12: 10, 13: 9, 14: 8, 15: 8
+        8: 8, 9: 8, 10: 14, 11: 16, 12: 10, 13: 9, 14: 6, 15: 6, 16: 6
     }
+
+    # # "业绩反转"
+    # col_widths3 = {    # K=10
+    #     0: 8, 1: 8, 2: 6, 3: 6, 4: 7, 5: 6, 6: 4, 7: 8,
+    #     8: 8, 9: 8, 10: 19, 11: 10, 12: 6, 13: 6, 14: 60, 15: 30
+    # }
 
     # "业绩反转"
     col_widths3 = {    # K=10
         0: 8, 1: 8, 2: 6, 3: 6, 4: 7, 5: 6, 6: 4, 7: 8,
-        8: 8, 9: 8, 10: 19, 11: 10, 12: 6, 13: 6, 14: 60, 15: 30
+        8: 8, 9: 8, 10: 19, 11: 10, 12: 6, 13: 6, 14: 6, 15: 60, 16: 30
     }
 
     # 应用列宽
@@ -1441,33 +1691,34 @@ def write_sheet_data1(
             sheetin.col(col).width = width * 256
 
     # 表头
-    if is_stock_dividend_sheet:
+    if is_stock_dividend_sheet: # 分红股
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位%", "排名", "累积金额",
                    "累积仓位%", "策略", "下期新年报日期", "分红日期", "每十股分红", "年化收益",
-                   "远涨", "远跌"]
+                   "远涨", "远跌", "近涨"]
+    # 小盘猛牛，涨停回调，配债股
     elif is_small_cap_sheet or is_limit_up_callback_sheet or is_bond_allot_sheet:
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位%", "排名", "累积金额",
                    "累积仓位%", "策略", "下期新年报日期", "分红日期", "每十股分红", "年化收益",
-                   "远涨", "远跌"]
-    elif is_fund_dividend_sheet:
+                   "远涨", "远跌", "近涨"]
+    elif is_fund_dividend_sheet: # 分红基
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位%", "排名", "累积金额",
                    "累积仓位%", "策略", "去年对应分红日期", "下期新分红日期", "每十股分红", "年化收益",
-                   "远涨", "远跌"]
-    elif is_overdown_sheet:
+                   "远涨", "远跌", "近涨"]
+    elif is_overdown_sheet: # 超跌基
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位%", "排名", "累积金额",
-                   "累积仓位%", "策略", "远涨", "远跌"]
-    elif is_oversea_sheet:
+                   "累积仓位%", "策略", "远涨", "远跌", "近涨"]
+    elif is_oversea_sheet: #  海外基
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位%", "排名", "累积金额",
-                   "累积仓位%", "策略", "远涨", "远跌"]
-    elif is_swapbond_sheet:
+                   "累积仓位%", "策略", "远涨", "远跌", "近涨"]
+    elif is_swapbond_sheet:  # 可转债
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位%", "排名", "累积金额",
-                   "累积仓位%", "策略", "远涨", "远跌"]
-    elif is_performance_reversal_sheet:
+                   "累积仓位%", "策略", "远涨", "远跌", "近涨"]
+    elif is_performance_reversal_sheet: # 业绩反转
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位%", "排名", "累积金额",
-                   "累积仓位%", "策略", "摘帽申请日期", "周线", "远涨", "远跌", "审计", "要点"]
-    else:
+                   "累积仓位%", "策略", "摘帽申请日期", "周线", "远涨", "远跌", "近涨", "审计", "要点"]
+    else: # 空策略
         headers = ["证券代码", "证券名称", "数量", "当前价", "金额", "仓位%", "排名", "累积金额",
-                   "累积仓位%", "策略", "远涨", "远跌"]
+                   "累积仓位%", "策略", "远涨", "远跌", "近涨"]
 
     sheetin.row(0).height = ROW_HEIGHT
 
@@ -1549,7 +1800,9 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
 
-                _write_far_up_down(sheetin, row_idx, 14, 15, stock_dividend_struct_dict.get(code, ""),
+                # _write_far_up_down(sheetin, row_idx, 14, 15, stock_dividend_struct_dict.get(code, ""),
+                #                    styles, is_yellow=True)
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, stock_dividend_struct_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_limit_up_callback_sheet:  # 涨停回调
@@ -1570,7 +1823,9 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
 
-                _write_far_up_down(sheetin, row_idx, 14, 15, limit_up_callback_struct_dict.get(code, ""),
+                # _write_far_up_down(sheetin, row_idx, 14, 15, limit_up_callback_struct_dict.get(code, ""),
+                #                    styles, is_yellow=True)
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, limit_up_callback_struct_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_small_cap_sheet:  # 小盘猛牛
@@ -1591,7 +1846,9 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
 
-                _write_far_up_down(sheetin, row_idx, 14, 15, small_cap_callback_struct_dict.get(code, ""),
+                # _write_far_up_down(sheetin, row_idx, 14, 15, small_cap_callback_struct_dict.get(code, ""),
+                #                    styles, is_yellow=True)
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, small_cap_callback_struct_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_bond_allot_sheet:  # 配债股
@@ -1612,7 +1869,9 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
 
-                _write_far_up_down(sheetin, row_idx, 14, 15, bond_allot_struct_dict.get(code, ""),
+                # _write_far_up_down(sheetin, row_idx, 14, 15, bond_allot_struct_dict.get(code, ""),
+                #                    styles, is_yellow=True)
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, bond_allot_struct_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_fund_dividend_sheet:  # 分红基
@@ -1633,19 +1892,27 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
 
-                _write_far_up_down(sheetin, row_idx, 14, 15, dividend_fund_struct_dict.get(code, ""),
+                # _write_far_up_down(sheetin, row_idx, 14, 15, dividend_fund_struct_dict.get(code, ""),
+                #                    styles, is_yellow=True)
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, dividend_fund_struct_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_overdown_sheet:  # 超跌基
-                _write_far_up_down(sheetin, row_idx, 10, 11, overdown_fund_struct_dict.get(code, ""),
+                # _write_far_up_down(sheetin, row_idx, 10, 11, overdown_fund_struct_dict.get(code, ""),
+                #                    styles, is_yellow=True)
+                _write_far_up_down(sheetin, row_idx, 10, 11, 12, overdown_fund_struct_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_oversea_sheet:  # 海外基
-                _write_far_up_down(sheetin, row_idx, 10, 11, oversea_fund_struct_dict.get(code, ""),
+                # _write_far_up_down(sheetin, row_idx, 10, 11, oversea_fund_struct_dict.get(code, ""),
+                #                    styles, is_yellow=True)
+                _write_far_up_down(sheetin, row_idx, 10, 11, 12, oversea_fund_struct_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_swapbond_sheet:  # 可转债
-                _write_far_up_down(sheetin, row_idx, 10, 11, swapbond_fund_struct_dict.get(code, ""),
+                # _write_far_up_down(sheetin, row_idx, 10, 11, swapbond_fund_struct_dict.get(code, ""),
+                #                    styles, is_yellow=True)
+                _write_far_up_down(sheetin, row_idx, 10, 11, 12, swapbond_fund_struct_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_performance_reversal_sheet:  # 业绩反转
@@ -1662,26 +1929,28 @@ def write_sheet_data1(
                 else:
                     sheetin.write(row_idx, 11, week_line, styles["yellow_week_normal"])
 
-                _write_far_up_down(sheetin, row_idx, 12, 13, performance_reversal_far_dict.get(code, ","),
+                # _write_far_up_down(sheetin, row_idx, 12, 13, performance_reversal_far_dict.get(code, ","),
+                #                    styles, is_yellow=True)
+                _write_far_up_down(sheetin, row_idx, 12, 13, 14, performance_reversal_far_dict.get(code, ","),
                                    styles, is_yellow=True)
 
                 audit_text = performance_reversal_audit_dict.get(code, "")
                 audit_stripped = audit_text.strip()
                 if "整改已ok" in audit_stripped and "暂不退市" in audit_stripped:
-                    sheetin.write(row_idx, 14, audit_text, styles["yellow_audit_pink"])
+                    sheetin.write(row_idx, 15, audit_text, styles["yellow_audit_pink"])
                 elif "已申请摘帽" in audit_stripped:
-                        sheetin.write(row_idx, 14, audit_text, styles["yellow_audit_pink"])
+                        sheetin.write(row_idx, 15, audit_text, styles["yellow_audit_pink"])
                 elif "重整" in audit_stripped and "可能退市" in audit_stripped:
-                    sheetin.write(row_idx, 14, audit_text, styles["yellow_audit_brown"])
+                    sheetin.write(row_idx, 15, audit_text, styles["yellow_audit_brown"])
                 elif "矿" in audit_stripped and "可能退市" not in audit_stripped:
-                    sheetin.write(row_idx, 14, audit_text, styles["yellow_audit_pink"])
+                    sheetin.write(row_idx, 15, audit_text, styles["yellow_audit_pink"])
                 elif audit_stripped.endswith("可能退市"):
-                    sheetin.write(row_idx, 14, audit_text, styles["yellow_audit_red"])
+                    sheetin.write(row_idx, 15, audit_text, styles["yellow_audit_red"])
                 else:
-                    sheetin.write(row_idx, 14, audit_text, styles["yellow_audit_normal"])
+                    sheetin.write(row_idx, 15, audit_text, styles["yellow_audit_normal"])
 
                 memo = performance_reversal_memo_dict.get(code, "")
-                sheetin.write(row_idx, 15, memo, styles["yellow_memo_left"])
+                sheetin.write(row_idx, 16, memo, styles["yellow_memo_left"])
 
         else:  # 普通行（非黄色背景）
             sheetin.write(row_idx, 0, code, styles["base_digit"])
@@ -1714,7 +1983,9 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
 
-                _write_far_up_down(sheetin, row_idx, 14, 15, stock_dividend_struct_dict.get(code, ""),
+                # _write_far_up_down(sheetin, row_idx, 14, 15, stock_dividend_struct_dict.get(code, ""),
+                #                    styles, is_yellow=False)
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, stock_dividend_struct_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_limit_up_callback_sheet:  # 涨停回调
@@ -1735,7 +2006,9 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
 
-                _write_far_up_down(sheetin, row_idx, 14, 15, limit_up_callback_struct_dict.get(code, ""),
+                # _write_far_up_down(sheetin, row_idx, 14, 15, limit_up_callback_struct_dict.get(code, ""),
+                #                    styles, is_yellow=False)
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, limit_up_callback_struct_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_small_cap_sheet:  # 小盘猛牛
@@ -1756,7 +2029,9 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
 
-                _write_far_up_down(sheetin, row_idx, 14, 15, small_cap_callback_struct_dict.get(code, ""),
+                # _write_far_up_down(sheetin, row_idx, 14, 15, small_cap_callback_struct_dict.get(code, ""),
+                #                    styles, is_yellow=False)
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, small_cap_callback_struct_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_bond_allot_sheet:  # 配债股
@@ -1777,7 +2052,9 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
 
-                _write_far_up_down(sheetin, row_idx, 14, 15, bond_allot_struct_dict.get(code, ""),
+                # _write_far_up_down(sheetin, row_idx, 14, 15, bond_allot_struct_dict.get(code, ""),
+                #                    styles, is_yellow=False)
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, bond_allot_struct_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_fund_dividend_sheet:  # 分红基
@@ -1798,19 +2075,23 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
 
-                _write_far_up_down(sheetin, row_idx, 14, 15, dividend_fund_struct_dict.get(code, ""),
+                # _write_far_up_down(sheetin, row_idx, 14, 15, dividend_fund_struct_dict.get(code, ""),
+                #                    styles, is_yellow=False)
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, dividend_fund_struct_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_overdown_sheet:  # 超跌基
-                _write_far_up_down(sheetin, row_idx, 10, 11, overdown_fund_struct_dict.get(code, ""),
+                # _write_far_up_down(sheetin, row_idx, 10, 11, overdown_fund_struct_dict.get(code, ""),
+                #                    styles, is_yellow=False)
+                _write_far_up_down(sheetin, row_idx, 10, 11, 12, overdown_fund_struct_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_oversea_sheet:  # 海外基
-                _write_far_up_down(sheetin, row_idx, 10, 11, oversea_fund_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 10, 11, 12, oversea_fund_struct_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_swapbond_sheet:  # 可转债
-                _write_far_up_down(sheetin, row_idx, 10, 11, swapbond_fund_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 10, 11,12,  swapbond_fund_struct_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_performance_reversal_sheet:  # 业绩反转
@@ -1827,30 +2108,32 @@ def write_sheet_data1(
                 else:
                     sheetin.write(row_idx, 11, week_line, styles["week_normal"])
 
-                _write_far_up_down(sheetin, row_idx, 12, 13, performance_reversal_far_dict.get(code, ","),
-                                   styles, is_yellow=False)
+                # _write_far_up_down(sheetin, row_idx, 12, 13, performance_reversal_far_dict.get(code, ","),
+                #                    styles, is_yellow=False)
+                _write_far_up_down(sheetin, row_idx, 12, 13, 14, performance_reversal_far_dict.get(code, ","),
+                                    styles, is_yellow = False)
 
                 audit_text = performance_reversal_audit_dict.get(code, "")
                 audit_stripped = audit_text.strip()
                 if "整改已ok" in audit_stripped and "暂不退市" in audit_stripped:
-                    sheetin.write(row_idx, 14, audit_text, styles["audit_pink"])
+                    sheetin.write(row_idx, 15, audit_text, styles["audit_pink"])
                 elif "已申请摘帽" in audit_stripped:
-                    sheetin.write(row_idx, 14, audit_text, styles["audit_pink"])
+                    sheetin.write(row_idx, 15, audit_text, styles["audit_pink"])
                 elif "重整" in audit_stripped and "暂不退市" in audit_stripped:
-                    sheetin.write(row_idx, 14, audit_text, styles["audit_pink"])
+                    sheetin.write(row_idx, 15, audit_text, styles["audit_pink"])
                 elif "重整" in audit_stripped and "暂不退市" in audit_stripped:
-                    sheetin.write(row_idx, 14, audit_text, styles["audit_pink"])
+                    sheetin.write(row_idx, 15, audit_text, styles["audit_pink"])
                 elif "重整" in audit_stripped and "可能退市" in audit_stripped:
-                    sheetin.write(row_idx, 14, audit_text, styles["audit_brown"])
+                    sheetin.write(row_idx, 15, audit_text, styles["audit_brown"])
                 elif "矿" in audit_stripped and "可能退市" not in audit_stripped:
-                    sheetin.write(row_idx, 14, audit_text, styles["audit_pink"])
+                    sheetin.write(row_idx, 15, audit_text, styles["audit_pink"])
                 elif "可能退市" in audit_stripped:
-                    sheetin.write(row_idx, 14, audit_text, styles["audit_red"])
+                    sheetin.write(row_idx, 15, audit_text, styles["audit_red"])
                 else:
-                    sheetin.write(row_idx, 14, audit_text, styles["audit_normal"])
+                    sheetin.write(row_idx, 15, audit_text, styles["audit_normal"])
 
                 memo = performance_reversal_memo_dict.get(code, "")
-                sheetin.write(row_idx, 15, memo, styles["memo_left"])
+                sheetin.write(row_idx, 16, memo, styles["memo_left"])
 
         row_idx += 1
 
@@ -1869,7 +2152,7 @@ position_dict = {}
 
 # 依次遍历下面的sheet
 for sheet_name in ["01", "02", "03", "04"]:
-# for sheet_name in ["01"]:
+# for sheet_name in ["01", "02"]:
     sheet = old_workbook.sheet_by_name(sheet_name)   # 当前的sheet neme，如 “01”
     # print(sheet)   # <01>
 
@@ -2072,5 +2355,6 @@ for strategy_name in sorted_strategy_names:
     )
 
 final_workbook.save("__00_总仓位.xls")
+# final_workbook.save("00.xls")
 
 print("✅ 生成完成！")
