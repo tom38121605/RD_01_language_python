@@ -119,16 +119,18 @@ for file_path in files:
 
 
 # ----------here -------------------
+
+    # 典型的用 key = value ，取原字典data_dict的部分数据，逐条生成字典 test_dict
     test_dict = {}
     for code, info in data_dict.items():
         far_up = info.get('远涨', 0)
         far_down = info.get('远跌', 0)
         test_dict[code] = f"{far_up}, {far_down}"
 
-    all_test_dicts[dict_name] = test_dict
-    all_names[dict_name] = name_dict
+    all_test_dicts[dict_name] = test_dict   # 数据部分的字典
+    all_names[dict_name] = name_dict        # 注释部分的字典
 
-    globals()[dict_name] = test_dict
+    # globals()[dict_name] = test_dict    # 相当于 dict_name = test_dict，没啥作用
 
 print("\n")
 print(all_test_dicts)  # {'test_dict1B': {'600016': '0.283, -0.412', '600755': '0.204, -0.362'}}

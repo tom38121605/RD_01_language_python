@@ -13,6 +13,52 @@
       mydict["a02"] = {"名称": "名两", "数量": 20,  "当前J": 2.0}
       print(mydict)  # {'a01': {'名称': '名一', '数量': 10, '当前J': 1.0}, 'a02': {'名称': '名两', '数量': 20, '当前J': 2.0}}
 
+1. 用现有列表里面的数据，批量导入字典
+
+      示例1：
+      test_dict={}
+      list1= [('16', '0.283, -0.412'), ('55', '0.204, -0.362')]
+      test_dict = dict(list1)
+      print(test_dict)                 #  {'16': '0.283, -0.412', '55': '0.204, -0.362'}
+
+      示例2：
+      test_dict={}
+      list1= [('16', '0.283, -0.412'), ('55', '0.204, -0.362')]
+      test_dict["16"] =  list1[0]
+      test_dict["55"] =  list1[1]
+      print(test_dict)                #  {'16': ('16', '0.283, -0.412'), '55': ('55', '0.204, -0.362')}
+
+
+1. 4种字典直接赋值的比较
+
+      # 两字典共享同一份数据
+      test_dict={'aa': 10, 'bb': 20}
+      test_case_01 =  test_dict
+      test_case_01['aa']=100
+      print(test_case_01)   # {'aa': 100, 'bb': 20}
+      print(test_dict)      # {'aa': 100, 'bb': 20}   //原字典跟着变了
+
+      # 浅拷贝， 如果修改嵌套里面的字典，原字典相应的地方会跟着变
+      test_dict={'aa': 10, 'bb': 20}
+      test_case_01 = dict(test_dict)
+      test_case_01['aa']=100
+      print(test_case_01)     # {'aa': 100, 'bb': 20}
+      print(test_dict)        # {'aa': 10, 'bb': 20}   //没变
+
+      # 创建一个全局的快捷，指向原来的字典
+      test_dict={'aa': 10, 'bb': 20}
+      globals()["test_case_01"] = test_dict
+      test_case_01['aa']=100
+      print(test_case_01)   # {'aa': 100, 'bb': 20}
+      print(test_dict)      # {'aa': 100, 'bb': 20}   //原字典跟着变了
+
+      # 深拷贝
+      test_dict={'aa': 10, 'bb': 20}
+      import copy
+      test_case_01 = copy.deepcopy(test_dict)
+      test_case_01['aa']=100
+      print(test_case_01)   # {'aa': 100, 'bb': 20}
+      print(test_dict)      # {'aa': 10, 'bb': 20}   //没变
 
 2.  字典定义为 defaultdict ， 可用append赋值
 
