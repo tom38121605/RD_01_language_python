@@ -19,134 +19,72 @@ ROW_HEIGHT = 11 * 20
 
 # ========================== 一。每周维护字典 ==== 远涨远跌 ===============================
 
-# ---------------------- 0.1：分红股， 远涨远跌字典 ----------------------
-stock_dividend_struct_dict = {
+# ----------------- 0.0: full far 字典 -----------------
 
-    # "605368": "0.143, -0.549, 0.066, -0.198",  # 蓝天RQ
-    # "600755": "0.204, -0.362, 0.013, -0.212",  # 厦门GM
+full_far_dict = {
 
-    "600016": "0.348, -0.387, 0.057, -0.161",   # 民生银行
-    "600755": "0.308, -0.302, 0.108, -0.138",   # 厦门国贸
-    "601169": "0.661, -0.293, 0.051, -0.076",   # 北京银行
-    "605368": "0.159, -0.543, 0.083, -0.342",   # 蓝天燃气
-    "600681": "0.178, -0.413, 0.061, -0.373",   # 百川能源
-    "603801": "0.028, -0.793, 0.028, -0.423",   # 志邦家居
-    "601006": "0.075, -0.322, 0.075, -0.124",   # 大秦铁路
-    "600300": "0.45, -0.312, 0.069, -0.222",   # 维维股份
-
-    # # 多策略
-    # "600681": "45, 27 ",  # 百川能源
-    # "605368": "52, 45 ",  # 蓝天燃气
-    # "600755": "44, 27 ",  # 厦门国贸
-}
-
-# ---------------------- 0.2：涨停回调, 远涨远跌字典 ----------------------
-limit_up_callback_struct_dict = {
-
-    # "605368": "0.143, -0.549, 0.066, -0.198",  # 蓝天RQ
-    # "600755": "0.204, -0.362, 0.013, -0.212",  # 厦门GM
-    #
-    # "600662": "0.236, -0.414, 0.133, -0.375",  # 外服KG
-    # "605388": "0.156, -0.606, 0.015, -0.469",  # 均瑶JK
-
-    "600662": "0.264, -0.401, 0.056, -0.361",  # 外服控股
-    "600681": "0.178, -0.413, 0.061, -0.373",  # 百川能源
-    "600814": "0.318, -0.471, 0.055, -0.434",  # 杭州解百
-    "600755": "0.308, -0.302, 0.108, -0.138",  # 厦门国贸
-    "600858": "0.31, -0.448, 0.056, -0.37",  # 银座股份
-    "605368": "0.159, -0.543, 0.083, -0.342",  # 蓝天燃气
-    "605388": "0.167, -0.602, 0.025, -0.464",  # 均瑶健康
-
-    # # 多策略
-    # "600681": "45, 27 ",  # 百川能源
-    # "605368": "0.02, 0.49 ",  # 蓝天燃气
-    # "600755": "44, 27 ",  # 厦门国贸
-    #
-    # "001202": "155, 29 ",  # 炬申股份
-}
-
-
-# ---------------------- 0.3：小盘猛牛, 远涨远跌字典 ----------------------
-
-small_cap_callback_struct_dict = {
-    "300891": "0.166, -0.5, 0.028, -0.435",   # 惠云钛业
-    "605077": "0.011, -0.554, 0.007, -0.449",   # 华康股份
-    "603759": "0.375, -0.565, 0.084, -0.438",   # 海天股份
-}
-
-# ---------------------- 0.5：配债股, 远涨远跌字典 ----------------------
-
-bond_allot_struct_dict = {
-    "603759": "0.375, -0.565, 0.084, -0.438",   # 海天股份
-
-}
-
-# ---------------------- 0.6：分红基, 远涨远跌字典 ----------------------
-dividend_fund_struct_dict = {
-    "510720": "0.174, -0.105, 0.069, -0.098",   # 红利国企ETF国泰
-    "159307": "0.266, -0.093, 0.059, -0.09",   # 红利低波100ETF博时
-    "180102": "0.087, -0.602, 0.087, -0.376",   # 华夏合肥高新REIT
-    "508056": "0.161, -0.511, 0.15, -0.274",   # 中金普洛斯REIT
-    "513820": "0.4, -0.134, 0.06, -0.1",   # 港股通红利ETF汇添富
-    "510880": "0.41, -0.099, 0.064, -0.094",   # 红利ETF华泰柏瑞
-    "515450": "0.89, -0.066, 0.055, -0.066",   # 红利低波50ETF南方
-    "515300": "0.679, -0.133, 0.045, -0.109",   # 300红利低波ETF嘉实
-}
-
-# ---------------------- 0.7：超跌基, 远涨远跌字典 ----------------------
-overdown_fund_struct_dict = {
-    "512290": "0.229, -0.3, 0.151, -0.09",   # 生物医药ETF国泰
-    "512010": "0.141, -0.356, 0.108, -0.107",   # 医药ETF易方达
-    "515710": "0.038, -0.463, 0.038, -0.229",   # 食品饮料ETF华宝
-    "164906": "0.4, -0.354, 0.127, -0.272",   # 中概互联网LOF
-    "159766": "0.028, -0.536, 0.028, -0.35",   # 旅游ETF富国
-}
-
-# ---------------------- 0.8：海外基, 远涨远跌字典 ----------------------
-oversea_fund_struct_dict = {
-    "159329": "0.002, -0.342, 0.028, -0.35",   # 沙特ETF南方
-    "164824": "0.193, -0.24, 0.028, -0.35",   # 印度基金LOF
-    "161126": "0.28, -0.098, 0.028, -0.35",   # 标普医疗保健LOF
-    "159100": "0.14, -0.228, 0.028, -0.35"   # 巴西ETF华夏
-}
-
-# ---------------------- 0.9：可转债, 远涨远跌字典 ----------------------
-swapbond_fund_struct_dict = {
-    "127025": "0.11, 0.18, 0.028, -0.35",  # 冀东转债
-}
-
-
-# ===================== 1.0：业绩反转，远涨远跌字典 =====================
-# 格式：key=股票代码, value="远涨数值,远跌数值"
-performance_reversal_far_dict = {
-    "003032": "0.059, -0.751, 0.059, -0.315",   # 传智教育
-    "300527": "0.413, -0.447, 0.158, -0.175",   # ST应急
-    "300366": "0.077, -0.771, 0.077, -0.368",   # ST创意
-    "002124": "0.158, -0.71, 0.118, -0.308",   # 天邦食品
-    "002122": "0.343, -0.597, 0.167, -0.254",   # ST汇洲
-    "000698": "0.251, -0.537, 0.113, -0.268",   # ST沈化
-    "002689": "0.299, -0.551, 0.079, -0.376",   # ST远智
-    "600624": "0.323, -0.614, 0.154, -0.345",   # ST复华
-    "600169": "0.15, -0.341, 0.093, -0.224",   # ST太重
-    "300460": "0.826, -0.439, 0.258, -0.091",   # ST惠伦
-    "000821": "0.117, -0.708, 0.117, -0.522",   # ST京机
-    "300173": "0.13, -0.674, 0.07, -0.344",   # ST福能
-    "000010": "0.331, -0.648, 0.128, -0.626",   # *ST美丽
-    "000488": "0.23, -0.632, 0.109, -0.364",   # ST晨鸣
-    "000826": "0.43, -0.638, 0.122, -0.367",   # *ST启环
+    "000010": "0.309, -0.653, 0.11, -0.632",   # *ST美丽
+    "000488": "0.212, -0.638, 0.093, -0.373",   # ST晨鸣
+    "000698": "0.243, -0.54, 0.106, -0.273",   # ST沈化
+    "000821": "0.089, -0.716, 0.089, -0.534",   # ST京机
+    "000826": "0.4, -0.645, 0.099, -0.38",   # *ST启环
     "000903": "0.146, -0.706, 0.059, -0.371",   # ST云动
-    "002055": "0.49, -0.412, 0.272, -0.174",   # ST得润
-    "002360": "0.296, -0.363, 0.205, -0.259",   # ST同德
-    "002512": "0.241, -0.594, 0.133, -0.511",   # ST达华
-    "002691": "0.106, -0.707, 0.089, -0.566",   # *ST冀凯
-    "002719": "0.127, -0.675, 0.073, -0.439",   # ST麦趣
-    "301030": "0.139, -0.825, 0.139, -0.467",   # *ST仕净
-    "600053": "0.112, -0.686, 0.112, -0.686",   # *ST九鼎
-    "600537": "0.226, -0.711, 0.121, -0.408",   # *ST亿晶
+    "002055": "0.521, -0.399, 0.299, -0.157",   # ST得润
+    "002122": "0.349, -0.596, 0.172, -0.251",   # ST汇洲
+    "002124": "0.148, -0.713, 0.108, -0.314",   # 天邦食品
+    "002360": "0.299, -0.369, 0.193, -0.266",   # ST同德
+    "002512": "0.255, -0.589, 0.147, -0.505",   # ST达华
+    "002689": "0.289, -0.554, 0.07, -0.38",   # ST远智
+    "002691": "0.09, -0.711, 0.073, -0.572",   # *ST冀凯
+    "002719": "0.121, -0.676, 0.067, -0.442",   # ST麦趣
+    "003032": "0.037, -0.756, 0.037, -0.33",   # 传智教育
+    "300173": "0.13, -0.674, 0.07, -0.344",   # ST福能
+    "300366": "0.084, -0.77, 0.084, -0.364",   # ST创意
+    "300460": "0.777, -0.454, 0.224, -0.115",   # ST惠伦
+    "300527": "0.439, -0.437, 0.178, -0.161",   # ST应急
+    "300891": "0.159, -0.503, 0.03, -0.438",   # 惠云钛业
+    "301030": "0.137, -0.825, 0.137, -0.468",   # *ST仕净
+    "600016": "0.34, -0.39, 0.051, -0.166",   # 民生银行
+    "600053": "0.081, -0.695, 0.081, -0.695",   # *ST九鼎
+    "600169": "0.15, -0.341, 0.093, -0.224",   # ST太重
+    "600300": "0.441, -0.317, 0.062, -0.227",   # 维维股份
+    "600537": "0.198, -0.718, 0.095, -0.421",   # *ST亿晶
+    "600624": "0.32, -0.615, 0.151, -0.346",   # ST复华
+    "600662": "0.248, -0.408, 0.044, -0.369",   # 外服控股
+    "600681": "0.203, -0.401, 0.083, -0.36",   # 百川能源
     "600734": "0.189, -0.757, 0.189, -0.639",   # *ST实达
-    "600735": "0.835, -0.38, 0.147, -0.189",   # ST新华锦
-    "600759": "0.296, -0.735, 0.296, -0.735",   # ST洲际
-    "688201": "0.194, -0.773, 0.066, -0.598",   # ST信安
+    "600735": "0.824, -0.384, 0.14, -0.195",   # ST新华锦
+    "600755": "0.339, -0.286, 0.135, -0.118",   # 厦门国贸
+    "600759": "0.323, -0.729, 0.323, -0.729",   # ST洲际
+    "600814": "0.299, -0.478, 0.04, -0.442",   # 杭州解百
+    "600858": "0.296, -0.454, 0.044, -0.377",   # 银座股份
+    "601006": "0.064, -0.329, 0.064, -0.133",   # 大秦铁路
+    "603759": "0.356, -0.571, 0.068, -0.446",   # 海天股份
+    "603801": "0.006, -0.798, 0.006, -0.437",   # 志邦家居
+    "605077": "0.015, -0.563, 0.015, -0.459",   # 华康股份
+    "605368": "0.148, -0.547, 0.073, -0.348",   # 蓝天燃气
+    "605388": "0.153, -0.607, 0.019, -0.47",   # 均瑶健康
+    "688201": "0.201, -0.772, 0.072, -0.595",   # ST信安
+    "159100": "0.136, -0.231, 0.031, -0.231",   # 巴西ETF华夏
+    "159307": "0.254, -0.102, 0.049, -0.098",   # 红利低波100ETF博时
+    "159329": "0.003, -0.341, 0.003, -0.099",   # 沙特ETF南方
+    "159766": "0.011, -0.546, 0.011, -0.363",   # 旅游ETF富国
+    "161126": "0.263, -0.11, 0.132, -0.046",   # 标普医疗保健LOF
+    "164824": "0.168, -0.258, 0.06, -0.107",   # 印度基金LOF
+    "164906": "0.376, -0.365, 0.108, -0.284",   # 中概互联网LOF
+    "180102": "0.081, -0.604, 0.081, -0.379",   # 华夏合肥高新REIT
+    "508056": "0.151, -0.515, 0.14, -0.28",   # 中金普洛斯REIT
+    "510720": "0.162, -0.114, 0.058, -0.107",   # 红利国企ETF国泰
+    "510880": "0.392, -0.111, 0.05, -0.106",   # 红利ETF华泰柏瑞
+    "512010": "0.163, -0.343, 0.13, -0.09",   # 医药ETF易方达
+    "512290": "0.26, -0.282, 0.18, -0.067",   # 生物医药ETF国泰
+    "513820": "0.39, -0.141, 0.052, -0.107",   # 港股通红利ETF汇添富
+    "515300": "0.674, -0.136, 0.042, -0.111",   # 300红利低波ETF嘉实
+    "515450": "0.869, -0.076, 0.043, -0.076",   # 红利低波50ETF南方
+    "515710": "0.024, -0.47, 0.024, -0.239",   # 食品饮料ETF华宝
+    "123265": "0.025, -0.418, 0.025, -0.418",   # 耐普转02
+    "123266": "0.048, -0.134, , ",   # 博士转债
+    "127025": "0.053, -0.068, 0.005, -0.016",   # 冀东转债
 }
 
 
@@ -238,7 +176,7 @@ fund_dividend_date_dict = {
 
     # goning
     "510720": ["登记 26/06/15", "预计 26/07/13", "0.03*12" ],  # 红利国企，模仿上次填       # 每月
-    "159307": ["登记 25/06/19 ", "预计 26/06/19", "0.13*4"],   # 红利100博时，模仿上次填    #每季 （分红3-4次）
+    "159307": ["登记 26/06/11 ", "预计 26/09/11", "0.13*4"],   # 红利100博时，模仿上次填    #每季 （分红3-4次）
     "180102": ["登记 26/04/20", "预计 26/08/20", "0.36*2"],    # 合肥高新                  # 每半年
     "508056": ["登记 26/04/3", "预计 26/07/2", "0.33*4"],      # 普洛斯                    # 每季
 
@@ -572,7 +510,7 @@ strategy_dict = {
     "113701": "可转债", "111024": "可转债",  "110081": "可转债", "127015": "可转债",
     "404003": "可转债", "127033": "可转债", "128124": "可转债", "127025": "可转债",
     "113575": "可转债", "110092": "可转债", "118027": "可转债", "123265": "可转债",
-    "123266": "可转债", "113705": "可转债",
+    "123266": "可转债", "113705": "可转债", "128119": "可转债",
 
     # 业绩反转
     "000903": "业绩反转", "300527": "业绩反转", "603595": "业绩反转", "300052": "业绩反转",
@@ -1366,26 +1304,11 @@ def write_sheet_data2(
         far_up = ""
         far_down = ""
 
-        # 先从各个字典中查找
+        # 先从各个字典中查找 (已合并成一个字典)
         far_data = None
-        if code in stock_dividend_struct_dict:
-            far_data = stock_dividend_struct_dict.get(code, "")
-        elif code in limit_up_callback_struct_dict:
-            far_data = limit_up_callback_struct_dict.get(code, "")
-        elif code in small_cap_callback_struct_dict:
-            far_data = small_cap_callback_struct_dict.get(code, "")
-        elif code in bond_allot_struct_dict:
-            far_data = bond_allot_struct_dict.get(code, "")
-        elif code in dividend_fund_struct_dict:
-            far_data = dividend_fund_struct_dict.get(code, "")
-        elif code in overdown_fund_struct_dict:
-            far_data = overdown_fund_struct_dict.get(code, "")
-        elif code in oversea_fund_struct_dict:
-            far_data = oversea_fund_struct_dict.get(code, "")
-        elif code in swapbond_fund_struct_dict:
-            far_data = swapbond_fund_struct_dict.get(code, "")
-        elif code in performance_reversal_far_dict:
-            far_data = performance_reversal_far_dict.get(code, "")
+        if code in full_far_dict:
+            far_data = full_far_dict.get(code, "")
+
 
         if far_data:
             parts = far_data.split(",")
@@ -1800,9 +1723,7 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
 
-                # _write_far_up_down(sheetin, row_idx, 14, 15, stock_dividend_struct_dict.get(code, ""),
-                #                    styles, is_yellow=True)
-                _write_far_up_down(sheetin, row_idx, 14, 15, 16, stock_dividend_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, full_far_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_limit_up_callback_sheet:  # 涨停回调
@@ -1823,9 +1744,7 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
 
-                # _write_far_up_down(sheetin, row_idx, 14, 15, limit_up_callback_struct_dict.get(code, ""),
-                #                    styles, is_yellow=True)
-                _write_far_up_down(sheetin, row_idx, 14, 15, 16, limit_up_callback_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, full_far_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_small_cap_sheet:  # 小盘猛牛
@@ -1846,9 +1765,7 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
 
-                # _write_far_up_down(sheetin, row_idx, 14, 15, small_cap_callback_struct_dict.get(code, ""),
-                #                    styles, is_yellow=True)
-                _write_far_up_down(sheetin, row_idx, 14, 15, 16, small_cap_callback_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, full_far_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_bond_allot_sheet:  # 配债股
@@ -1869,9 +1786,7 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
 
-                # _write_far_up_down(sheetin, row_idx, 14, 15, bond_allot_struct_dict.get(code, ""),
-                #                    styles, is_yellow=True)
-                _write_far_up_down(sheetin, row_idx, 14, 15, 16, bond_allot_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, full_far_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_fund_dividend_sheet:  # 分红基
@@ -1892,27 +1807,19 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=True)
 
-                # _write_far_up_down(sheetin, row_idx, 14, 15, dividend_fund_struct_dict.get(code, ""),
-                #                    styles, is_yellow=True)
-                _write_far_up_down(sheetin, row_idx, 14, 15, 16, dividend_fund_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, full_far_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_overdown_sheet:  # 超跌基
-                # _write_far_up_down(sheetin, row_idx, 10, 11, overdown_fund_struct_dict.get(code, ""),
-                #                    styles, is_yellow=True)
-                _write_far_up_down(sheetin, row_idx, 10, 11, 12, overdown_fund_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 10, 11, 12, full_far_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_oversea_sheet:  # 海外基
-                # _write_far_up_down(sheetin, row_idx, 10, 11, oversea_fund_struct_dict.get(code, ""),
-                #                    styles, is_yellow=True)
-                _write_far_up_down(sheetin, row_idx, 10, 11, 12, oversea_fund_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 10, 11, 12, full_far_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_swapbond_sheet:  # 可转债
-                # _write_far_up_down(sheetin, row_idx, 10, 11, swapbond_fund_struct_dict.get(code, ""),
-                #                    styles, is_yellow=True)
-                _write_far_up_down(sheetin, row_idx, 10, 11, 12, swapbond_fund_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 10, 11, 12, full_far_dict.get(code, ""),
                                    styles, is_yellow=True)
 
             elif is_performance_reversal_sheet:  # 业绩反转
@@ -1929,9 +1836,7 @@ def write_sheet_data1(
                 else:
                     sheetin.write(row_idx, 11, week_line, styles["yellow_week_normal"])
 
-                # _write_far_up_down(sheetin, row_idx, 12, 13, performance_reversal_far_dict.get(code, ","),
-                #                    styles, is_yellow=True)
-                _write_far_up_down(sheetin, row_idx, 12, 13, 14, performance_reversal_far_dict.get(code, ","),
+                _write_far_up_down(sheetin, row_idx, 12, 13, 14, full_far_dict.get(code, ","),
                                    styles, is_yellow=True)
 
                 audit_text = performance_reversal_audit_dict.get(code, "")
@@ -1983,9 +1888,7 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
 
-                # _write_far_up_down(sheetin, row_idx, 14, 15, stock_dividend_struct_dict.get(code, ""),
-                #                    styles, is_yellow=False)
-                _write_far_up_down(sheetin, row_idx, 14, 15, 16, stock_dividend_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, full_far_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_limit_up_callback_sheet:  # 涨停回调
@@ -2006,9 +1909,7 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
 
-                # _write_far_up_down(sheetin, row_idx, 14, 15, limit_up_callback_struct_dict.get(code, ""),
-                #                    styles, is_yellow=False)
-                _write_far_up_down(sheetin, row_idx, 14, 15, 16, limit_up_callback_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, full_far_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_small_cap_sheet:  # 小盘猛牛
@@ -2029,9 +1930,7 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
 
-                # _write_far_up_down(sheetin, row_idx, 14, 15, small_cap_callback_struct_dict.get(code, ""),
-                #                    styles, is_yellow=False)
-                _write_far_up_down(sheetin, row_idx, 14, 15, 16, small_cap_callback_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, full_far_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_bond_allot_sheet:  # 配债股
@@ -2052,9 +1951,7 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
 
-                # _write_far_up_down(sheetin, row_idx, 14, 15, bond_allot_struct_dict.get(code, ""),
-                #                    styles, is_yellow=False)
-                _write_far_up_down(sheetin, row_idx, 14, 15, 16, bond_allot_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, full_far_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_fund_dividend_sheet:  # 分红基
@@ -2075,23 +1972,19 @@ def write_sheet_data1(
                 annual_rate_text = _calc_annual_rate(per_div, info["当前价"])
                 _write_annual_rate(sheetin, row_idx, 13, annual_rate_text, styles, is_yellow=False)
 
-                # _write_far_up_down(sheetin, row_idx, 14, 15, dividend_fund_struct_dict.get(code, ""),
-                #                    styles, is_yellow=False)
-                _write_far_up_down(sheetin, row_idx, 14, 15, 16, dividend_fund_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 14, 15, 16, full_far_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_overdown_sheet:  # 超跌基
-                # _write_far_up_down(sheetin, row_idx, 10, 11, overdown_fund_struct_dict.get(code, ""),
-                #                    styles, is_yellow=False)
-                _write_far_up_down(sheetin, row_idx, 10, 11, 12, overdown_fund_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 10, 11, 12, full_far_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_oversea_sheet:  # 海外基
-                _write_far_up_down(sheetin, row_idx, 10, 11, 12, oversea_fund_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 10, 11, 12, full_far_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_swapbond_sheet:  # 可转债
-                _write_far_up_down(sheetin, row_idx, 10, 11,12,  swapbond_fund_struct_dict.get(code, ""),
+                _write_far_up_down(sheetin, row_idx, 10, 11,12,  full_far_dict.get(code, ""),
                                    styles, is_yellow=False)
 
             elif is_performance_reversal_sheet:  # 业绩反转
@@ -2108,9 +2001,7 @@ def write_sheet_data1(
                 else:
                     sheetin.write(row_idx, 11, week_line, styles["week_normal"])
 
-                # _write_far_up_down(sheetin, row_idx, 12, 13, performance_reversal_far_dict.get(code, ","),
-                #                    styles, is_yellow=False)
-                _write_far_up_down(sheetin, row_idx, 12, 13, 14, performance_reversal_far_dict.get(code, ","),
+                _write_far_up_down(sheetin, row_idx, 12, 13, 14, full_far_dict.get(code, ","),
                                     styles, is_yellow = False)
 
                 audit_text = performance_reversal_audit_dict.get(code, "")
