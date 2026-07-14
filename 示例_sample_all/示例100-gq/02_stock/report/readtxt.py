@@ -39,7 +39,8 @@ for file_path in files:
 
     #----------------------读取文件内容-------------------------
 
-    with open(file_path, 'r', encoding='gbk') as f:
+    # with open(file_path, 'r', encoding='gbk') as f:  //utf-8
+    with open(file_path, 'r', encoding='gbk', errors='ignore') as f:
         lines = f.readlines()
 
     # print(lines)  # 全文
